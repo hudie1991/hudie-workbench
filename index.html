@@ -147,10 +147,29 @@
       <!-- 宝宝成长状态 -->
       <div class="diet-section pregnancy-only">
         <h3>👶 宝宝成长状态</h3>
+        <div class="baby-basic">
+          <label>末次月经日期</label>
+          <input type="date" id="baby-lmp">
+          <button id="save-lmp-btn">计算孕周</button>
+        </div>
+        <div class="baby-status-card" id="baby-status-card">
+          <div class="baby-status-week">请设置末次月经日期</div>
+          <div class="baby-status-due">或手动添加成长记录</div>
+        </div>
+        <div class="baby-tips" id="baby-tips" style="display:none;">
+          <div class="baby-tip-block">
+            <h4>🍼 宝宝变化</h4>
+            <p id="baby-change">--</p>
+          </div>
+          <div class="baby-tip-block">
+            <h4>🤰 妈妈变化</h4>
+            <p id="mom-change">--</p>
+          </div>
+        </div>
         <div class="baby-form">
-          <input type="number" id="baby-week" placeholder="孕周">
-          <input type="number" id="baby-length" placeholder="胎长(cm)" step="0.1">
-          <input type="number" id="baby-weight" placeholder="胎重(g)" step="1">
+          <input type="text" id="baby-week" placeholder="孕周（如：15+1）">
+          <input type="number" id="baby-length" placeholder="顶臀长/身长(cm)" step="0.1">
+          <input type="number" id="baby-weight" placeholder="体重(g)" step="1">
           <input type="text" id="baby-note" placeholder="备注">
           <button id="add-baby-btn">添加</button>
         </div>

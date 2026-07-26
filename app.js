@@ -65,7 +65,7 @@ const defaultData = {
   ],
   dietMode:'pregnancy',
   meals:{ breakfast:{text:'',photos:[],calories:0}, lunch:{text:'',photos:[],calories:0}, dinner:{text:'',photos:[],calories:0}, snack:{text:'',photos:[],calories:0} },
-  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[],
+  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null,
   weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]=''; }); return acc; }, {}),
   interests:[], memos:[], reviews:[]
 };
@@ -75,6 +75,7 @@ function migrateData(stored) {
   if (!merged.meals || typeof merged.meals !== 'object') merged.meals = defaultData.meals;
   DIET_MEALS.forEach(function(k){ if (!merged.meals[k] || typeof merged.meals[k] !== 'object') merged.meals[k] = { text:'', photos:[], calories:0 }; });
   if (!merged.weeklyPlan) merged.weeklyPlan = defaultData.weeklyPlan;
+  if (!merged.lmpDate) merged.lmpDate = null;
   WEEKDAYS.forEach(function(d){ if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {}; MEAL_KEYS.forEach(function(k){ if (merged.weeklyPlan[d][k] === undefined) merged.weeklyPlan[d][k] = ''; }); });
   ['weightRecords','poopRecords','babyRecords','checkupRecords','interests','memos','reviews'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   return merged;
@@ -362,14 +363,186 @@ function renderPoopList() {
   }
   list.innerHTML = html;
 }
-function renderBabySection() { renderBabyList(); }
+var BABY_GROWTH_DATA = {
+  4:  { length:0.4, weight:'--', baby:'\u53d7\u7cbe\u5375\u7740\u5e8a\uff0c\u5f00\u59cb\u5206\u88c2\u53d1\u80b2\uff0c\u50cf\u829d\u9ebb\u4e00\u6837\u5c0f\u3002', mom:'\u53ef\u80fd\u8fd8\u6ca1\u4ec0\u4e48\u611f\u89c9\uff0c\u6fc0\u7d20\u6c34\u5e73\u5f00\u59cb\u53d8\u5316\u3002' },
+  5:  { length:0.6, weight:'--', baby:'\u80da\u80ce\u50cf\u82f9\u679c\u7c7d\uff0c\u795e\u7ecf\u7ba1\u5f00\u59cb\u5f62\u6210\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u8f7b\u5fae\u75b2\u52b3\u3001\u4e73\u623f\u80c0\u75db\u3002' },
+  6:  { length:0.8, weight:'--', baby:'\u5fc3\u810f\u5f00\u59cb\u8df3\u52a8\uff0c\u56db\u80a2\u82bd\u51fa\u73b0\uff0c\u50cf\u6241\u8c46\u5927\u5c0f\u3002', mom:'\u65e9\u5b55\u53cd\u5e94\u53ef\u80fd\u51fa\u73b0\uff0c\u5bb9\u6613\u6076\u5fc3\u3001\u55dc\u7761\u3002' },
+  7:  { length:1.0, weight:'--', baby:'\u5934\u90e8\u53d1\u80b2\u660e\u663e\uff0c\u773c\u775b\u3001\u9f3b\u5b50\u5f00\u59cb\u6210\u5f62\u3002', mom:'\u5b55\u5410\u53ef\u80fd\u52a0\u91cd\uff0c\u6ce8\u610f\u5c11\u98df\u591a\u9910\u3002' },
+  8:  { length:1.6, weight:'1', baby:'\u521d\u5177\u4eba\u5f62\uff0c\u624b\u6307\u811a\u8dbe\u5f00\u59cb\u53d1\u80b2\uff0c\u50cf\u82b8\u8c46\u5927\u5c0f\u3002', mom:'\u5b50\u5bab\u5728\u6162\u6162\u589e\u5927\uff0c\u8179\u90e8\u8fd8\u6ca1\u660e\u663e\u53d8\u5316\u3002' },
+  9:  { length:2.2, weight:'2', baby:'\u4e94\u5b98\u66f4\u6e05\u6670\uff0c\u5fc3\u810f\u5206\u6210\u56db\u4e2a\u8154\u5ba4\u3002', mom:'\u4e73\u623f\u80c0\u75db\u6301\u7eed\uff0c\u60c5\u7eea\u53ef\u80fd\u6ce2\u52a8\u8f83\u5927\u3002' },
+  10: { length:3.1, weight:'4', baby:'\u6b63\u5f0f\u8fdb\u5165\u80ce\u513f\u671f\uff0c\u624b\u81c2\u53ef\u5f2f\u66f2\uff0c\u50cf\u91d1\u6854\u5927\u5c0f\u3002', mom:'\u65e9\u5b55\u53cd\u5e94\u53ef\u80fd\u51cf\u8f7b\uff0c\u7cbe\u529b\u7565\u6709\u6062\u590d\u3002' },
+  11: { length:4.1, weight:'7', baby:'\u810a\u67f1\u5f00\u59cb\u9aa8\u5316\uff0c\u4f1a\u505a\u5438\u542e\u548c\u541e\u54bd\u52a8\u4f5c\u3002', mom:'\u8179\u90e8\u8f7b\u5fae\u9686\u8d77\uff0c\u88e4\u5b50\u53ef\u80fd\u53d8\u7d27\u3002' },
+  12: { length:5.4, weight:'14', baby:'\u6240\u6709\u5668\u5b98\u57fa\u672c\u5f62\u6210\uff0cNT\u68c0\u67e5\u7684\u597d\u65f6\u673a\u3002', mom:'\u5b55\u5410\u660e\u663e\u51cf\u8f7b\uff0c\u98df\u6b32\u5f00\u59cb\u6062\u590d\u3002' },
+  13: { length:7.4, weight:'23', baby:'\u6307\u7eb9\u5f62\u6210\uff0c\u80be\u810f\u5f00\u59cb\u4ea7\u751f\u5c3f\u6db2\u3002', mom:'\u8179\u90e8\u9686\u8d77\u66f4\u660e\u663e\uff0c\u6ce8\u610f\u8865\u5145\u8425\u517b\u3002' },
+  14: { length:8.7, weight:'43', baby:'\u9762\u90e8\u7279\u5f81\u66f4\u660e\u663e\uff0c\u4f1a\u505a\u9b3c\u8138\u3002', mom:'\u7cbe\u529b\u6062\u590d\uff0c\u80ce\u76d8\u5f00\u59cb\u627f\u62c5\u66f4\u591a\u529f\u80fd\u3002' },
+  15: { length:10.4, weight:'70', baby:'\u56db\u80a2\u7279\u522b\u6d3b\u8dc3\uff0c\u52a8\u4f5c\u53d8\u5f97\u9891\u7e41\uff0c\u4f46\u5988\u5988\u53ef\u80fd\u8fd8\u611f\u53d7\u4e0d\u5230\u3002', mom:'\u9f3b\u5b50\u5bb9\u6613\u5145\u8840\u751a\u81f3\u51fa\u8840\uff0c\u591a\u559d\u6c34\u591a\u5403\u679c\u852c\u3002' },
+  16: { length:11.6, weight:'100', baby:'\u9aa8\u9abc\u53d8\u786c\uff0c\u542c\u89c9\u5f00\u59cb\u53d1\u80b2\u3002', mom:'\u8179\u90e8\u660e\u663e\u9686\u8d77\uff0c\u53ef\u80fd\u5f00\u59cb\u611f\u53d7\u5230\u8f7b\u5fae\u80ce\u52a8\u3002' },
+  17: { length:13.0, weight:'140', baby:'\u76ae\u4e0b\u8102\u80aa\u5f00\u59cb\u79ef\u7d2f\uff0c\u4f1a\u5438\u542e\u62c7\u6307\u3002', mom:'\u98df\u6b32\u589e\u52a0\uff0c\u6ce8\u610f\u63a7\u5236\u4f53\u91cd\u589e\u957f\u3002' },
+  18: { length:14.2, weight:'190', baby:'\u80ce\u52a8\u66f4\u660e\u663e\uff0c\u80fd\u542c\u5230\u5916\u754c\u58f0\u97f3\u3002', mom:'\u8170\u80cc\u90e8\u538b\u529b\u589e\u52a0\uff0c\u6ce8\u610f\u59ff\u52bf\u3002' },
+  19: { length:15.3, weight:'240', baby:'\u611f\u89c9\u5668\u5b98\u8fc5\u901f\u53d1\u5c55\uff0c\u5927\u8111\u795e\u7ecf\u8fde\u63a5\u589e\u52a0\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u76ae\u80a4\u7619\u75d2\uff0c\u6ce8\u610f\u4fdd\u6e7f\u3002' },
+  20: { length:16.4, weight:'300', baby:'\u56db\u80a2\u548c\u8eaf\u5e72\u6bd4\u4f8b\u66f4\u534f\u8c03\uff0c\u5927\u6392\u7578\u68c0\u67e5\u597d\u65f6\u673a\u3002', mom:'\u5b50\u5bab\u9876\u5230\u809a\u8110\uff0c\u80ce\u52a8\u50cf\u5c0f\u9c7c\u6e38\u3002' },
+  21: { length:26.7, weight:'360', baby:'\u4f53\u91cd\u5feb\u901f\u589e\u52a0\uff0c\u7709\u6bdb\u548c\u776b\u6bdb\u5f00\u59cb\u751f\u957f\u3002', mom:'\u7cbe\u529b\u65fa\u76db\u671f\uff0c\u6ce8\u610f\u9002\u5f53\u8fd0\u52a8\u3002' },
+  22: { length:27.8, weight:'430', baby:'\u76ae\u80a4\u5f00\u59cb\u6709\u76b1\u7eb9\uff0c\u542c\u89c9\u66f4\u654f\u9510\u3002', mom:'\u8179\u90e8\u7ee7\u7eed\u589e\u5927\uff0c\u53ef\u80fd\u51fa\u73b0\u598a\u5a20\u7eb9\u3002' },
+  23: { length:28.9, weight:'501', baby:'\u80ba\u90e8\u5f00\u59cb\u53d1\u80b2\uff0c\u4e3a\u51fa\u751f\u540e\u547c\u5438\u505a\u51c6\u5907\u3002', mom:'\u80ce\u52a8\u89c4\u5f8b\uff0c\u6ce8\u610f\u4f11\u606f\u907f\u514d\u52b3\u7d2f\u3002' },
+  24: { length:30.0, weight:'600', baby:'\u76ae\u80a4\u8584\u800c\u900f\u660e\uff0c\u80fd\u542c\u5230\u5988\u5988\u5fc3\u8df3\u548c\u80a0\u80c3\u8815\u52a8\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u8170\u9178\u80cc\u75db\uff0c\u9002\u5f53\u6309\u6469\u7f13\u89e3\u3002' },
+  25: { length:34.6, weight:'680', baby:'\u76ae\u4e0b\u8102\u80aa\u589e\u591a\uff0c\u76ae\u80a4\u5f00\u59cb\u53d8\u5149\u6ed1\u3002', mom:'\u547c\u5438\u56f0\u96be\u53ef\u80fd\u52a0\u91cd\uff0c\u907f\u514d\u5e73\u8eba\u3002' },
+  26: { length:35.6, weight:'760', baby:'\u773c\u775b\u5f00\u59cb\u7741\u5f00\uff0c\u5bf9\u5916\u754c\u5149\u7ebf\u6709\u53cd\u5e94\u3002', mom:'\u5c3f\u9891\u53ef\u80fd\u518d\u6b21\u51fa\u73b0\uff0c\u907f\u514d\u618b\u5c3f\u3002' },
+  27: { length:36.6, weight:'875', baby:'\u5927\u8111\u5feb\u901f\u53d1\u80b2\uff0c\u7761\u7720\u65f6\u95f4\u89c4\u5f8b\u3002', mom:'\u8eab\u4f53\u91cd\u5fc3\u524d\u79fb\uff0c\u6ce8\u610f\u9632\u8dcc\u5012\u3002' },
+  28: { length:37.6, weight:'1000', baby:'\u8fdb\u5165\u5b55\u665a\u671f\uff0c\u80ba\u90e8\u7ee7\u7eed\u6210\u719f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u5047\u6027\u5bab\u7f29\uff0c\u6ce8\u610f\u4f11\u606f\u3002' },
+  29: { length:38.6, weight:'1150', baby:'\u808c\u8089\u548c\u80ba\u90e8\u7ee7\u7eed\u53d1\u80b2\uff0c\u5934\u56f4\u589e\u5927\u3002', mom:'\u8179\u90e8\u6c89\u91cd\uff0c\u6ce8\u610f\u5de6\u4fa7\u5367\u4f4d\u4f11\u606f\u3002' },
+  30: { length:39.9, weight:'1300', baby:'\u5934\u53d1\u5f00\u59cb\u751f\u957f\uff0c\u6307\u7532\u53d8\u957f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u6c34\u80bf\uff0c\u6ce8\u610f\u63a7\u76d0\u3002' },
+  31: { length:41.1, weight:'1500', baby:'\u76ae\u4e0b\u8102\u80aa\u8fdb\u4e00\u6b65\u589e\u52a0\uff0c\u4f53\u6e29\u8c03\u8282\u80fd\u529b\u53d1\u5c55\u3002', mom:'\u80ce\u52a8\u6709\u529b\uff0c\u6ce8\u610f\u6570\u80ce\u52a8\u3002' },
+  32: { length:42.4, weight:'1700', baby:'\u76ae\u80a4\u53d8\u7c89\u7ea2\uff0c\u624b\u6307\u7532\u548c\u811a\u8dbe\u7532\u957f\u9f50\u3002', mom:'\u5b50\u5bab\u9876\u5230\u808b\u9aa8\u4e0b\u7f18\uff0c\u5c11\u98df\u591a\u9910\u3002' },
+  33: { length:43.7, weight:'1900', baby:'\u80ba\u90e8\u63a5\u8fd1\u6210\u719f\uff0c\u9aa8\u9abc\u53d8\u786c\u4f46\u4ecd\u67d4\u8f6f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u7761\u7720\u56f0\u96be\uff0c\u7528\u6795\u5934\u652f\u6491\u3002' },
+  34: { length:45.0, weight:'2150', baby:'\u514d\u75ab\u7cfb\u7edf\u5f00\u59cb\u5de5\u4f5c\uff0c\u80fd\u8bc6\u522b\u5988\u5988\u58f0\u97f3\u3002', mom:'\u5047\u6027\u5bab\u7f29\u66f4\u9891\u7e41\uff0c\u6ce8\u610f\u533a\u5206\u771f\u5047\u4e34\u4ea7\u3002' },
+  35: { length:46.2, weight:'2350', baby:'\u8eab\u4f53\u5404\u5668\u5b98\u57fa\u672c\u6210\u719f\uff0c\u6b63\u5728\u589e\u52a0\u4f53\u91cd\u3002', mom:'\u547c\u5438\u56f0\u96be\u53ef\u80fd\u7f13\u89e3\uff0c\u80ce\u513f\u4e0b\u964d\u5165\u76c6\u3002' },
+  36: { length:47.5, weight:'2600', baby:'\u76ae\u4e0b\u8102\u80aa\u9971\u6ee1\uff0c\u50cf\u5c0f\u897f\u74dc\u5927\u5c0f\u3002', mom:'\u5c3f\u9891\u52a0\u91cd\uff0c\u51c6\u5907\u5f85\u4ea7\u5305\u3002' },
+  37: { length:48.6, weight:'2850', baby:'\u8db3\u6708\uff0c\u80ba\u90e8\u548c\u5927\u8111\u5b8c\u5168\u6210\u719f\uff0c\u968f\u65f6\u53ef\u80fd\u51fa\u751f\u3002', mom:'\u53ef\u80fd\u6709\u4e0b\u5760\u611f\uff0c\u6ce8\u610f\u4e34\u4ea7\u5f81\u5146\u3002' },
+  38: { length:49.8, weight:'3000', baby:'\u4f53\u91cd\u6301\u7eed\u589e\u52a0\uff0c\u5934\u53d1\u53d8\u6d53\u5bc6\u3002', mom:'\u8eab\u4f53\u51c6\u5907\u5206\u5a29\uff0c\u6ce8\u610f\u4f11\u606f\u4fdd\u5b58\u4f53\u529b\u3002' },
+  39: { length:50.7, weight:'3150', baby:'\u7f8a\u6c34\u91cf\u53ef\u80fd\u51cf\u5c11\uff0c\u80ce\u52a8\u4ecd\u8981\u5173\u6ce8\u3002', mom:'\u968f\u65f6\u53ef\u80fd\u4e34\u4ea7\uff0c\u51c6\u5907\u597d\u5165\u9662\u7269\u54c1\u3002' },
+  40: { length:51.2, weight:'3200', baby:'\u9884\u4ea7\u671f\u5230\u4e86\uff0c\u968f\u65f6\u51c6\u5907\u548c\u5988\u5988\u89c1\u9762\u3002', mom:'\u6ce8\u610f\u89c4\u5f8b\u5bab\u7f29\u3001\u7834\u6c34\u3001\u89c1\u7ea2\u7b49\u4e34\u4ea7\u4fe1\u53f7\u3002' }
+};
+
+function parseWeek(weekStr) {
+  // \u652f\u6301 "15+1"\u3001"15\u5468+1"\u3001"15\u54681\u5929"\u3001"15.1"\u3001"15"
+  var s = String(weekStr || '').trim().replace(/\u5468/g, ' ').replace(/\u5929/g, ' ').replace(/\+/g, ' ').replace(/\s+/g, ' ');
+  var parts = s.split(' ').filter(function(v){ return v !== ''; });
+  if (!parts.length) return 0;
+  var week = parseInt(parts[0]);
+  var day = parts.length > 1 ? parseInt(parts[1]) || 0 : 0;
+  if (isNaN(week) || week <= 0) return 0;
+  return { week:week, day:day, totalDays:week * 7 + day };
+}
+
+function formatWeek(weekObj) {
+  if (!weekObj) return '--';
+  return weekObj.week + '\u5468' + (weekObj.day ? weekObj.day + '\u5929' : '');
+}
+
+function addDays(dateStr, days) {
+  var d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function formatDate(d) {
+  if (typeof d === 'string') d = new Date(d);
+  return (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65e5';
+}
+
+function formatISO(d) {
+  if (typeof d === 'string') d = new Date(d);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function daysBetween(start, end) {
+  var s = new Date(start).setHours(0,0,0,0);
+  var e = new Date(end).setHours(0,0,0,0);
+  return Math.round((e - s) / 86400000);
+}
+
+function getBabyGrowth(weekObj) {
+  var week = weekObj ? weekObj.week : 0;
+  if (!week || week < 4) return null;
+  if (week > 40) week = 40;
+  var data = BABY_GROWTH_DATA[week];
+  if (!data) return null;
+  // \u57284-12\u5468\u663e\u793a\u9876\u81c0\u957f\uff0c13\u5468\u540e\u663e\u793a\u8eab\u957f
+  var isEarly = week <= 12;
+  return {
+    length: data.length,
+    weight: data.weight,
+    lengthLabel: isEarly ? '\u9876\u81c0\u957f' : '\u8eab\u957f',
+    baby: data.baby,
+    mom: data.mom
+  };
+}
+
+function renderBabySection() {
+  var lmpInput = document.getElementById('baby-lmp');
+  if (appData.lmpDate) lmpInput.value = appData.lmpDate;
+  renderBabyStatus();
+  renderBabyList();
+}
+
+function renderBabyStatus() {
+  var card = document.getElementById('baby-status-card');
+  var tips = document.getElementById('baby-tips');
+  var babyChange = document.getElementById('baby-change');
+  var momChange = document.getElementById('mom-change');
+  var today = new Date();
+  
+  // \u4f18\u5148\u6839\u636e\u672b\u6b21\u6708\u7ecf\u8ba1\u7b97\u5f53\u524d\u5b55\u5468
+  var currentWeekObj = null;
+  var dueDate = null;
+  var daysToDue = null;
+  
+  if (appData.lmpDate) {
+    var totalDays = daysBetween(appData.lmpDate, today);
+    if (totalDays >= 0) {
+      var week = Math.floor(totalDays / 7);
+      var day = totalDays % 7;
+      currentWeekObj = { week:week, day:day, totalDays:totalDays };
+    }
+    dueDate = addDays(appData.lmpDate, 280);
+    daysToDue = daysBetween(today, dueDate);
+  }
+  
+  // \u5982\u679c\u6ca1\u6709\u672b\u6b21\u6708\u7ecf\uff0c\u53d6\u6700\u8fd1\u4e00\u6b21\u8bb0\u5f55
+  if (!currentWeekObj && appData.babyRecords && appData.babyRecords.length) {
+    var last = appData.babyRecords.slice().sort(function(a,b){ return b.totalDays - a.totalDays; })[0];
+    if (last && last.totalDays) currentWeekObj = { week:last.week, day:last.day, totalDays:last.totalDays };
+  }
+  
+  if (!currentWeekObj || currentWeekObj.week < 1) {
+    card.innerHTML = '<div class="baby-status-week">\u8bf7\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf\u65e5\u671f</div><div class="baby-status-due">\u6216\u624b\u52a8\u6dfb\u52a0\u6210\u957f\u8bb0\u5f55</div>';
+    tips.style.display = 'none';
+    return;
+  }
+  
+  var growth = getBabyGrowth(currentWeekObj);
+  var html = '';
+  html += '<div class="baby-status-week">\u5b55 ' + formatWeek(currentWeekObj) + '</div>';
+  if (dueDate && daysToDue !== null) {
+    html += '<div class="baby-status-due">\u9884\u4ea7\u671f ' + formatDate(dueDate) + ' \u00b7 \u8ddd\u79bb\u9884\u4ea7\u671f ' + daysToDue + ' \u5929</div>';
+  }
+  if (growth) {
+    html += '<div class="baby-status-size">';
+    html += '<div class="baby-size-item"><div class="num">' + growth.length + '</div><div class="label">' + growth.lengthLabel + ' cm</div></div>';
+    html += '<div class="baby-size-item"><div class="num">' + growth.weight + '</div><div class="label">\u4f53\u91cd g</div></div>';
+    html += '</div>';
+  }
+  card.innerHTML = html;
+  
+  if (growth) {
+    babyChange.textContent = growth.baby;
+    momChange.textContent = growth.mom;
+    tips.style.display = 'flex';
+  } else {
+    tips.style.display = 'none';
+  }
+}
+
+document.getElementById('save-lmp-btn').addEventListener('click', function(){
+  var lmp = document.getElementById('baby-lmp').value;
+  if (!lmp) { alert('\u8bf7\u9009\u62e9\u672b\u6b21\u6708\u7ecf\u65e5\u671f'); return; }
+  appData.lmpDate = lmp;
+  saveData();
+  renderBabySection();
+});
+
 document.getElementById('add-baby-btn').addEventListener('click', function(){
-  var week = parseInt(document.getElementById('baby-week').value);
+  var weekStr = document.getElementById('baby-week').value.trim();
   var length = parseFloat(document.getElementById('baby-length').value);
   var weight = parseFloat(document.getElementById('baby-weight').value);
   var note = document.getElementById('baby-note').value.trim();
-  if (!week) { alert('\u8bf7\u586b\u5199\u5b55\u5468'); return; }
-  appData.babyRecords.push({ id:newId(appData.babyRecords), week:week, length:length || '', weight:weight || '', note:note });
+  var parsed = parseWeek(weekStr);
+  if (!parsed || !parsed.week) { alert('\u8bf7\u586b\u5199\u5b55\u5468\uff0c\u5982 15+1'); return; }
+  // \u5982\u679c\u6ca1\u8f93\u5165\u8eab\u957f\u4f53\u91cd\uff0c\u81ea\u52a8\u6839\u636e\u5b55\u5468\u4f30\u7b97
+  var growth = getBabyGrowth(parsed);
+  if (!length && growth) length = growth.length;
+  if (!weight && growth) weight = parseInt(growth.weight) || '';
+  appData.babyRecords.push({ id:newId(appData.babyRecords), week:parsed.week, day:parsed.day, totalDays:parsed.totalDays, length:length || '', weight:weight || '', note:note });
   saveData(); renderBabySection();
   document.getElementById('baby-week').value = '';
   document.getElementById('baby-length').value = '';
@@ -378,12 +551,13 @@ document.getElementById('add-baby-btn').addEventListener('click', function(){
 });
 function renderBabyList() {
   var list = document.getElementById('baby-list');
-  var records = appData.babyRecords.slice().sort(function(a,b){ return a.week - b.week; }).reverse();
+  var records = appData.babyRecords.slice().sort(function(a,b){ return a.totalDays - b.totalDays; }).reverse();
   var html = '';
   for (var i = 0; i < records.length; i++) {
     var r = records[i];
+    var weekText = r.day ? r.week + '+' + r.day : String(r.week);
     html += '<div class="record-item">';
-    html += '<div class="record-main"><span class="record-value">\u5b55 ' + r.week + ' \u5468</span>' + (r.length ? '<span class="record-tag">\u80ce\u957f ' + r.length + ' cm</span>' : '') + (r.weight ? '<span class="record-tag">\u80ce\u91cd ' + r.weight + ' g</span>' : '') + '</div>';
+    html += '<div class="record-main"><span class="record-value">\u5b55 ' + weekText + ' \u5468</span>' + (r.length ? '<span class="record-tag">' + (r.week <= 12 ? '\u9876\u81c0\u957f' : '\u8eab\u957f') + ' ' + r.length + ' cm</span>' : '') + (r.weight ? '<span class="record-tag">\u4f53\u91cd ' + r.weight + ' g</span>' : '') + '</div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="baby">\u2715</button>';
     html += '</div>';
