@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#5a7a4f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="胡碟的工作台">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="胡碟的工作台 - 每日任务、孕期/减脂饮食、兴趣收藏、一周饮食计划、普拉提、化妆穿搭、营养学、英语、备忘录">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="style.css">
+<title>胡碟的工作台</title>
+</head>
+<body>
+<div class="app">
+  <!-- 侧边导航栏 -->
+  <aside class="sidebar">
+    <div class="profile">
+      <h1 class="name">胡碟</h1>
+      <p class="subtitle">的工作台</p>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-section="daily" title="每日任务">
+        <span class="icon">✅</span>
+        <span class="label">每日任务</span>
+      </button>
+      <button class="nav-item" data-section="diet" title="孕期/减脂饮食">
+        <span class="icon">🥗</span>
+        <span class="label">孕期/减脂</span>
+      </button>
+      <button class="nav-item" data-section="favorites" title="兴趣收藏">
+        <span class="icon">⭐</span>
+        <span class="label">兴趣收藏</span>
+      </button>
+      <button class="nav-item" data-section="weekly" title="一周饮食计划">
+        <span class="icon">📅</span>
+        <span class="label">一周饮食</span>
+      </button>
+      <button class="nav-item" data-section="pilates" title="普拉提">
+        <span class="icon">🧘</span>
+        <span class="label">普拉提</span>
+      </button>
+      <button class="nav-item" data-section="beauty" title="化妆·穿搭">
+        <span class="icon">💄</span>
+        <span class="label">化妆穿搭</span>
+      </button>
+      <button class="nav-item" data-section="nutrition" title="营养学知识">
+        <span class="icon">🥑</span>
+        <span class="label">营养学</span>
+      </button>
+      <button class="nav-item" data-section="english" title="英语学习">
+        <span class="icon">🌍</span>
+        <span class="label">英语</span>
+      </button>
+      <button class="nav-item" data-section="memo" title="备忘录">
+        <span class="icon">📝</span>
+        <span class="label">备忘录</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <p class="quote">"每天进步一点点"</p>
+    </div>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main class="main">
+    <!-- 1. 每日任务 -->
+    <section id="daily" class="section active">
+      <div class="section-header">
+        <h2>每日任务</h2>
+        <div class="date-info">
+          <span id="today-date"></span>
+          <span class="weekday" id="today-weekday"></span>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-info">
+          <span>今日完成度</span>
+          <span id="progress-text">0 / 4</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+      <div class="todo-list" id="todo-list"></div>
+      <div class="add-task">
+        <input type="text" id="new-task-input" placeholder="添加新任务..." maxlength="50">
+        <button id="add-task-btn">+ 添加</button>
+      </div>
+    </section>
+
+    <!-- 2. 孕期/减脂期饮食 -->
+    <section id="diet" class="section">
+      <div class="section-header">
+        <h2 id="diet-title">孕期饮食</h2>
+        <div class="diet-tabs">
+          <button class="diet-tab active" data-mode="pregnancy">🤰 孕期</button>
+          <button class="diet-tab" data-mode="fatloss">🥬 减脂期</button>
+        </div>
+      </div>
+
+      <!-- 一日三餐记录 -->
+      <div class="diet-section">
+        <h3>🍽️ 一日三餐记录</h3>
+        <div class="daily-calories-summary">今日摄入：<strong id="today-calories">0</strong> kcal</div>
+        <div class="meal-grid" id="meal-grid"></div>
+      </div>
+
+      <!-- 体重记录（仅孕期显示宝宝相关，减脂期可记录体重） -->
+      <div class="diet-section">
+        <h3>⚖️ 体重记录</h3>
+        <div class="weight-form">
+          <input type="date" id="weight-date">
+          <input type="number" id="weight-value" placeholder="体重(kg)" step="0.1">
+          <input type="number" id="weight-week" placeholder="孕周(选填)">
+          <input type="text" id="weight-note" placeholder="备注">
+          <button id="add-weight-btn">添加</button>
+        </div>
+        <div class="weight-chart" id="weight-chart"></div>
+        <div class="record-list" id="weight-list"></div>
+      </div>
+
+      <!-- 便便记录 -->
+      <div class="diet-section pregnancy-only">
+        <h3>💩 便便记录</h3>
+        <div class="poop-form">
+          <input type="date" id="poop-date">
+          <select id="poop-status">
+            <option value="">选择状态</option>
+            <option value="normal">🟤 正常</option>
+            <option value="dry">🟡 偏干</option>
+            <option value="diarrhea">🟢 偏稀</option>
+            <option value="difficult">🔴 困难</option>
+            <option value="none">⚪ 未排便</option>
+          </select>
+          <input type="text" id="poop-note" placeholder="备注">
+          <button id="add-poop-btn">添加</button>
+        </div>
+        <div class="record-list" id="poop-list"></div>
+      </div>
+
+      <!-- 宝宝成长状态 -->
+      <div class="diet-section pregnancy-only">
+        <h3>👶 宝宝成长状态</h3>
+        <div class="baby-form">
+          <input type="number" id="baby-week" placeholder="孕周">
+          <input type="number" id="baby-length" placeholder="胎长(cm)" step="0.1">
+          <input type="number" id="baby-weight" placeholder="胎重(g)" step="1">
+          <input type="text" id="baby-note" placeholder="备注">
+          <button id="add-baby-btn">添加</button>
+        </div>
+        <div class="record-list" id="baby-list"></div>
+      </div>
+
+      <!-- 孕检记录 -->
+      <div class="diet-section pregnancy-only">
+        <h3>🏥 孕检记录</h3>
+        <div class="checkup-form">
+          <input type="date" id="checkup-date">
+          <input type="text" id="checkup-item" placeholder="检查项目">
+          <input type="text" id="checkup-result" placeholder="检查结果">
+          <input type="date" id="checkup-next" placeholder="下次预约">
+          <button id="add-checkup-btn">添加</button>
+        </div>
+        <div class="record-list" id="checkup-list"></div>
+      </div>
+    </section>
+
+    <!-- 3. 兴趣收藏 -->
+    <section id="favorites" class="section">
+      <div class="section-header">
+        <h2>兴趣收藏</h2>
+      </div>
+      <div class="favorite-tabs" id="favorite-tabs">
+        <button class="favorite-tab active" data-cat="all">全部</button>
+        <button class="favorite-tab" data-cat="video">视频</button>
+        <button class="favorite-tab" data-cat="article">文章</button>
+        <button class="favorite-tab" data-cat="recipe">菜谱</button>
+        <button class="favorite-tab" data-cat="other">其他</button>
+      </div>
+      <div class="favorite-search">
+        <input type="text" id="fav-search-input" placeholder="输入食材，搜索我的收藏...">
+        <button id="fav-search-btn">搜索收藏</button>
+        <button id="fav-search-clear">清空</button>
+      </div>
+      <div class="favorite-list" id="favorite-list"></div>
+      <div class="add-resource">
+        <h3>+ 添加收藏</h3>
+        <input type="text" id="fav-title" placeholder="标题">
+        <input type="text" id="fav-link" placeholder="链接（视频/菜谱可选）">
+        <select id="fav-type">
+          <option value="video">视频</option>
+          <option value="article">文章</option>
+          <option value="recipe">菜谱</option>
+          <option value="other">其他</option>
+        </select>
+        <input type="text" id="fav-ingredients" placeholder="食材标签，用空格或逗号分隔，如：鸡蛋 燕麦 鸡胸肉">
+        <textarea id="fav-note" placeholder="感悟/笔记/做法..."></textarea>
+        <button id="save-favorite-btn">保存收藏</button>
+      </div>
+    </section>
+
+    <!-- 4. 一周饮食计划 -->
+    <section id="weekly" class="section">
+      <div class="section-header">
+        <h2>一周饮食计划</h2>
+      </div>
+      <div class="weekly-search">
+        <input type="text" id="recipe-search" placeholder="搜索菜谱/做菜视频...">
+        <button id="search-bilibili">B站搜索</button>
+        <button id="search-douyin">抖音搜索</button>
+        <button id="search-xhs">小红书搜索</button>
+        <button id="search-my-favorites" class="btn-primary">搜我的收藏</button>
+      </div>
+      <div class="weekly-fav-results" id="weekly-fav-results"></div>
+      <div class="weekly-plan" id="weekly-plan"></div>
+    </section>
+
+    <!-- 5. 普拉提 -->
+    <section id="pilates" class="section">
+      <div class="section-header">
+        <h2>普拉提</h2>
+        <div class="date-info">每日精选 5 个练习</div>
+      </div>
+      <div class="daily-videos" id="pilates-videos"></div>
+    </section>
+
+    <!-- 6. 化妆·穿搭 -->
+    <section id="beauty" class="section">
+      <div class="section-header">
+        <h2>化妆 · 穿搭</h2>
+        <div class="date-info">每日精选 5 个灵感</div>
+      </div>
+      <div class="daily-videos" id="beauty-videos"></div>
+    </section>
+
+    <!-- 7. 营养学知识 -->
+    <section id="nutrition" class="section">
+      <div class="section-header">
+        <h2>营养学知识</h2>
+        <div class="date-info">每日精选 5 条</div>
+      </div>
+      <div class="daily-videos" id="nutrition-videos"></div>
+    </section>
+
+    <!-- 8. 英语 -->
+    <section id="english" class="section">
+      <div class="section-header">
+        <h2>英语学习</h2>
+        <div class="date-info">每日精选 5 个日常对话</div>
+      </div>
+      <div class="voca-card">
+        <div class="voca-icon">🎙️</div>
+        <div class="voca-info">
+          <h4>Voca AI 口语神器</h4>
+          <p>可直接与 AI 英语对话练习</p>
+        </div>
+        <a href="https://www.voca.ai" target="_blank" class="voca-btn">去对话</a>
+      </div>
+      <div class="daily-videos" id="english-videos"></div>
+    </section>
+
+    <!-- 9. 备忘录 -->
+    <section id="memo" class="section">
+      <div class="section-header">
+        <h2>备忘录</h2>
+      </div>
+      <div class="memo-tabs" id="memo-tabs">
+        <button class="memo-tab active" data-type="text">📝 文字</button>
+        <button class="memo-tab" data-type="audio">🎙️ 录音</button>
+      </div>
+      <div class="memo-input-area" id="memo-input-area">
+        <textarea id="memo-text" placeholder="记录点什么..."></textarea>
+        <button id="save-text-memo-btn">保存文字备忘</button>
+      </div>
+      <div class="memo-record-area" id="memo-record-area" style="display:none;">
+        <button id="record-btn" class="record-btn">按住录音</button>
+        <div class="record-status" id="record-status">点击按住开始录音</div>
+      </div>
+      <div class="memo-list" id="memo-list"></div>
+    </section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
