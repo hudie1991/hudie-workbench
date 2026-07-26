@@ -231,8 +231,9 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .section-header h2 { font-size:18px; }
   .meal-grid { grid-template-columns:1fr; }
   .daily-videos-grid { grid-template-columns:1fr; }
-  .weight-form, .poop-form, .baby-form, .checkup-form { flex-direction:column; }
-  .weight-form input, .poop-form input, .poop-form select, .baby-form input, .checkup-form input { width:100%; }
+  .weight-form, .poop-form, .baby-form, .checkup-form, .baby-basic { flex-direction:column; }
+  .weight-form input, .poop-form input, .poop-form select, .baby-form input, .checkup-form input, .baby-basic input { width:100%; }
+  .baby-status-size { gap:16px; }
   .weekly-search { flex-direction:column; }
   .weekly-search input { width:100%; }
   .weekly-search button { flex:1; }
