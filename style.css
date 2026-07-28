@@ -64,6 +64,10 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .diet-tab.active { background:var(--primary); color:white; border-color:var(--primary); }
 .diet-section { background:var(--card-bg); border-radius:16px; padding:20px; margin-bottom:18px; box-shadow:var(--shadow); }
 .diet-section h3 { color:var(--primary-dark); margin-bottom:14px; font-size:16px; }
+#diet.active { display:flex; flex-wrap:wrap; gap:16px; }
+#diet.active > .section-header { flex:1 1 100%; }
+#diet.active > .diet-section { flex:1 1 calc(50% - 8px); margin-bottom:0; }
+#diet.active > .diet-section.full-width { flex:1 1 100%; }
 .daily-calories-summary { text-align:right; font-size:13px; color:var(--text-light); margin-bottom:10px; }
 .daily-calories-summary strong { color:var(--primary); font-size:18px; }
 

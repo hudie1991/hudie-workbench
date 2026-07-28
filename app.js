@@ -165,33 +165,6 @@ function addTask() {
   saveData(); input.value = ''; renderTodos();
 }
 
-/* ====== \u9884\u4ea7\u671f\u9884\u6d4b ====== */
-function renderDueCard() {
-  var card = document.getElementById('due-card');
-  if (!appData.lmpDate) {
-    card.innerHTML = '<div class="due-main">\u8bf7\u5148\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf\u65e5\u671f</div><div class="due-sub">\u7528\u4e8e\u81ea\u52a8\u8ba1\u7b97\u5b55\u5468\u548c\u5b9d\u5b9d\u6210\u957f\u6570\u636e</div>';
-    return;
-  }
-  var lmp = new Date(appData.lmpDate);
-  var today = new Date();
-  var due = new Date(lmp);
-  due.setDate(due.getDate() + 280);
-  var totalDays = Math.floor((today - lmp) / 86400000);
-  var week = Math.floor(totalDays / 7);
-  var day = totalDays % 7;
-  var daysToDue = Math.floor((due - today) / 86400000);
-  var trimester = week < 13 ? 1 : (week < 27 ? 2 : 3);
-  var html = '';
-  html += '<div class="due-main">\u9884\u4ea7\u671f ' + (due.getMonth()+1) + '\u6708' + due.getDate() + '\u65e5</div>';
-  html += '<div class="due-sub">\u5b55 ' + week + '\u5468' + (day ? day + '\u5929' : '') + ' \u00b7 \u7b2c' + trimester + '\u5b55\u671f</div>';
-  html += '<div class="due-detail">';
-  html += '<div class="due-item"><div class="num">' + daysToDue + '</div><div class="label">\u8ddd\u79bb\u9884\u4ea7\u671f(\u5929)</div></div>';
-  html += '<div class="due-item"><div class="num">' + week + '</div><div class="label">\u5b55\u5468</div></div>';
-  html += '<div class="due-item"><div class="num">' + day + '</div><div class="label">\u989d\u5916\u5929\u6570</div></div>';
-  html += '</div>';
-  card.innerHTML = html;
-}
-
 /* ====== \u5f85\u4ea7\u5305\u6e05\u5355 ====== */
 var currentBagCat = 'all';
 var currentKnowledgeCat = 'all';
@@ -643,7 +616,6 @@ document.getElementById('save-lmp-btn').addEventListener('click', function(){
   appData.lmpDate = lmp;
   saveData();
   renderBabySection();
-  renderDueCard();
 });
 
 document.getElementById('add-baby-btn').addEventListener('click', function(){
@@ -1054,7 +1026,6 @@ function init() {
   document.getElementById('today-date').textContent = todayStr();
   document.getElementById('today-weekday').textContent = weekdayStr();
   renderTodos();
-  renderDueCard();
   renderWeightSection();
   renderPoopSection();
   renderBabySection();
