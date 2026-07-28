@@ -18,6 +18,11 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .nav-item .icon { font-size:18px; width:22px; text-align:center; }
 .nav-item .label { font-size:13px; }
 .sidebar-footer { padding-top:16px; border-top:1px solid var(--border); text-align:center; }
+.data-actions { display:flex; gap:8px; margin-bottom:12px; }
+.data-btn { flex:1; padding:8px 6px; border:1px solid var(--border); background:var(--card-bg); border-radius:8px; font-size:12px; color:var(--text-light); cursor:pointer; }
+.data-btn:hover { border-color:var(--primary); color:var(--primary); }
+.data-actions-mobile { display:flex; gap:8px; margin-top:16px; }
+.data-actions-mobile .data-btn { flex:1; padding:10px; font-size:13px; }
 .quote { color:var(--text-light); font-size:12px; font-style:italic; }
 
 .main { flex:1; padding:36px 40px; overflow-y:auto; }

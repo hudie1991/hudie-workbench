@@ -58,10 +58,17 @@ const defaultData = {
   weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]={ content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] }; }); return acc; }, {}),
   interests:[], memos:[], reviews:[]
 };
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 function migrateData(stored) {
-  if (!stored) return Object.assign({}, defaultData);
-  var merged = Object.assign({}, defaultData, stored);
-  if (!merged.weeklyPlan) merged.weeklyPlan = defaultData.weeklyPlan;
+  if (!stored) return deepClone(defaultData);
+  var merged = deepClone(defaultData);
+  // \u628a stored \u7684\u5b57\u6bb5\u5408\u5e76\u5230 merged\uff08\u6df1\u5408\u5e76\uff09
+  for (var key in stored) {
+    if (stored.hasOwnProperty(key) && stored[key] !== undefined && stored[key] !== null) {
+      merged[key] = stored[key];
+    }
+  }
+  if (!merged.weeklyPlan) merged.weeklyPlan = deepClone(defaultData.weeklyPlan);
   if (!merged.lmpDate) merged.lmpDate = null;
   WEEKDAYS.forEach(function(d){
     if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {};
@@ -70,7 +77,6 @@ function migrateData(stored) {
       if (val === undefined || val === null) {
         merged.weeklyPlan[d][k] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
       } else if (typeof val === 'string') {
-        // \u517c\u5bb9\u65e7\u6570\u636e\uff1a\u5b57\u7b26\u4e32\u8f6c\u5bf9\u8c61
         merged.weeklyPlan[d][k] = { content:val, meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
       } else if (!val.tags) {
         val.tags = [];
@@ -78,14 +84,34 @@ function migrateData(stored) {
     });
   });
   ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
-  // \u517c\u5bb9\u65e7\u6570\u636e\uff1a\u786e\u4fdd todos \u4e2d\u6bcf\u9879\u6709 note \u5b57\u6bb5
   if (merged.todos) {
     merged.todos.forEach(function(t){ if (t.note === undefined) t.note = ''; });
   }
   return merged;
 }
-function loadData() { var stored = localStorage.getItem(STORAGE_KEY); if (stored) { try { return migrateData(JSON.parse(stored)); } catch(e){ return Object.assign({}, defaultData); } } return Object.assign({}, defaultData); }
-function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }
+function loadData() {
+  var stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      return migrateData(JSON.parse(stored));
+    } catch(e) {
+      // JSON \u89e3\u6790\u5931\u8d25\uff0c\u5c1d\u8bd5\u4ece\u5907\u4efd\u6062\u590d
+      var backup = localStorage.getItem(STORAGE_KEY + '_backup');
+      if (backup) {
+        try { return migrateData(JSON.parse(backup)); } catch(e2) {}
+      }
+      return deepClone(defaultData);
+    }
+  }
+  return deepClone(defaultData);
+}
+function saveData() {
+  // \u5148\u5907\u4efd\uff0c\u518d\u4fdd\u5b58\uff0c\u9632\u6b62\u6570\u636e\u4e22\u5931
+  try {
+    localStorage.setItem(STORAGE_KEY + '_backup', localStorage.getItem(STORAGE_KEY) || JSON.stringify(appData));
+  } catch(e) {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
 var appData = loadData();
 function todayStr() { var d = new Date(); return d.getFullYear() + '\u5e74' + (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65e5'; }
 function weekdayStr() { return ['\u661f\u671f\u65e5','\u661f\u671f\u4e00','\u661f\u671f\u4e8c','\u661f\u671f\u4e09','\u661f\u671f\u56db','\u661f\u671f\u4e94','\u661f\u671f\u516d'][new Date().getDay()]; }
@@ -1327,6 +1353,41 @@ document.getElementById('memo-list').addEventListener('click', function(e){
     saveData(); renderMemos();
   }
 });
+
+/* ====== \u6570\u636e\u5bfc\u51fa/\u5bfc\u5165 ====== */
+function exportData() {
+  var blob = new Blob([JSON.stringify(appData, null, 2)], { type:'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'hudie_workbench_' + todayISO() + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(file) {
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try {
+      var imported = JSON.parse(ev.target.result);
+      if (confirm('\u786e\u8ba4\u5bfc\u5165\uff1f\u8fd9\u5c06\u8986\u76d6\u5f53\u524d\u6570\u636e\u3002')) {
+        appData = migrateData(imported);
+        saveData();
+        alert('\u5bfc\u5165\u6210\u529f\uff01\u9875\u9762\u5c06\u5237\u65b0\u3002');
+        location.reload();
+      }
+    } catch(err) {
+      alert('\u6587\u4ef6\u683c\u5f0f\u9519\u8bef\uff0c\u65e0\u6cd5\u5bfc\u5165');
+    }
+  };
+  reader.readAsText(file);
+}
+var exportBtns = document.querySelectorAll('#export-data-btn, #export-data-btn2');
+exportBtns.forEach(function(btn){ btn.addEventListener('click', exportData); });
+var importBtns = document.querySelectorAll('#import-data-btn, #import-data-btn2');
+importBtns.forEach(function(btn){ btn.addEventListener('click', function(){ var f = btn.id === 'import-data-btn' ? 'import-file' : 'import-file2'; document.getElementById(f).click(); }); });
+var importFiles = document.querySelectorAll('#import-file, #import-file2');
+importFiles.forEach(function(input){ input.addEventListener('change', function(e){ importData(e.target.files[0]); e.target.value = ''; }); });
 
 /* ====== \u521d\u59cb\u5316 ====== */
 function init() {
