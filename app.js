@@ -55,7 +55,7 @@ const defaultData = {
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   todosDate:null,
-  weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]=''; }); return acc; }, {}),
+  weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]={ content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] }; }); return acc; }, {}),
   interests:[], memos:[], reviews:[]
 };
 function migrateData(stored) {
@@ -63,7 +63,20 @@ function migrateData(stored) {
   var merged = Object.assign({}, defaultData, stored);
   if (!merged.weeklyPlan) merged.weeklyPlan = defaultData.weeklyPlan;
   if (!merged.lmpDate) merged.lmpDate = null;
-  WEEKDAYS.forEach(function(d){ if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {}; MEAL_KEYS.forEach(function(k){ if (merged.weeklyPlan[d][k] === undefined) merged.weeklyPlan[d][k] = ''; }); });
+  WEEKDAYS.forEach(function(d){
+    if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {};
+    MEAL_KEYS.forEach(function(k){
+      var val = merged.weeklyPlan[d][k];
+      if (val === undefined || val === null) {
+        merged.weeklyPlan[d][k] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
+      } else if (typeof val === 'string') {
+        // \u517c\u5bb9\u65e7\u6570\u636e\uff1a\u5b57\u7b26\u4e32\u8f6c\u5bf9\u8c61
+        merged.weeklyPlan[d][k] = { content:val, meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
+      } else if (!val.tags) {
+        val.tags = [];
+      }
+    });
+  });
   ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   // \u517c\u5bb9\u65e7\u6570\u636e\uff1a\u786e\u4fdd todos \u4e2d\u6bcf\u9879\u6709 note \u5b57\u6bb5
   if (merged.todos) {
@@ -78,6 +91,23 @@ function todayStr() { var d = new Date(); return d.getFullYear() + '\u5e74' + (d
 function weekdayStr() { return ['\u661f\u671f\u65e5','\u661f\u671f\u4e00','\u661f\u671f\u4e8c','\u661f\u671f\u4e09','\u661f\u671f\u56db','\u661f\u671f\u4e94','\u661f\u671f\u516d'][new Date().getDay()]; }
 function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function nowStr() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+function getWeekDates(baseDate) {
+  var d = baseDate ? new Date(baseDate) : new Date();
+  var day = d.getDay();
+  var diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  var monday = new Date(d.setDate(diff));
+  var dates = [];
+  for (var i = 0; i < 7; i++) {
+    var cur = new Date(monday);
+    cur.setDate(monday.getDate() + i);
+    dates.push({
+      iso: cur.getFullYear() + '-' + String(cur.getMonth()+1).padStart(2,'0') + '-' + String(cur.getDate()).padStart(2,'0'),
+      short: (cur.getMonth()+1) + '.' + cur.getDate(),
+      weekday: ['\u5468\u4e00','\u5468\u4e8c','\u5468\u4e09','\u5468\u56db','\u5468\u4e94','\u5468\u516d','\u5468\u65e5'][i]
+    });
+  }
+  return dates;
+}
 function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
 function newId(arr) { return arr.length ? Math.max.apply(null, arr.map(function(x){ return x.id || 0; })) + 1 : 1; }
 function seededRandom(seed) { var x = Math.sin(seed)*10000; return x - Math.floor(x); }
@@ -868,27 +898,183 @@ document.getElementById('search-my-favorites').addEventListener('click', functio
 });
 
 /* ====== \u4e00\u5468\u996e\u98df\u8ba1\u5212 ====== */
+var currentWeekOffset = 0;
+var currentExpandedCell = null;
+
+function getWeeklyPlan(day, meal) {
+  if (!appData.weeklyPlan[day]) appData.weeklyPlan[day] = {};
+  if (!appData.weeklyPlan[day][meal] || typeof appData.weeklyPlan[day][meal] !== 'object') {
+    appData.weeklyPlan[day][meal] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
+  }
+  return appData.weeklyPlan[day][meal];
+}
+
 function renderWeeklyPlan() {
   var plan = document.getElementById('weekly-plan');
-  var html = '<div class="weekly-table-wrap"><table class="weekly-table"><thead><tr><th>\u65e5\u671f</th>';
+  var base = new Date();
+  base.setDate(base.getDate() + currentWeekOffset * 7);
+  var weekDates = getWeekDates(base);
+  var html = '';
+  html += '<div class="weekly-header">';
+  html += '<button class="week-nav-btn" id="week-prev">\u2039</button>';
+  html += '<span class="week-range">' + weekDates[0].short + ' - ' + weekDates[6].short + '</span>';
+  html += '<button class="week-nav-btn" id="week-next">\u203a</button>';
+  html += '<button class="week-today-btn" id="week-today">\u4eca\u5929</button>';
+  html += '</div>';
+  html += '<div class="weekly-table-wrap"><table class="weekly-table"><thead><tr><th>\u65e5\u671f</th>';
   for (var i = 0; i < MEAL_KEYS.length; i++) html += '<th>' + MEAL_LABELS[MEAL_KEYS[i]] + '</th>';
   html += '</tr></thead><tbody>';
   for (var d = 0; d < WEEKDAYS.length; d++) {
     var day = WEEKDAYS[d];
-    html += '<tr><td class="day-label">' + WEEKDAY_LABELS[day] + '</td>';
+    var dateInfo = weekDates[d];
+    var isToday = dateInfo.iso === todayISO();
+    html += '<tr><td class="day-label ' + (isToday ? 'today' : '') + '"><div class="day-date">' + dateInfo.short + '</div><div class="day-week">' + dateInfo.weekday + '</div></td>';
     for (var m = 0; m < MEAL_KEYS.length; m++) {
       var meal = MEAL_KEYS[m];
-      html += '<td><textarea data-day="' + day + '" data-meal="' + meal + '" placeholder="\u8ba1\u5212\u5403\u4ec0\u4e48...">' + escapeHtml(appData.weeklyPlan[day][meal] || '') + '</textarea></td>';
+      var data = getWeeklyPlan(day, meal);
+      html += '<td class="meal-cell">';
+      html += '<div class="meal-cell-header">';
+      html += '<button class="meal-detail-toggle" data-day="' + day + '" data-meal="' + meal + '">\u22ef</button>';
+      html += '</div>';
+      html += '<textarea data-day="' + day + '" data-meal="' + meal + '" data-field="content" placeholder="\u8ba1\u5212\u5403\u4ec0\u4e48...">' + escapeHtml(data.content || '') + '</textarea>';
+      html += '<div class="meal-tags-preview">' + (data.tags && data.tags.length ? data.tags.map(function(t){ return '<span class="mtp-tag">' + escapeHtml(t) + '</span>'; }).join('') : '') + '</div>';
+      html += '</td>';
     }
     html += '</tr>';
   }
   html += '</tbody></table></div>';
+  html += '<div class="diet-analysis-section">';
+  html += '<h3>\ud83e\udd57 \u4eca\u65e5\u996e\u98df\u5206\u6790</h3>';
+  html += '<button id="analyze-diet-btn" class="analyze-btn">\u5206\u6790\u4eca\u65e5\u996e\u98df</button>';
+  html += '<div id="diet-analysis-result" class="diet-analysis-result"></div>';
+  html += '</div>';
   plan.innerHTML = html;
+  bindWeeklyEvents();
 }
+
+function bindWeeklyEvents() {
+  document.getElementById('week-prev').addEventListener('click', function(){ currentWeekOffset--; renderWeeklyPlan(); });
+  document.getElementById('week-next').addEventListener('click', function(){ currentWeekOffset++; renderWeeklyPlan(); });
+  document.getElementById('week-today').addEventListener('click', function(){ currentWeekOffset = 0; renderWeeklyPlan(); });
+  document.getElementById('analyze-diet-btn').addEventListener('click', analyzeTodayDiet);
+  document.querySelectorAll('.meal-detail-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(e){ e.stopPropagation(); openMealDetail(btn.dataset.day, btn.dataset.meal); });
+  });
+}
+
 document.getElementById('weekly-plan').addEventListener('input', function(e){
-  var day = e.target.dataset.day, meal = e.target.dataset.meal;
-  if (day && meal) { appData.weeklyPlan[day][meal] = e.target.value; saveData(); }
+  var day = e.target.dataset.day, meal = e.target.dataset.meal, field = e.target.dataset.field;
+  if (day && meal && field) {
+    var data = getWeeklyPlan(day, meal);
+    data[field] = e.target.value;
+    saveData();
+  }
 });
+
+function openMealDetail(day, meal) {
+  currentExpandedCell = { day:day, meal:meal };
+  var data = getWeeklyPlan(day, meal);
+  var mealName = MEAL_LABELS[meal];
+  var dateInfo = getWeekDates(new Date().setDate(new Date().getDate() + currentWeekOffset * 7))[WEEKDAYS.indexOf(day)];
+  var panel = document.createElement('div');
+  panel.className = 'meal-detail-panel-overlay';
+  panel.id = 'meal-detail-panel';
+  var tags = ['\u8865\u94c1','\u8865\u9499','\u8865\u53f6\u9178','\u8865DHA','\u8865\u86cb\u767d\u8d28','\u8865\u7ef4\u751f\u7d20','\u8865\u81b3\u98df\u7ea4\u7ef4','\u8865\u950c'];
+  var html = '';
+  html += '<div class="meal-detail-panel">';
+  html += '<div class="meal-detail-header">';
+  html += '<h4>' + dateInfo.short + ' ' + dateInfo.weekday + ' \u00b7 ' + mealName + '</h4>';
+  html += '<button class="meal-detail-close">\u2715</button>';
+  html += '</div>';
+  html += '<div class="meal-detail-body">';
+  html += '<div class="meal-detail-row"><label>\u4e3b\u8981\u9910\u98df</label><textarea data-field="content" placeholder="\u5982\uff1a\u71d5\u9ea6\u9e21\u86cb\u7897\u3001\u4e94\u9ed1\u996e">' + escapeHtml(data.content || '') + '</textarea></div>';
+  html += '<div class="meal-detail-row"><label>\u8089\u7c7b/\u86cb\u7c7b</label><input type="text" data-field="meat" placeholder="\u5982\uff1a\u9e21\u86cb\u3001\u9e21\u80f8\u8089\u3001\u725b\u8089" value="' + escapeHtml(data.meat || '') + '"></div>';
+  html += '<div class="meal-detail-row"><label>\u852c\u83dc</label><input type="text" data-field="veg" placeholder="\u5982\uff1a\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304" value="' + escapeHtml(data.veg || '') + '"></div>';
+  html += '<div class="meal-detail-row"><label>\u4e3b\u98df/\u8c37\u7269</label><input type="text" data-field="staple" placeholder="\u5982\uff1a\u6742\u7cae\u996d\u3001\u7ea2\u85af\u3001\u5168\u9ea6\u9762\u5305" value="' + escapeHtml(data.staple || '') + '"></div>';
+  html += '<div class="meal-detail-row"><label>\u6c34\u679c</label><input type="text" data-field="fruit" placeholder="\u5982\uff1a\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843" value="' + escapeHtml(data.fruit || '') + '"></div>';
+  html += '<div class="meal-detail-row"><label>\u5176\u4ed6</label><input type="text" data-field="others" placeholder="\u5982\uff1a\u725b\u5976\u3001\u575a\u679c\u3001\u9178\u5976" value="' + escapeHtml(data.others || '') + '"></div>';
+  html += '<div class="meal-detail-row"><label>\u8425\u517b\u6807\u7b7e</label><div class="tag-options">';
+  for (var i = 0; i < tags.length; i++) {
+    var checked = (data.tags || []).indexOf(tags[i]) >= 0 ? 'checked' : '';
+    html += '<label class="tag-option ' + checked + '"><input type="checkbox" value="' + tags[i] + '" ' + checked + '> ' + tags[i] + '</label>';
+  }
+  html += '</div></div>';
+  html += '</div>';
+  html += '<div class="meal-detail-footer"><button class="save-meal-detail">\u4fdd\u5b58</button></div>';
+  html += '</div>';
+  panel.innerHTML = html;
+  document.body.appendChild(panel);
+  panel.querySelector('.meal-detail-close').addEventListener('click', closeMealDetail);
+  panel.addEventListener('click', function(e){ if (e.target === panel) closeMealDetail(); });
+  panel.querySelector('.save-meal-detail').addEventListener('click', function(){
+    var inputs = panel.querySelectorAll('input[data-field], textarea[data-field]');
+    for (var i = 0; i < inputs.length; i++) {
+      var field = inputs[i].dataset.field;
+      if (field) data[field] = inputs[i].value;
+    }
+    var checkedTags = [];
+    panel.querySelectorAll('.tag-options input:checked').forEach(function(cb){ checkedTags.push(cb.value); });
+    data.tags = checkedTags;
+    saveData();
+    closeMealDetail();
+    renderWeeklyPlan();
+  });
+}
+
+function closeMealDetail() {
+  var panel = document.getElementById('meal-detail-panel');
+  if (panel) panel.remove();
+  currentExpandedCell = null;
+}
+
+function analyzeTodayDiet() {
+  var today = new Date().getDay();
+  var dayKey = today === 0 ? 'sun' : WEEKDAYS[today - 1];
+  var meals = [];
+  MEAL_KEYS.forEach(function(meal){
+    var data = getWeeklyPlan(dayKey, meal);
+    if (data && (data.content || data.meat || data.veg || data.staple || data.fruit || (data.tags && data.tags.length))) {
+      meals.push({ name:MEAL_LABELS[meal], data:data });
+    }
+  });
+  var result = document.getElementById('diet-analysis-result');
+  if (!meals.length) { result.innerHTML = '<div class="analysis-empty">\u4eca\u5929\u8fd8\u6ca1\u6709\u8bb0\u5f55\u996e\u98df\uff0c\u5148\u586b\u5199\u4eca\u65e5\u9910\u98df\u5427\uff5e</div>'; return; }
+  var summary = [], allMeat = [], allVeg = [], allStaple = [], allFruit = [], allOthers = [], allTags = [];
+  meals.forEach(function(m){
+    if (m.data.content) summary.push('<b>' + m.name + '</b>\uff1a' + escapeHtml(m.data.content));
+    if (m.data.meat) allMeat.push(m.data.meat);
+    if (m.data.veg) allVeg.push(m.data.veg);
+    if (m.data.staple) allStaple.push(m.data.staple);
+    if (m.data.fruit) allFruit.push(m.data.fruit);
+    if (m.data.others) allOthers.push(m.data.others);
+    if (m.data.tags) allTags = allTags.concat(m.data.tags);
+  });
+  var html = '';
+  html += '<div class="analysis-block"><h5>\ud83d\udccb \u4eca\u65e5\u9910\u98df\u8bb0\u5f55</h5><p>' + summary.join('<br>') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83e\udd69 \u8089\u7c7b/\u86cb\u7c7b</h5><p>' + (allMeat.length ? escapeHtml(allMeat.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83e\udd6c \u852c\u83dc</h5><p>' + (allVeg.length ? escapeHtml(allVeg.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83c\udf5a \u4e3b\u98df/\u8c37\u7269</h5><p>' + (allStaple.length ? escapeHtml(allStaple.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83c\udf4e \u6c34\u679c</h5><p>' + (allFruit.length ? escapeHtml(allFruit.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83e\udd5b \u5176\u4ed6</h5><p>' + (allOthers.length ? escapeHtml(allOthers.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\ud83c\udff7\ufe0f \u8425\u517b\u6807\u7b7e</h5><p>' + (allTags.length ? allTags.map(function(t){ return '<span class="analysis-tag">' + escapeHtml(t) + '</span>'; }).join(' ') : '\u672a\u52fe\u9009') + '</p></div>';
+
+  // \u6539\u5584\u5efa\u8bae
+  var suggestions = [];
+  if (!allMeat.length || !/(\u732a|\u725b|\u7f8a|\u9e21|\u9c7c|\u867e|\u86cb|\u8089)/.test(allMeat.join(''))) suggestions.push('\u4eca\u65e5\u86cb\u767d\u8d28\u6444\u5165\u4e0d\u8db3\uff0c\u5efa\u8bae\u665a\u9910\u8865\u5145\u7626\u8089\u3001\u9e21\u86cb\u6216\u9c7c\u867e\u3002');
+  if (!allVeg.length) suggestions.push('\u852c\u83dc\u6444\u5165\u504f\u5c11\uff0c\u5efa\u8bae\u4e0b\u4e00\u9910\u589e\u52a0\u6df1\u8272\u852c\u83dc\uff0c\u5982\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304\u3002');
+  if (!allFruit.length) suggestions.push('\u4eca\u5929\u8fd8\u6ca1\u5403\u6c34\u679c\uff0c\u53ef\u9002\u91cf\u8865\u5145\u4f4e\u7cd6\u6c34\u679c\u5982\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843\u3002');
+  if (allTags.indexOf('\u8865\u94c1') < 0 && !/(\u732a|\u725b|\u7f8a|\u52a8\u7269|\u8840|\u809d)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('\u5b55\u671f\u5bb9\u6613\u7f3a\u94c1\uff0c\u53ef\u9002\u5f53\u6444\u5165\u7ea2\u8089\u3001\u52a8\u7269\u809d\u810f\u6216\u8840\u5236\u54c1\u3002');
+  if (allTags.indexOf('\u8865\u9499') < 0 && !/(\u5976|\u8c46\u8150|\u829d\u9ebb|\u867e|\u6df1\u7eff)/.test((allOthers.join('') + allVeg.join('')))) suggestions.push('\u6ce8\u610f\u8865\u9499\uff0c\u53ef\u559d\u725b\u5976\u3001\u5403\u8c46\u8150\u6216\u829d\u9ebb\u9171\u3002');
+  if (allTags.indexOf('\u8865\u53f6\u9178') < 0 && !/(\u83e0|\u82a6|\u83dc|\u809d|\u8c46)/.test((allVeg.join('') + allOthers.join('')))) suggestions.push('\u53f6\u9178\u5bf9\u5b55\u671f\u5f88\u91cd\u8981\uff0c\u591a\u5403\u6df1\u7eff\u8272\u852c\u83dc\u548c\u8c46\u7c7b\u3002');
+  if (allTags.indexOf('\u8865DHA') < 0 && !/(\u9c7c|\u867e|\u6d77|\u85fb|\u6838\u6843)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('DHA \u6709\u52a9\u4e8e\u80ce\u513f\u5927\u8111\u53d1\u80b2\uff0c\u53ef\u6bcf\u5468\u5403 2-3 \u6b21\u6df1\u6d77\u9c7c\u6216\u6838\u6843\u3002');
+  if (!suggestions.length) suggestions.push('\u4eca\u65e5\u996e\u98df\u7ed3\u6784\u8f83\u5747\u8861\uff0c\u7ee7\u7eed\u4fdd\u6301\uff01\u6ce8\u610f\u591a\u559d\u6c34\u3001\u9002\u91cf\u8fd0\u52a8\u3002');
+
+  html += '<div class="analysis-block suggestions"><h5>\ud83d\udca1 \u6539\u5584\u5efa\u8bae</h5><ul>';
+  suggestions.forEach(function(s){ html += '<li>' + s + '</li>'; });
+  html += '</ul></div>';
+  result.innerHTML = html;
+}
+
 function openRecipeSearch(platform) {
   var q = document.getElementById('recipe-search').value.trim() || '\u51cf\u8102\u9910';
   var urls = {
