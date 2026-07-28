@@ -261,6 +261,10 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .meal-detail-body { padding:16px 18px; overflow-y:auto; max-height:calc(90vh - 120px); }
 .meal-detail-row { margin-bottom:14px; }
 .meal-detail-row label { display:block; font-size:13px; color:var(--text-light); margin-bottom:6px; }
+.meal-detail-row label small { color:var(--text-light); opacity:0.7; font-weight:normal; }
+.food-suggestions { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.food-suggestion-chip { padding:5px 10px; border:1px solid var(--border); background:var(--bg); border-radius:14px; font-size:12px; color:var(--text); cursor:pointer; }
+.food-suggestion-chip:hover { border-color:var(--primary); color:var(--primary); background:rgba(90,122,79,0.06); }
 .meal-detail-row input, .meal-detail-row textarea { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-size:14px; outline:none; font-family:inherit; }
 .meal-detail-row textarea { height:60px; resize:vertical; }
 .meal-detail-row input:focus, .meal-detail-row textarea:focus { border-color:var(--primary); }

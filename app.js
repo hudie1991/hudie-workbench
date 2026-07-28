@@ -971,6 +971,82 @@ document.getElementById('weekly-plan').addEventListener('input', function(e){
   }
 });
 
+/* ====== \u98df\u6750\u63a8\u8350\u4e0e\u81ea\u52a8\u6807\u7b7e ====== */
+var FOOD_SUGGESTIONS = {
+  meat: ['\u9e21\u86cb','\u9e21\u80f8\u8089','\u725b\u8089','\u732a\u8089','\u867e\u4ec1','\u4e09\u6587\u9c7c','\u732a\u809d','\u732a\u8840','\u9e2d\u8840','\u7f8a\u8089','\u9e21\u817f','\u9c88\u9c7c'],
+  veg: ['\u83e0\u83dc','\u897f\u5170\u82b1','\u756a\u8304','\u80e1\u841d\u535c','\u9ec4\u74dc','\u82b9\u83dc','\u6cb9\u9ea6\u83dc','\u83b4\u7b0b','\u5357\u74dc','\u8611\u83c7','\u6d77\u5e26'],
+  staple: ['\u6742\u7cae\u996d','\u7ea2\u85af','\u5168\u9ea6\u9762\u5305','\u71d5\u9ea6','\u7389\u7c73','\u7d2b\u85af','\u7cd9\u7c73','\u835e\u9ea6\u9762','\u5357\u74dc'],
+  fruit: ['\u84dd\u8393','\u82f9\u679c','\u7315\u7334\u6843','\u6a59\u5b50','\u897f\u67da','\u8349\u8393','\u756a\u8304','\u897f\u6885','\u68a8','\u6843\u5b50'],
+  others: ['\u725b\u5976','\u9178\u5976','\u575a\u679c','\u6838\u6843','\u829d\u9ebb','\u8c46\u8150','\u8c46\u6d46','\u71d5\u7a9d']
+};
+var FOOD_TAG_RULES = {
+  '\u8865\u94c1': ['\u732a\u809d','\u732a\u8840','\u9e2d\u8840','\u725b\u8089','\u7f8a\u8089','\u7626\u8089','\u83e0\u83dc','\u6d77\u5e26','\u9ed1\u6728\u8033','\u7ea2\u67a3'],
+  '\u8865\u9499': ['\u725b\u5976','\u9178\u5976','\u8c46\u8150','\u829d\u9ebb','\u867e\u76ae','\u5976\u916a','\u6df1\u7eff\u53f6\u83dc','\u6d77\u5e26','\u8c46\u6d46'],
+  '\u8865\u53f6\u9178': ['\u83e0\u83dc','\u82a6\u7b0b','\u897f\u5170\u82b1','\u751f\u83dc','\u725b\u6cb9\u679c','\u6a59\u5b50','\u8349\u8393','\u8c46\u7c7b',' liver','\u809d'],
+  '\u8865DHA': ['\u4e09\u6587\u9c7c','\u9cd5\u9c7c','\u9c88\u9c7c','\u867e','\u6d77\u9c7c','\u6df1\u6d77\u9c7c','\u6838\u6843','\u85fb\u6cb9','\u4e9a\u9ebb\u7c7d'],
+  '\u8865\u86cb\u767d\u8d28': ['\u9e21\u86cb','\u9e21\u80f8\u8089','\u725b\u8089','\u732a\u8089','\u9c7c','\u867e','\u8c46\u8150','\u725b\u5976','\u9178\u5976','\u575a\u679c'],
+  '\u8865\u7ef4\u751f\u7d20': ['\u6a59\u5b50','\u7315\u7334\u6843','\u8349\u8393','\u84dd\u8393','\u756a\u8304','\u80e1\u841d\u535c','\u897f\u5170\u82b1','\u83e0\u83dc','\u5f69\u6912'],
+  '\u8865\u81b3\u98df\u7ea4\u7ef4': ['\u71d5\u9ea6','\u7ea2\u85af','\u7389\u7c73','\u7cd9\u7c73','\u5168\u9ea6','\u82b9\u83dc','\u83e0\u83dc','\u82f9\u679c','\u68a8','\u6728\u8033'],
+  '\u8865\u950c': ['\u725b\u8089','\u732a\u8089','\u7f8a\u8089','\u7261\u86ce','\u867e','\u5357\u74dc\u5b50','\u829d\u9ebb','\u6838\u6843','\u86cb\u9ec4']
+};
+
+function autoDetectTags(text) {
+  var detected = [];
+  var joined = (text || '').toLowerCase();
+  for (var tag in FOOD_TAG_RULES) {
+    var foods = FOOD_TAG_RULES[tag];
+    for (var i = 0; i < foods.length; i++) {
+      if (joined.indexOf(foods[i].toLowerCase()) >= 0) {
+        if (detected.indexOf(tag) < 0) detected.push(tag);
+        break;
+      }
+    }
+  }
+  return detected;
+}
+
+function renderFoodSuggestions(panel, field) {
+  var list = FOOD_SUGGESTIONS[field] || [];
+  if (!list.length) return '';
+  return '<div class="food-suggestions" data-for="' + field + '">' + list.map(function(item){
+    return '<button type="button" class="food-suggestion-chip" data-food="' + escapeHtml(item) + '">' + escapeHtml(item) + '</button>';
+  }).join('') + '</div>';
+}
+
+function bindFoodSuggestions(panel, data) {
+  panel.querySelectorAll('.food-suggestion-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var field = chip.parentNode.dataset.for;
+      var input = panel.querySelector('[data-field="' + field + '"]');
+      if (!input) return;
+      var val = input.value.trim();
+      var food = chip.dataset.food;
+      var sep = val ? '\u3001' : '';
+      if (val.indexOf(food) < 0) input.value = val + sep + food;
+      // \u66f4\u65b0\u81ea\u52a8\u6807\u7b7e
+      updateAutoTags(panel, data);
+    });
+  });
+}
+
+function updateAutoTags(panel, data) {
+  var allText = '';
+  panel.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el){
+    allText += ' ' + el.value;
+  });
+  var detected = autoDetectTags(allText);
+  panel.querySelectorAll('.tag-options input').forEach(function(cb){
+    var label = cb.closest('.tag-option');
+    if (detected.indexOf(cb.value) >= 0) {
+      cb.checked = true;
+      label.classList.add('checked');
+    } else {
+      cb.checked = false;
+      label.classList.remove('checked');
+    }
+  });
+}
+
 function openMealDetail(day, meal) {
   currentExpandedCell = { day:day, meal:meal };
   var data = getWeeklyPlan(day, meal);
@@ -980,6 +1056,12 @@ function openMealDetail(day, meal) {
   panel.className = 'meal-detail-panel-overlay';
   panel.id = 'meal-detail-panel';
   var tags = ['\u8865\u94c1','\u8865\u9499','\u8865\u53f6\u9178','\u8865DHA','\u8865\u86cb\u767d\u8d28','\u8865\u7ef4\u751f\u7d20','\u8865\u81b3\u98df\u7ea4\u7ef4','\u8865\u950c'];
+  // \u5148\u6839\u636e\u5df2\u6709\u5185\u5bb9\u81ea\u52a8\u68c0\u6d4b\u6807\u7b7e
+  var allContent = [data.content, data.meat, data.veg, data.staple, data.fruit, data.others].join(' ');
+  var detectedTags = autoDetectTags(allContent);
+  var mergedTags = data.tags ? data.tags.slice() : [];
+  detectedTags.forEach(function(t){ if (mergedTags.indexOf(t) < 0) mergedTags.push(t); });
+  data.tags = mergedTags;
   var html = '';
   html += '<div class="meal-detail-panel">';
   html += '<div class="meal-detail-header">';
@@ -988,12 +1070,12 @@ function openMealDetail(day, meal) {
   html += '</div>';
   html += '<div class="meal-detail-body">';
   html += '<div class="meal-detail-row"><label>\u4e3b\u8981\u9910\u98df</label><textarea data-field="content" placeholder="\u5982\uff1a\u71d5\u9ea6\u9e21\u86cb\u7897\u3001\u4e94\u9ed1\u996e">' + escapeHtml(data.content || '') + '</textarea></div>';
-  html += '<div class="meal-detail-row"><label>\u8089\u7c7b/\u86cb\u7c7b</label><input type="text" data-field="meat" placeholder="\u5982\uff1a\u9e21\u86cb\u3001\u9e21\u80f8\u8089\u3001\u725b\u8089" value="' + escapeHtml(data.meat || '') + '"></div>';
-  html += '<div class="meal-detail-row"><label>\u852c\u83dc</label><input type="text" data-field="veg" placeholder="\u5982\uff1a\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304" value="' + escapeHtml(data.veg || '') + '"></div>';
-  html += '<div class="meal-detail-row"><label>\u4e3b\u98df/\u8c37\u7269</label><input type="text" data-field="staple" placeholder="\u5982\uff1a\u6742\u7cae\u996d\u3001\u7ea2\u85af\u3001\u5168\u9ea6\u9762\u5305" value="' + escapeHtml(data.staple || '') + '"></div>';
-  html += '<div class="meal-detail-row"><label>\u6c34\u679c</label><input type="text" data-field="fruit" placeholder="\u5982\uff1a\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843" value="' + escapeHtml(data.fruit || '') + '"></div>';
-  html += '<div class="meal-detail-row"><label>\u5176\u4ed6</label><input type="text" data-field="others" placeholder="\u5982\uff1a\u725b\u5976\u3001\u575a\u679c\u3001\u9178\u5976" value="' + escapeHtml(data.others || '') + '"></div>';
-  html += '<div class="meal-detail-row"><label>\u8425\u517b\u6807\u7b7e</label><div class="tag-options">';
+  html += '<div class="meal-detail-row"><label>\u8089\u7c7b/\u86cb\u7c7b</label><input type="text" data-field="meat" placeholder="\u5982\uff1a\u9e21\u86cb\u3001\u9e21\u80f8\u8089\u3001\u725b\u8089" value="' + escapeHtml(data.meat || '') + '">' + renderFoodSuggestions(panel, 'meat') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u852c\u83dc</label><input type="text" data-field="veg" placeholder="\u5982\uff1a\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304" value="' + escapeHtml(data.veg || '') + '">' + renderFoodSuggestions(panel, 'veg') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u4e3b\u98df/\u8c37\u7269</label><input type="text" data-field="staple" placeholder="\u5982\uff1a\u6742\u7cae\u996d\u3001\u7ea2\u85af\u3001\u5168\u9ea6\u9762\u5305" value="' + escapeHtml(data.staple || '') + '">' + renderFoodSuggestions(panel, 'staple') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u6c34\u679c</label><input type="text" data-field="fruit" placeholder="\u5982\uff1a\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843" value="' + escapeHtml(data.fruit || '') + '">' + renderFoodSuggestions(panel, 'fruit') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u5176\u4ed6</label><input type="text" data-field="others" placeholder="\u5982\uff1a\u725b\u5976\u3001\u575a\u679c\u3001\u9178\u5976" value="' + escapeHtml(data.others || '') + '">' + renderFoodSuggestions(panel, 'others') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u8425\u517b\u6807\u7b7e <small>\uff08\u4f1a\u6839\u636e\u98df\u6750\u81ea\u52a8\u52fe\u9009\uff09</small></label><div class="tag-options">';
   for (var i = 0; i < tags.length; i++) {
     var checked = (data.tags || []).indexOf(tags[i]) >= 0 ? 'checked' : '';
     html += '<label class="tag-option ' + checked + '"><input type="checkbox" value="' + tags[i] + '" ' + checked + '> ' + tags[i] + '</label>';
@@ -1006,6 +1088,18 @@ function openMealDetail(day, meal) {
   document.body.appendChild(panel);
   panel.querySelector('.meal-detail-close').addEventListener('click', closeMealDetail);
   panel.addEventListener('click', function(e){ if (e.target === panel) closeMealDetail(); });
+  bindFoodSuggestions(panel, data);
+  // \u8f93\u5165\u65f6\u5b9e\u65f6\u66f4\u65b0\u6807\u7b7e
+  panel.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el){
+    el.addEventListener('input', function(){ updateAutoTags(panel, data); });
+  });
+  // \u6807\u7b7e\u70b9\u51fb\u5207\u6362\u6837\u5f0f
+  panel.querySelectorAll('.tag-options input').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      var label = cb.closest('.tag-option');
+      if (cb.checked) label.classList.add('checked'); else label.classList.remove('checked');
+    });
+  });
   panel.querySelector('.save-meal-detail').addEventListener('click', function(){
     var inputs = panel.querySelectorAll('input[data-field], textarea[data-field]');
     for (var i = 0; i < inputs.length; i++) {
