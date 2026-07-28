@@ -670,13 +670,11 @@ document.getElementById('add-checkup-btn').addEventListener('click', function(){
   var date = document.getElementById('checkup-date').value;
   var item = document.getElementById('checkup-item').value.trim();
   var result = document.getElementById('checkup-result').value.trim();
-  var nextDate = document.getElementById('checkup-next').value;
   if (!date || !item) { alert('\u8bf7\u586b\u5199\u65e5\u671f\u548c\u9879\u76ee'); return; }
-  appData.checkupRecords.push({ id:newId(appData.checkupRecords), date:date, item:item, result:result, nextDate:nextDate });
+  appData.checkupRecords.push({ id:newId(appData.checkupRecords), date:date, item:item, result:result });
   saveData(); renderCheckupSection();
   document.getElementById('checkup-item').value = '';
   document.getElementById('checkup-result').value = '';
-  document.getElementById('checkup-next').value = '';
 });
 function renderCheckupList() {
   var list = document.getElementById('checkup-list');
@@ -687,7 +685,6 @@ function renderCheckupList() {
     html += '<div class="record-item">';
     html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + escapeHtml(r.item) + '</span></div>';
     if (r.result) html += '<div class="record-note">\u7ed3\u679c\uff1a' + escapeHtml(r.result) + '</div>';
-    if (r.nextDate) html += '<div class="record-note">\u4e0b\u6b21\u9884\u7ea6\uff1a' + r.nextDate + '</div>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="checkup">\u2715</button>';
     html += '</div>';
   }

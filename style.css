@@ -166,13 +166,13 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .weight-chart { background:var(--bg); border-radius:12px; padding:10px; margin-bottom:14px; border:1px solid var(--border); }
 .chart-placeholder { text-align:center; color:var(--text-light); padding:40px; font-size:13px; }
 .record-list { display:flex; flex-direction:column; gap:8px; }
-.record-item { display:flex; justify-content:space-between; align-items:flex-start; background:var(--bg); border-radius:10px; padding:12px; border:1px solid var(--border); position:relative; }
-.record-main { display:flex; flex-wrap:wrap; gap:8px; align-items:center; flex:1; }
+.record-item { display:flex; flex-direction:column; background:var(--bg); border-radius:10px; padding:12px 36px 12px 12px; border:1px solid var(--border); position:relative; gap:6px; }
+.record-main { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .record-date { font-size:12px; color:var(--text-light); }
-.record-value { font-size:14px; font-weight:600; color:var(--text); }
+.record-value { font-size:14px; font-weight:600; color:var(--text); word-break:break-word; }
 .record-tag { font-size:11px; color:var(--primary); background:rgba(90,122,79,0.08); padding:2px 8px; border-radius:8px; }
-.record-note { font-size:12px; color:var(--text-light); margin-top:4px; width:100%; }
-.record-delete { width:24px; height:24px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:13px; flex-shrink:0; }
+.record-note { font-size:13px; color:var(--text); word-break:break-word; line-height:1.6; white-space:pre-wrap; }
+.record-delete { position:absolute; top:8px; right:8px; width:24px; height:24px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:13px; }
 .record-delete:hover { background:#ffebee; color:#c62828; }
 
 /* \u5174\u8da3\u6536\u85cf */
