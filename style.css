@@ -64,7 +64,13 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .diet-tab.active { background:var(--primary); color:white; border-color:var(--primary); }
 .diet-section { background:var(--card-bg); border-radius:14px; padding:14px 16px; margin-bottom:10px; box-shadow:var(--shadow); }
 .diet-section h3 { color:var(--primary-dark); margin-bottom:10px; font-size:15px; }
-#diet .section-header { margin-bottom:14px; padding-bottom:10px; }
+#diet .section-header { margin-bottom:12px; padding-bottom:10px; }
+.diet-nav { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.diet-nav-btn { padding:10px 14px; border:1px solid var(--border); background:var(--card-bg); border-radius:12px; cursor:pointer; font-size:13px; color:var(--text-light); transition:all 0.2s; white-space:nowrap; }
+.diet-nav-btn:hover { border-color:var(--primary); color:var(--primary); }
+.diet-nav-btn.active { background:var(--primary); color:white; border-color:var(--primary); box-shadow:0 2px 8px rgba(90,122,79,0.25); }
+.diet-panel { display:none; }
+.diet-panel.active { display:block; }
 #diet .weight-form, #diet .poop-form, #diet .baby-form, #diet .checkup-form, #diet .baby-basic { display:flex; flex-wrap:wrap; gap:8px; }
 #diet .weight-form input, #diet .weight-form button, #diet .poop-form input, #diet .poop-form select, #diet .poop-form button, #diet .baby-form input, #diet .baby-form button, #diet .checkup-form input, #diet .checkup-form button, #diet .baby-basic input, #diet .baby-basic button { flex:1 1 120px; }
 

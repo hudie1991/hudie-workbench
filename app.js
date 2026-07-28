@@ -226,6 +226,19 @@ function renderBagList() {
   }
   list.innerHTML = html;
 }
+
+/* ====== \u5b55\u671f\u6307\u5357\u5b50\u5bfc\u822a\u5207\u6362 ====== */
+document.querySelectorAll('.diet-nav-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.diet-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var panel = btn.dataset.panel;
+    document.querySelectorAll('.diet-panel').forEach(function(p){ p.classList.remove('active'); });
+    var target = document.querySelector('.diet-panel[data-panel="' + panel + '"]');
+    if (target) target.classList.add('active');
+  });
+});
+
 document.querySelectorAll('.bag-tab').forEach(function(tab){
   tab.addEventListener('click', function(){
     document.querySelectorAll('.bag-tab').forEach(function(t){ t.classList.remove('active'); });

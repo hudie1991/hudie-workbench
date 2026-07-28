@@ -100,9 +100,19 @@
         <h2>孕期指南</h2>
         <div class="date-info">科学孕育，安心养胎</div>
       </div>
+      <div class="diet-nav" id="diet-nav">
+        <button class="diet-nav-btn active" data-panel="weight">⚖️ 体重</button>
+        <button class="diet-nav-btn" data-panel="poop">💩 便便</button>
+        <button class="diet-nav-btn" data-panel="baby">👶 宝宝</button>
+        <button class="diet-nav-btn" data-panel="checkup">🏥 孕检</button>
+        <button class="diet-nav-btn" data-panel="fetal">👣 胎动</button>
+        <button class="diet-nav-btn" data-panel="bag">🎒 待产包</button>
+        <button class="diet-nav-btn" data-panel="knowledge">📚 知识</button>
+      </div>
+      <div class="diet-panels" id="diet-panels">
 
       <!-- 体重记录 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel active" data-panel="weight">
         <h3>⚖️ 体重记录</h3>
         <div class="weight-form">
           <input type="date" id="weight-date">
@@ -116,7 +126,7 @@
       </div>
 
       <!-- 便便记录 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="poop">
         <h3>💩 便便记录</h3>
         <div class="poop-form">
           <input type="date" id="poop-date">
@@ -135,7 +145,7 @@
       </div>
 
       <!-- 宝宝成长状态 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="baby">
         <h3>👶 宝宝成长状态</h3>
         <div class="baby-basic">
           <label>末次月经日期</label>
@@ -167,7 +177,7 @@
       </div>
 
       <!-- 孕检记录 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="checkup">
         <h3>🏥 孕检记录</h3>
         <div class="checkup-form">
           <input type="date" id="checkup-date">
@@ -180,7 +190,7 @@
       </div>
 
       <!-- 数胎动 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="fetal">
         <h3>👣 数胎动</h3>
         <div class="fetal-tip">
           📖 <strong>胎动计数方法：</strong>每天早、中、晚各选1小时安静躺着或坐着，专心感受胎动。<br>
@@ -200,7 +210,7 @@
       </div>
 
       <!-- 待产包清单 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="bag">
         <h3>👶 待产包清单</h3>
         <div class="bag-progress">
           <span>已准备物品</span>
@@ -231,7 +241,7 @@
       </div>
 
       <!-- 孕期知识 -->
-      <div class="diet-section">
+      <div class="diet-section diet-panel" data-panel="knowledge">
         <h3>📚 孕期知识</h3>
         <div class="knowledge-tabs">
           <button class="knowledge-tab active" data-cat="all">全部</button>
@@ -243,6 +253,8 @@
         </div>
         <div class="knowledge-list" id="knowledge-list"></div>
       </div>
+
+      </div><!-- /diet-panels -->
     </section>
 
     <!-- 3. 兴趣收藏 -->
