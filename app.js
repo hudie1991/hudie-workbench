@@ -766,16 +766,6 @@ function doFavSearch(query) {
   currentFavQuery = (query || '').trim();
   renderFavorites();
 }
-document.getElementById('fav-search-btn').addEventListener('click', function(){
-  doFavSearch(document.getElementById('fav-search-input').value);
-});
-document.getElementById('fav-search-input').addEventListener('keydown', function(e){
-  if (e.key === 'Enter') doFavSearch(document.getElementById('fav-search-input').value);
-});
-document.getElementById('fav-search-clear').addEventListener('click', function(){
-  document.getElementById('fav-search-input').value = '';
-  doFavSearch('');
-});
 function resetFavForm() {
   document.getElementById('fav-title').value = '';
   document.getElementById('fav-link').value = '';
@@ -813,8 +803,8 @@ document.getElementById('save-favorite-btn').addEventListener('click', function(
   saveData(); renderFavorites();
   resetFavForm();
   if (editingId) {
-    var inputEl = document.getElementById('fav-search-input');
-    if (inputEl.value) doFavSearch(inputEl.value);
+    var inputEl = document.getElementById('recipe-search');
+    if (inputEl && inputEl.value) doFavSearch(inputEl.value);
   }
 });
 document.getElementById('favorite-list').addEventListener('click', function(e){

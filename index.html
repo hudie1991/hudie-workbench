@@ -269,11 +269,16 @@
         <button class="favorite-tab" data-cat="recipe">菜谱</button>
         <button class="favorite-tab" data-cat="other">其他</button>
       </div>
-      <div class="favorite-search">
-        <input type="text" id="fav-search-input" placeholder="输入食材，搜索我的收藏...">
-        <button id="fav-search-btn">搜索收藏</button>
-        <button id="fav-search-clear">清空</button>
+      <div class="search-box">
+        <input type="text" id="recipe-search" placeholder="搜索菜谱/做菜视频/食材...">
+        <div class="search-actions">
+          <button id="search-bilibili">B站</button>
+          <button id="search-douyin">抖音</button>
+          <button id="search-xhs">小红书</button>
+          <button id="search-my-favorites" class="btn-primary">搜我的收藏</button>
+        </div>
       </div>
+      <div class="weekly-fav-results" id="weekly-fav-results"></div>
       <div class="favorite-list" id="favorite-list"></div>
       <div class="add-resource">
         <h3>+ 添加收藏</h3>
@@ -296,14 +301,16 @@
       <div class="section-header">
         <h2>一周饮食计划</h2>
       </div>
-      <div class="weekly-search">
-        <input type="text" id="recipe-search" placeholder="搜索菜谱/做菜视频...">
-        <button id="search-bilibili">B站搜索</button>
-        <button id="search-douyin">抖音搜索</button>
-        <button id="search-xhs">小红书搜索</button>
-        <button id="search-my-favorites" class="btn-primary">搜我的收藏</button>
+      <div class="recipe-cards">
+        <div class="recipe-card">
+          <h4>妊娠期糖尿病 · 孕中期一日食谱</h4>
+          <img src="./recipe_zhongqi.png" alt="妊娠期糖尿病孕中期一日食谱" loading="lazy">
+        </div>
+        <div class="recipe-card">
+          <h4>妊娠期糖尿病 · 孕晚期一日食谱</h4>
+          <img src="./recipe_wanqi.png" alt="妊娠期糖尿病孕晚期一日食谱" loading="lazy">
+        </div>
       </div>
-      <div class="weekly-fav-results" id="weekly-fav-results"></div>
       <div class="weekly-plan" id="weekly-plan"></div>
     </section>
 

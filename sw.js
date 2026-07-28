@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hudie-workbench-v18';
+const CACHE_NAME = 'hudie-workbench-v19';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,9 @@ const ASSETS = [
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png',
-  './favicon.png'
+  './favicon.png',
+  './recipe_zhongqi.png',
+  './recipe_wanqi.png'
 ];
 
 // 安装：预缓存核心资源

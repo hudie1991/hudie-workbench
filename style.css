@@ -201,18 +201,23 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .favorite-search button:hover { border-color:var(--primary); color:var(--primary); }
 .favorite-search button:last-child { background:transparent; }
 
-.add-resource { background:var(--card-bg); border-radius:16px; padding:20px; box-shadow:var(--shadow); }
+.search-box { background:var(--card-bg); border-radius:14px; padding:14px; box-shadow:var(--shadow); margin-bottom:14px; }
+.search-box input { width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:14px; outline:none; margin-bottom:10px; box-sizing:border-box; }
+.search-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.search-actions button { flex:1; min-width:60px; padding:10px 8px; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:10px; font-size:13px; cursor:pointer; }
+.search-actions button:hover { border-color:var(--primary); color:var(--primary); }
+.search-actions button.btn-primary { background:var(--primary); color:white; border-color:var(--primary); }
+
+.recipe-cards { display:flex; flex-direction:column; gap:14px; margin-bottom:16px; }
+.recipe-card { background:var(--card-bg); border-radius:14px; padding:14px; box-shadow:var(--shadow); }
+.recipe-card h4 { font-size:14px; color:var(--primary-dark); margin-bottom:10px; }
+.recipe-card img { width:100%; border-radius:10px; display:block; }
 .add-resource h3 { color:var(--primary-dark); margin-bottom:12px; font-size:15px; }
 .add-resource input, .add-resource select, .add-resource textarea { width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:8px; font-size:13px; margin-bottom:10px; font-family:inherit; outline:none; }
 .add-resource textarea { min-height:70px; resize:vertical; }
 .add-resource button { padding:10px 24px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
 
 /* \u4e00\u5468\u996e\u98df\u8ba1\u5212 */
-.weekly-search { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-.weekly-search input { flex:1; min-width:180px; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:14px; outline:none; }
-.weekly-search button { padding:10px 16px; background:var(--card-bg); color:var(--text); border:1px solid var(--border); border-radius:10px; font-size:13px; cursor:pointer; }
-.weekly-search button:hover { border-color:var(--primary); color:var(--primary); }
-.weekly-search button.btn-primary { background:var(--primary); color:white; border-color:var(--primary); }
 .weekly-fav-results { margin-bottom:18px; }
 .weekly-fav-header { font-size:14px; font-weight:600; color:var(--primary-dark); margin-bottom:10px; padding:0 4px; }
 .weekly-fav-list { display:flex; flex-direction:column; gap:10px; }
@@ -293,12 +298,7 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .weight-form, .poop-form, .baby-form, .checkup-form, .baby-basic { flex-direction:column; gap:8px; }
   .weight-form input, .poop-form input, .poop-form select, .baby-form input, .checkup-form input, .baby-basic input { width:100%; min-height:40px; padding:8px 12px; }
   .weight-form button, .poop-form button, .baby-form button, .checkup-form button, .baby-basic button { width:100%; min-height:40px; }
-  .weekly-search { flex-direction:column; }
-  .weekly-search input { width:100%; }
-  .weekly-search button { flex:1; }
-  .favorite-search { flex-direction:column; }
-  .favorite-search input { width:100%; }
-  .favorite-search button { flex:1; }
+  .search-actions button { flex:1 1 calc(50% - 4px); }
 }
 @media (display-mode: standalone) {
   body { user-select:none; -webkit-user-select:none; }
