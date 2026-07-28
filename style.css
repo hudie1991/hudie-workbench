@@ -23,9 +23,9 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .main { flex:1; padding:36px 40px; overflow-y:auto; }
 .section { display:none; animation:fadeIn 0.3s; }
 .section.active { display:block; }
-.section#diet.active { display:flex; flex-wrap:wrap; gap:16px; }
+.section#diet.active { display:flex; flex-wrap:wrap; gap:14px; }
 .section#diet.active > .section-header { flex:1 1 100%; }
-.section#diet.active > .diet-section { flex:1 1 calc(50% - 8px); margin-bottom:0; }
+.section#diet.active > .diet-section { flex:1 1 calc(50% - 7px); margin-bottom:0; min-width:0; }
 .section#diet.active > .diet-section.full-width { flex:1 1 100%; }
 .section#diet.active > .diet-section:only-child { flex:1 1 100%; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
@@ -69,8 +69,8 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .diet-tab.active { background:var(--primary); color:white; border-color:var(--primary); }
 .diet-section { background:var(--card-bg); border-radius:16px; padding:20px; margin-bottom:18px; box-shadow:var(--shadow); }
 .diet-section h3 { color:var(--primary-dark); margin-bottom:14px; font-size:16px; }
-.daily-calories-summary { text-align:right; font-size:13px; color:var(--text-light); margin-bottom:10px; }
-.daily-calories-summary strong { color:var(--primary); font-size:18px; }
+#diet .weight-form, #diet .poop-form, #diet .baby-form, #diet .checkup-form, #diet .baby-basic { display:flex; flex-wrap:wrap; gap:8px; }
+#diet .weight-form input, #diet .weight-form button, #diet .poop-form input, #diet .poop-form select, #diet .poop-form button, #diet .baby-form input, #diet .baby-form button, #diet .checkup-form input, #diet .checkup-form button, #diet .baby-basic input, #diet .baby-basic button { flex:1 1 120px; }
 
 .meal-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; }
 .meal-card { background:var(--bg); border-radius:12px; padding:14px; border:1px solid var(--border); }
