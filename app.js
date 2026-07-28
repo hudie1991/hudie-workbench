@@ -950,6 +950,14 @@ function renderWeeklyPlan() {
   html += '</div>';
   plan.innerHTML = html;
   bindWeeklyEvents();
+  autoResizeWeeklyTextareas();
+}
+
+function autoResizeWeeklyTextareas() {
+  document.querySelectorAll('#weekly-plan textarea').forEach(function(ta){
+    ta.style.height = 'auto';
+    ta.style.height = Math.max(54, ta.scrollHeight) + 'px';
+  });
 }
 
 function bindWeeklyEvents() {
@@ -968,6 +976,11 @@ document.getElementById('weekly-plan').addEventListener('input', function(e){
     var data = getWeeklyPlan(day, meal);
     data[field] = e.target.value;
     saveData();
+  }
+  // textarea \u81ea\u52a8\u8c03\u6574\u9ad8\u5ea6
+  if (e.target.tagName === 'TEXTAREA') {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.max(54, e.target.scrollHeight) + 'px';
   }
 });
 
@@ -1086,12 +1099,23 @@ function openMealDetail(day, meal) {
   html += '</div>';
   panel.innerHTML = html;
   document.body.appendChild(panel);
+  // \u521d\u59cb\u5316 textarea \u9ad8\u5ea6
+  panel.querySelectorAll('textarea[data-field]').forEach(function(el){
+    el.style.height = 'auto';
+    el.style.height = Math.max(60, el.scrollHeight) + 'px';
+  });
   panel.querySelector('.meal-detail-close').addEventListener('click', closeMealDetail);
   panel.addEventListener('click', function(e){ if (e.target === panel) closeMealDetail(); });
   bindFoodSuggestions(panel, data);
-  // \u8f93\u5165\u65f6\u5b9e\u65f6\u66f4\u65b0\u6807\u7b7e
+  // \u8f93\u5165\u65f6\u5b9e\u65f6\u66f4\u65b0\u6807\u7b7e + textarea \u81ea\u52a8\u8c03\u6574\u9ad8\u5ea6
   panel.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el){
-    el.addEventListener('input', function(){ updateAutoTags(panel, data); });
+    el.addEventListener('input', function(){
+      updateAutoTags(panel, data);
+      if (el.tagName === 'TEXTAREA') {
+        el.style.height = 'auto';
+        el.style.height = Math.max(60, el.scrollHeight) + 'px';
+      }
+    });
   });
   // \u6807\u7b7e\u70b9\u51fb\u5207\u6362\u6837\u5f0f
   panel.querySelectorAll('.tag-options input').forEach(function(cb){
