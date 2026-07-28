@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hudie-workbench-v14';
+const CACHE_NAME = 'hudie-workbench-v15';
 const ASSETS = [
   './',
   './index.html',
