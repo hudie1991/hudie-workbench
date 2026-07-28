@@ -29,9 +29,9 @@
         <span class="icon">✅</span>
         <span class="label">每日任务</span>
       </button>
-      <button class="nav-item" data-section="diet" title="孕期/减脂饮食">
-        <span class="icon">🥗</span>
-        <span class="label">孕期/减脂</span>
+      <button class="nav-item" data-section="diet" title="孕期指南">
+        <span class="icon">🤰</span>
+        <span class="label">孕期指南</span>
       </button>
       <button class="nav-item" data-section="favorites" title="兴趣收藏">
         <span class="icon">⭐</span>
@@ -94,24 +94,25 @@
       </div>
     </section>
 
-    <!-- 2. 孕期/减脂期饮食 -->
+    <!-- 2. 孕期指南 -->
     <section id="diet" class="section">
       <div class="section-header">
-        <h2 id="diet-title">孕期饮食</h2>
-        <div class="diet-tabs">
-          <button class="diet-tab active" data-mode="pregnancy">🤰 孕期</button>
-          <button class="diet-tab" data-mode="fatloss">🥬 减脂期</button>
+        <h2>孕期指南</h2>
+        <div class="date-info">科学孕育，安心养胎</div>
+      </div>
+
+      <!-- 预产期预测 -->
+      <div class="diet-section">
+        <h3>📅 预产期预测</h3>
+        <div class="due-card" id="due-card">
+          <div class="due-card-content">
+            <div class="due-main">请先设置末次月经日期</div>
+            <div class="due-sub">用于自动计算孕周和宝宝成长数据</div>
+          </div>
         </div>
       </div>
 
-      <!-- 一日三餐记录 -->
-      <div class="diet-section">
-        <h3>🍽️ 一日三餐记录</h3>
-        <div class="daily-calories-summary">今日摄入：<strong id="today-calories">0</strong> kcal</div>
-        <div class="meal-grid" id="meal-grid"></div>
-      </div>
-
-      <!-- 体重记录（仅孕期显示宝宝相关，减脂期可记录体重） -->
+      <!-- 体重记录 -->
       <div class="diet-section">
         <h3>⚖️ 体重记录</h3>
         <div class="weight-form">
@@ -126,7 +127,7 @@
       </div>
 
       <!-- 便便记录 -->
-      <div class="diet-section pregnancy-only">
+      <div class="diet-section">
         <h3>💩 便便记录</h3>
         <div class="poop-form">
           <input type="date" id="poop-date">
@@ -145,7 +146,7 @@
       </div>
 
       <!-- 宝宝成长状态 -->
-      <div class="diet-section pregnancy-only">
+      <div class="diet-section">
         <h3>👶 宝宝成长状态</h3>
         <div class="baby-basic">
           <label>末次月经日期</label>
@@ -177,7 +178,7 @@
       </div>
 
       <!-- 孕检记录 -->
-      <div class="diet-section pregnancy-only">
+      <div class="diet-section">
         <h3>🏥 孕检记录</h3>
         <div class="checkup-form">
           <input type="date" id="checkup-date">
@@ -187,6 +188,71 @@
           <button id="add-checkup-btn">添加</button>
         </div>
         <div class="record-list" id="checkup-list"></div>
+      </div>
+
+      <!-- 数胎动 -->
+      <div class="diet-section">
+        <h3>👣 数胎动</h3>
+        <div class="fetal-tip">
+          📖 <strong>胎动计数方法：</strong>每天早、中、晚各选1小时安静躺着或坐着，专心感受胎动。<br>
+          正常范围：<strong>1小时内不少于3-5次，或数到10次不超过2小时</strong>。<br>
+          如果明显减少或2小时不足10次，请及时就医。
+        </div>
+        <div class="fetal-counter">
+          <div class="fetal-counter-label">当前计数</div>
+          <div class="fetal-counter-num"><span id="fetal-count">0</span> / 10</div>
+          <div class="fetal-counter-time" id="fetal-timer">00:00</div>
+          <div class="fetal-counter-actions">
+            <button id="fetal-tap" class="fetal-tap-btn">👣 轻拍计数</button>
+            <button id="fetal-reset" class="fetal-reset-btn">重置</button>
+          </div>
+        </div>
+        <div class="fetal-history" id="fetal-history"></div>
+      </div>
+
+      <!-- 待产包清单 -->
+      <div class="diet-section">
+        <h3>👶 待产包清单</h3>
+        <div class="bag-progress">
+          <span>已准备物品</span>
+          <span id="bag-count">0 / 30</span>
+        </div>
+        <div class="progress-track" style="margin-bottom:14px;">
+          <div class="progress-fill" id="bag-progress-fill"></div>
+        </div>
+        <div class="favorite-tabs">
+          <button class="bag-tab active" data-cat="all">全部</button>
+          <button class="bag-tab" data-cat="证件资料">证件资料</button>
+          <button class="bag-tab" data-cat="妈妈用品">妈妈用品</button>
+          <button class="bag-tab" data-cat="宝宝用品">宝宝用品</button>
+          <button class="bag-tab" data-cat="其他">其他</button>
+        </div>
+        <div class="bag-list" id="bag-list"></div>
+        <div class="add-resource">
+          <h3>+ 添加新物品</h3>
+          <input type="text" id="bag-name" placeholder="物品名称">
+          <select id="bag-category">
+            <option value="证件资料">证件资料</option>
+            <option value="妈妈用品">妈妈用品</option>
+            <option value="宝宝用品">宝宝用品</option>
+            <option value="其他">其他</option>
+          </select>
+          <button id="add-bag-btn">添加</button>
+        </div>
+      </div>
+
+      <!-- 孕期知识 -->
+      <div class="diet-section">
+        <h3>📚 孕期知识</h3>
+        <div class="knowledge-tabs">
+          <button class="knowledge-tab active" data-cat="all">全部</button>
+          <button class="knowledge-tab" data-cat="孕早期">孕早期</button>
+          <button class="knowledge-tab" data-cat="孕中期">孕中期</button>
+          <button class="knowledge-tab" data-cat="孕晚期">孕晚期</button>
+          <button class="knowledge-tab" data-cat="分娩">分娩</button>
+          <button class="knowledge-tab" data-cat="产后">产后</button>
+        </div>
+        <div class="knowledge-list" id="knowledge-list"></div>
       </div>
     </section>
 

@@ -36,18 +36,21 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .progress-fill { height:100%; background:linear-gradient(90deg, var(--primary-light), var(--primary)); border-radius:4px; transition:width 0.4s ease; width:0%; }
 
 .todo-list { background:var(--card-bg); border-radius:14px; padding:6px; margin-bottom:16px; box-shadow:var(--shadow); }
-.todo-item { display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); transition:all 0.2s; }
+.todo-item { display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); transition:all 0.2s; flex-wrap:wrap; }
 .todo-item:last-child { border-bottom:none; }
 .todo-item:hover { background:rgba(90,122,79,0.03); }
 .todo-item.completed { opacity:0.6; }
 .todo-checkbox { width:20px; height:20px; border:2px solid var(--primary); border-radius:5px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:white; }
 .todo-checkbox.checked { background:var(--primary); border-color:var(--primary); }
 .todo-checkbox.checked::after { content:"\u2713"; color:white; font-size:12px; font-weight:bold; }
-.todo-text { flex:1; font-size:14px; color:var(--text); }
+.todo-text { flex:1; font-size:14px; color:var(--text); min-width:0; }
 .todo-item.completed .todo-text { text-decoration:line-through; color:var(--text-light); }
-.todo-time { font-size:11px; color:var(--text-light); background:var(--bg); padding:2px 8px; border-radius:8px; }
-.todo-delete { width:26px; height:26px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:14px; }
+.todo-time { font-size:11px; color:var(--text-light); background:var(--bg); padding:2px 8px; border-radius:8px; flex-shrink:0; }
+.todo-delete { width:26px; height:26px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:14px; flex-shrink:0; }
 .todo-delete:hover { background:#ffebee; color:#c62828; }
+.todo-note-input { flex:1 1 100%; font-size:12px; color:var(--text-light); border:1px dashed var(--border); border-radius:6px; padding:6px 10px; margin-top:4px; background:var(--bg); outline:none; }
+.todo-note-input:focus { border-color:var(--primary); border-style:solid; background:white; }
+.todo-note-input::placeholder { color:var(--text-light); opacity:0.85; }
 
 .add-task { display:flex; gap:8px; margin-bottom:24px; }
 .add-task input { flex:1; padding:10px 14px; border:1px solid var(--border); border-radius:10px; font-size:14px; background:var(--card-bg); outline:none; }
@@ -104,6 +107,57 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .baby-tip-block { background:var(--card-bg); border-radius:12px; padding:14px; border:1px solid var(--border); }
 .baby-tip-block h4 { font-size:15px; color:var(--primary-dark); margin-bottom:8px; }
 .baby-tip-block p { font-size:13px; color:var(--text); line-height:1.6; }
+
+/* 预产期卡 */
+.due-card { background:linear-gradient(135deg, rgba(90,122,79,0.92), rgba(90,122,79,0.75)); border-radius:16px; padding:20px; color:white; text-align:center; box-shadow:0 4px 16px rgba(90,122,79,0.2); }
+.due-main { font-size:24px; font-weight:700; margin-bottom:6px; }
+.due-sub { font-size:13px; opacity:0.95; }
+.due-detail { display:flex; justify-content:space-around; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.25); }
+.due-item { text-align:center; }
+.due-item .num { font-size:20px; font-weight:700; }
+.due-item .label { font-size:11px; opacity:0.9; margin-top:2px; }
+
+/* 数胎动 */
+.fetal-tip { background:#FFF8E7; border:1px solid #F5DEB3; border-radius:12px; padding:14px; margin-bottom:14px; font-size:13px; color:#6B5B3D; line-height:1.8; }
+.fetal-counter { background:var(--card-bg); border-radius:16px; padding:24px; text-align:center; box-shadow:var(--shadow); margin-bottom:14px; border:1px solid var(--border); }
+.fetal-counter-label { font-size:13px; color:var(--text-light); }
+.fetal-counter-num { font-size:48px; font-weight:700; color:var(--primary); margin:8px 0; line-height:1; }
+.fetal-counter-time { font-size:14px; color:var(--text-light); margin-bottom:14px; }
+.fetal-counter-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.fetal-tap-btn { padding:14px 32px; background:var(--primary); color:white; border:none; border-radius:50px; font-size:16px; cursor:pointer; }
+.fetal-tap-btn:active { transform:scale(0.95); background:var(--primary-dark); }
+.fetal-reset-btn { padding:14px 24px; background:transparent; color:var(--text-light); border:1px solid var(--border); border-radius:50px; font-size:14px; cursor:pointer; }
+.fetal-history { display:flex; flex-direction:column; gap:8px; }
+.fetal-history-item { background:var(--bg); border-radius:10px; padding:12px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.fetal-history-date { font-size:13px; color:var(--text-light); }
+.fetal-history-count { font-size:15px; font-weight:600; color:var(--primary); }
+
+/* 待产包 */
+.bag-progress { display:flex; justify-content:space-between; align-items:center; padding:0 4px; margin-bottom:8px; font-size:14px; color:var(--text); }
+.bag-list { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+.bag-item { display:flex; align-items:center; gap:12px; background:var(--card-bg); border-radius:10px; padding:12px 14px; border:1px solid var(--border); }
+.bag-checkbox { width:22px; height:22px; border:2px solid var(--border); border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:white; font-size:14px; color:transparent; }
+.bag-checkbox.checked { background:var(--primary); border-color:var(--primary); color:white; }
+.bag-item-body { flex:1; }
+.bag-item-name { font-size:14px; color:var(--text); }
+.bag-item-name.completed { text-decoration:line-through; color:var(--text-light); }
+.bag-item-tag { font-size:11px; color:var(--primary); background:rgba(90,122,79,0.08); padding:2px 8px; border-radius:8px; display:inline-block; margin-top:4px; margin-right:4px; }
+.bag-item-delete { width:24px; height:24px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:13px; }
+.bag-item-delete:hover { background:#ffebee; color:#c62828; }
+
+/* 孕期知识 */
+.knowledge-tabs { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.knowledge-tab { padding:6px 14px; border:1px solid var(--border); background:var(--card-bg); border-radius:20px; cursor:pointer; font-size:13px; color:var(--text-light); }
+.knowledge-tab.active { background:var(--primary); color:white; border-color:var(--primary); }
+.knowledge-list { display:flex; flex-direction:column; gap:10px; }
+.knowledge-item { background:var(--card-bg); border-radius:12px; padding:14px; box-shadow:var(--shadow); border:1px solid var(--border); }
+.knowledge-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.knowledge-item-title { font-size:15px; font-weight:600; color:var(--text); display:flex; gap:8px; align-items:center; }
+.knowledge-item-cat { font-size:11px; padding:2px 8px; border-radius:8px; background:rgba(90,122,79,0.1); color:var(--primary); }
+.knowledge-item-fav { background:transparent; border:none; cursor:pointer; font-size:16px; color:#DAA520; }
+.knowledge-item-content { font-size:13px; color:var(--text-light); line-height:1.6; margin-top:6px; }
+.knowledge-item-content.hidden { display:none; }
+.knowledge-toggle { font-size:12px; color:var(--primary); cursor:pointer; margin-top:4px; display:inline-block; }
 .weight-chart { background:var(--bg); border-radius:12px; padding:10px; margin-bottom:14px; border:1px solid var(--border); }
 .chart-placeholder { text-align:center; color:var(--text-light); padding:40px; font-size:13px; }
 .record-list { display:flex; flex-direction:column; gap:8px; }

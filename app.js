@@ -4,8 +4,6 @@ const WEEKDAYS = ['mon','tue','wed','thu','fri','sat','sun'];
 const WEEKDAY_LABELS = { mon:'\u5468\u4e00', tue:'\u5468\u4e8c', wed:'\u5468\u4e09', thu:'\u5468\u56db', fri:'\u5468\u4e94', sat:'\u5468\u516d', sun:'\u5468\u65e5' };
 const MEAL_KEYS = ['breakfast','morningSnack','lunch','afternoonSnack','dinner','eveningSnack'];
 const MEAL_LABELS = { breakfast:'\u65e9\u9910', morningSnack:'\u65e9\u52a0\u9910', lunch:'\u5348\u9910', afternoonSnack:'\u5348\u52a0\u9910', dinner:'\u665a\u9910', eveningSnack:'\u665a\u52a0\u9910' };
-const DIET_MEALS = ['breakfast','lunch','dinner','snack'];
-const DIET_MEAL_LABELS = { breakfast:'\u65e9\u9910', lunch:'\u5348\u9910', dinner:'\u665a\u9910', snack:'\u52a0\u9910/\u6c34\u679c' };
 const DAILY_VIDEOS = {
   pilates: [
     { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
@@ -48,36 +46,29 @@ const DAILY_VIDEOS = {
     { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://m.bilibili.com/search?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
   ]
 };
-const FOOD_CALORIES = {
-  '\u7c73\u996d':116,'\u7cd9\u7c73':111,'\u71d5\u9ea6':377,'\u5168\u9ea6\u9762\u5305':247,'\u9992\u5934':223,'\u7ea2\u85af':86,'\u7389\u7c73':112,'\u7d2b\u85af':70,'\u5c0f\u7c73\u7ca5':46,'\u9762\u6761':137,
-  '\u9e21\u86cb':140,'\u6c34\u716e\u86cb':140,'\u9e21\u80f8\u8089':133,'\u9e21\u817f':181,'\u725b\u8089':125,'\u732a\u8089':143,'\u9c7c\u8089':100,'\u867e':93,'\u8c46\u8150':84,'\u8c46\u6d46':31,
-  '\u725b\u5976':54,'\u9178\u5976':72,'\u65e0\u7cd6\u9178\u5976':60,'\u5976\u916a':328,'\u575a\u679c':560,'\u82f9\u679c':52,'\u68a8':50,'\u6a59\u5b50':47,'\u8349\u8393':32,'\u8461\u8404':69,
-  '\u897f\u74dc':30,'\u9999\u8549':89,'\u756a\u8304':18,'\u9ec4\u74dc':16,'\u897f\u5170\u82b1':34,'\u83e0\u83dc':23,'\u751f\u83dc':15,'\u80e1\u841d\u535c':41,'\u571f\u8c46':77,'\u5357\u74dc':23,
-  '\u8377\u5170\u8c46':27,'\u6728\u8033':21,'\u6d77\u5e26':12,'\u7d2b\u83dc':207,'\u6a44\u6984\u6cb9':884,'\u82b1\u751f\u6cb9':899,'\u829d\u9ebb\u6cb9':899,'\u9171\u6cb9':63,'\u76d0':0,
-  '\u8001\u5e72\u5988':598,'\u6c99\u62c9\u9171':680,'\u82b1\u751f\u9171':600,'\u829d\u9ebb\u9171':630,'\u5976\u8336':40,'\u53ef\u4e50':45,'\u679c\u6c41':45,'\u9ed1\u5496\u5561':2,'\u7eff\u8336':0
-};
 const defaultData = {
   todos: [
-    { id:1, text:'\u666e\u62c9\u63d0\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'pilates' },
-    { id:2, text:'\u8425\u517b\u5b66\u77e5\u8bc6\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'nutrition' },
-    { id:3, text:'\u5316\u5986\u7a7f\u642d\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'beauty' },
-    { id:4, text:'\u82f1\u8bed\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'english' }
+    { id:1, text:'\u666e\u62c9\u63d0\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'pilates', note:'' },
+    { id:2, text:'\u8425\u517b\u5b66\u77e5\u8bc6\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'nutrition', note:'' },
+    { id:3, text:'\u5316\u5986\u7a7f\u642d\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'beauty', note:'' },
+    { id:4, text:'\u82f1\u8bed\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'english', note:'' }
   ],
-  dietMode:'pregnancy',
-  meals:{ breakfast:{text:'',photos:[],calories:0}, lunch:{text:'',photos:[],calories:0}, dinner:{text:'',photos:[],calories:0}, snack:{text:'',photos:[],calories:0} },
-  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null,
+  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
+  todosDate:null,
   weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]=''; }); return acc; }, {}),
   interests:[], memos:[], reviews:[]
 };
 function migrateData(stored) {
   if (!stored) return Object.assign({}, defaultData);
   var merged = Object.assign({}, defaultData, stored);
-  if (!merged.meals || typeof merged.meals !== 'object') merged.meals = defaultData.meals;
-  DIET_MEALS.forEach(function(k){ if (!merged.meals[k] || typeof merged.meals[k] !== 'object') merged.meals[k] = { text:'', photos:[], calories:0 }; });
   if (!merged.weeklyPlan) merged.weeklyPlan = defaultData.weeklyPlan;
   if (!merged.lmpDate) merged.lmpDate = null;
   WEEKDAYS.forEach(function(d){ if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {}; MEAL_KEYS.forEach(function(k){ if (merged.weeklyPlan[d][k] === undefined) merged.weeklyPlan[d][k] = ''; }); });
-  ['weightRecords','poopRecords','babyRecords','checkupRecords','interests','memos','reviews'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
+  ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
+  // \u517c\u5bb9\u65e7\u6570\u636e\uff1a\u786e\u4fdd todos \u4e2d\u6bcf\u9879\u6709 note \u5b57\u6bb5
+  if (merged.todos) {
+    merged.todos.forEach(function(t){ if (t.note === undefined) t.note = ''; });
+  }
   return merged;
 }
 function loadData() { var stored = localStorage.getItem(STORAGE_KEY); if (stored) { try { return migrateData(JSON.parse(stored)); } catch(e){ return Object.assign({}, defaultData); } } return Object.assign({}, defaultData); }
@@ -87,7 +78,7 @@ function todayStr() { var d = new Date(); return d.getFullYear() + '\u5e74' + (d
 function weekdayStr() { return ['\u661f\u671f\u65e5','\u661f\u671f\u4e00','\u661f\u671f\u4e8c','\u661f\u671f\u4e09','\u661f\u671f\u56db','\u661f\u671f\u4e94','\u661f\u671f\u516d'][new Date().getDay()]; }
 function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function nowStr() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
-function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
+function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
 function newId(arr) { return arr.length ? Math.max.apply(null, arr.map(function(x){ return x.id || 0; })) + 1 : 1; }
 function seededRandom(seed) { var x = Math.sin(seed)*10000; return x - Math.floor(x); }
 function getDailySeed() { var d = new Date(); return d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(); }
@@ -116,7 +107,18 @@ document.querySelectorAll('.nav-item').forEach(function(btn){
     document.getElementById(btn.dataset.section).classList.add('active');
   });
 });
+
+/* ====== \u6bcf\u65e5\u4efb\u52a1 ====== */
+function checkDailyReset() {
+  var today = todayISO();
+  if (appData.todosDate !== today) {
+    appData.todos.forEach(function(t){ t.done = false; });
+    appData.todosDate = today;
+    saveData();
+  }
+}
 function renderTodos() {
+  checkDailyReset();
   var list = document.getElementById('todo-list');
   var html = '';
   for (var i = 0; i < appData.todos.length; i++) {
@@ -126,6 +128,7 @@ function renderTodos() {
     html += '<span class="todo-text">' + escapeHtml(t.text) + '</span>';
     html += '<span class="todo-time">' + escapeHtml(t.time || '') + '</span>';
     html += '<button class="todo-delete" data-id="' + t.id + '">\u2715</button>';
+    html += '<input class="todo-note-input" data-id="' + t.id + '" placeholder="\u5907\u6ce8\u7279\u6b8a\u60c5\u51b5..." value="' + escapeHtml(t.note || '') + '">';
     html += '</div>';
   }
   list.innerHTML = html;
@@ -141,6 +144,13 @@ document.getElementById('todo-list').addEventListener('click', function(e){
     if (confirm('\u5220\u9664\u8fd9\u6761\u4efb\u52a1\uff1f')) { appData.todos = appData.todos.filter(function(t){ return t.id !== id; }); saveData(); renderTodos(); }
   }
 });
+document.getElementById('todo-list').addEventListener('input', function(e){
+  if (e.target.classList.contains('todo-note-input')) {
+    var id = parseInt(e.target.dataset.id);
+    var todo = appData.todos.find(function(t){ return t.id === id; });
+    if (todo) { todo.note = e.target.value; saveData(); }
+  }
+});
 document.getElementById('add-task-btn').addEventListener('click', addTask);
 document.getElementById('new-task-input').addEventListener('keypress', function(e){ if (e.key === 'Enter') addTask(); });
 function addTask() {
@@ -151,134 +161,249 @@ function addTask() {
   else if (/\u8425\u517b|nutrition|\u98df\u8c31|\u996e\u98df/i.test(text)) category = 'nutrition';
   else if (/\u5316\u5986|\u7a7f\u642d|\u642d\u914d|\u670d\u88c5|\u7f8e\u5986/i.test(text)) category = 'beauty';
   else if (/\u82f1\u8bed|english|\u53e3\u8bed|\u5355\u8bcd/i.test(text)) category = 'english';
-  appData.todos.push({ id:newId(appData.todos), text:text, time:'\u81ea\u5b9a\u4e49', done:false, category:category });
+  appData.todos.push({ id:newId(appData.todos), text:text, time:'\u81ea\u5b9a\u4e49', done:false, category:category, note:'' });
   saveData(); input.value = ''; renderTodos();
 }
 
-function renderMealGrid() {
-  var grid = document.getElementById('meal-grid');
+/* ====== \u9884\u4ea7\u671f\u9884\u6d4b ====== */
+function renderDueCard() {
+  var card = document.getElementById('due-card');
+  if (!appData.lmpDate) {
+    card.innerHTML = '<div class="due-main">\u8bf7\u5148\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf\u65e5\u671f</div><div class="due-sub">\u7528\u4e8e\u81ea\u52a8\u8ba1\u7b97\u5b55\u5468\u548c\u5b9d\u5b9d\u6210\u957f\u6570\u636e</div>';
+    return;
+  }
+  var lmp = new Date(appData.lmpDate);
+  var today = new Date();
+  var due = new Date(lmp);
+  due.setDate(due.getDate() + 280);
+  var totalDays = Math.floor((today - lmp) / 86400000);
+  var week = Math.floor(totalDays / 7);
+  var day = totalDays % 7;
+  var daysToDue = Math.floor((due - today) / 86400000);
+  var trimester = week < 13 ? 1 : (week < 27 ? 2 : 3);
   var html = '';
-  for (var i = 0; i < DIET_MEALS.length; i++) {
-    var key = DIET_MEALS[i];
-    var m = appData.meals[key];
-    html += '<div class="meal-card" data-meal="' + key + '">';
-    html += '<div class="meal-header"><h4>' + DIET_MEAL_LABELS[key] + '</h4><span class="meal-cal">' + (m.calories || 0) + ' kcal</span></div>';
-    html += '<textarea placeholder="\u5403\u4e86\u4ec0\u4e48..." data-meal-text="' + key + '">' + escapeHtml(m.text || '') + '</textarea>';
-    html += '<div class="meal-tools">';
-    html += '<div class="calculator">';
-    html += '<input type="text" class="food-search" data-food-search="' + key + '" placeholder="\u98df\u7269\u5982\uff1a\u7c73\u996d" list="food-list-' + key + '">';
-    html += '<input type="number" class="food-gram" data-food-gram="' + key + '" placeholder="\u514b" min="0">';
-    html += '<button class="btn-add-cal" data-meal-cal="' + key + '">+</button>';
-    html += '<input type="number" class="manual-cal" data-manual-cal="' + key + '" placeholder="kcal" min="0" value="' + (m.calories || '') + '">';
-    html += '</div>';
-    html += '<label class="meal-photo-btn"><input type="file" accept="image/*" capture="environment" data-meal-photo="' + key + '" style="display:none"><span>\ud83d\udcf7</span></label>';
-    html += '</div>';
-    html += '<div class="meal-photos" id="photos-' + key + '"></div>';
+  html += '<div class="due-main">\u9884\u4ea7\u671f ' + (due.getMonth()+1) + '\u6708' + due.getDate() + '\u65e5</div>';
+  html += '<div class="due-sub">\u5b55 ' + week + '\u5468' + (day ? day + '\u5929' : '') + ' \u00b7 \u7b2c' + trimester + '\u5b55\u671f</div>';
+  html += '<div class="due-detail">';
+  html += '<div class="due-item"><div class="num">' + daysToDue + '</div><div class="label">\u8ddd\u79bb\u9884\u4ea7\u671f(\u5929)</div></div>';
+  html += '<div class="due-item"><div class="num">' + week + '</div><div class="label">\u5b55\u5468</div></div>';
+  html += '<div class="due-item"><div class="num">' + day + '</div><div class="label">\u989d\u5916\u5929\u6570</div></div>';
+  html += '</div>';
+  card.innerHTML = html;
+}
+
+/* ====== \u5f85\u4ea7\u5305\u6e05\u5355 ====== */
+var currentBagCat = 'all';
+var currentKnowledgeCat = 'all';
+
+function ensureBagDefaults() {
+  if (appData.bagItems && appData.bagItems.length) return;
+  appData.bagItems = [
+    { id:1, name:'\u592b\u59bb\u53cc\u65b9\u8eab\u4efd\u8bc1', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:2, name:'\u533b\u4fdd\u5361/\u793e\u4fdd\u5361', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:3, name:'\u4ea7\u68c0\u6863\u6848/\u6bcd\u5b50\u5065\u5eb7\u624b\u518c', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:4, name:'\u7ed3\u5a5a\u8bc1', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:5, name:'\u6237\u53e3\u672c', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:6, name:'\u536b\u751f\u5dfe\uff08\u4ea7\u5987\u4e13\u7528\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:7, name:'\u4ea7\u5987\u8ba1\u91cf\u7eb8/\u62a4\u7406\u57ab', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:8, name:'\u4e00\u6b21\u6027\u7eaf\u68c9\u5185\u88e4', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:9, name:'\u54fa\u4e73\u6587\u80f8/\u9632\u6ea2\u4e73\u57ab', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:10, name:'\u4e73\u5934\u4fdd\u62a4\u971c', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:11, name:'\u62bd\u7eb8/\u5377\u7eb8', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:12, name:'\u6708\u5b50\u670d/\u7761\u8863\uff08\u524d\u5f00\u6263\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:13, name:'\u62d6\u978b\uff08\u9632\u6ed1\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:14, name:'\u5438\u7ba1\u676f/\u4fdd\u6e29\u676f', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:15, name:'\u6d17\u6f31\u7528\u54c1\uff08\u7259\u5237\u3001\u6bdb\u5dfe\u7b49\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:16, name:'\u51fa\u9662\u670d', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:17, name:'\u6536\u8179\u5e26', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:18, name:'\u5a74\u513f\u5305\u88ab\uff08\u8584\u539a\u5404\u4e00\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:19, name:'\u5a74\u513f\u8fde\u4f53\u8863\uff0852\u7801\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:20, name:'\u5a74\u513f\u53e3\u6c34\u5dfe/\u5c0f\u6bdb\u5dfe', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:21, name:'NB\u53f7\u7eb8\u5c3f\u88e4', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:22, name:'\u6e7f\u5dfe/\u68c9\u67d4\u5dfe', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:23, name:'\u5a74\u513f\u62a4\u81c0\u818f', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:24, name:'\u5976\u74f6+\u5976\u7c89\uff08\u5c0f\u7f50\u5907\u7528\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:25, name:'\u5a74\u513f\u5e3d/\u5c0f\u889c\u5b50', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:26, name:'\u624b\u673a+\u5145\u7535\u5668', cat:'\u5176\u4ed6', checked:false },
+    { id:27, name:'\u4fdd\u6e29\u996d\u76d2/\u9910\u5177', cat:'\u5176\u4ed6', checked:false },
+    { id:28, name:'\u73b0\u91d1/\u94f6\u884c\u5361', cat:'\u5176\u4ed6', checked:false },
+    { id:29, name:'\u5438\u7ba1\uff08\u4ea7\u540e\u8eba\u7740\u559d\u6c34\u7528\uff09', cat:'\u5176\u4ed6', checked:false },
+    { id:30, name:'\u5de7\u514b\u529b/\u7ea2\u725b\uff08\u8865\u5145\u4f53\u529b\uff09', cat:'\u5176\u4ed6', checked:false }
+  ];
+  saveData();
+}
+
+function renderBagList() {
+  ensureBagDefaults();
+  var list = document.getElementById('bag-list');
+  var items = appData.bagItems.slice();
+  if (currentBagCat !== 'all') items = items.filter(function(i){ return i.cat === currentBagCat; });
+  var total = appData.bagItems.length;
+  var done = appData.bagItems.filter(function(i){ return i.checked; }).length;
+  document.getElementById('bag-count').textContent = done + ' / ' + total;
+  document.getElementById('bag-progress-fill').style.width = total ? (done/total*100) + '%' : '0%';
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    html += '<div class="bag-item">';
+    html += '<div class="bag-checkbox ' + (it.checked ? 'checked' : '') + '" data-id="' + it.id + '">' + (it.checked ? '\u2713' : '') + '</div>';
+    html += '<div class="bag-item-body"><div class="bag-item-name ' + (it.checked ? 'completed' : '') + '">' + escapeHtml(it.name) + '</div><span class="bag-item-tag">' + escapeHtml(it.cat) + '</span></div>';
+    html += '<button class="bag-item-delete" data-id="' + it.id + '">\u2715</button>';
     html += '</div>';
   }
-  grid.innerHTML = html;
-  for (var j = 0; j < DIET_MEALS.length; j++) createFoodDatalist(DIET_MEALS[j]);
-  loadMealPhotos();
-  updateTodayCalories();
+  list.innerHTML = html;
 }
-function createFoodDatalist(key) {
-  var existing = document.getElementById('food-list-' + key);
-  if (existing) existing.remove();
-  var dl = document.createElement('datalist');
-  dl.id = 'food-list-' + key;
-  var foods = Object.keys(FOOD_CALORIES);
-  var opts = '';
-  for (var i = 0; i < foods.length; i++) opts += '<option value="' + foods[i] + '">';
-  dl.innerHTML = opts;
-  document.body.appendChild(dl);
-}
-function updateTodayCalories() {
-  var total = 0;
-  for (var i = 0; i < DIET_MEALS.length; i++) total += parseFloat(appData.meals[DIET_MEALS[i]].calories) || 0;
-  document.getElementById('today-calories').textContent = Math.round(total);
-}
-function loadMealPhotos() {
-  var promises = [];
-  for (var i = 0; i < DIET_MEALS.length; i++) {
-    (function(key){
-      var container = document.getElementById('photos-' + key);
-      if (!container) return;
-      container.innerHTML = '';
-      var ids = appData.meals[key].photos || [];
-      for (var j = 0; j < ids.length; j++) {
-        (function(pid){
-          promises.push(dbGet('hudie_photos', 'meal_photos', pid).then(function(blob){
-            if (!blob) return;
-            var url = URL.createObjectURL(blob);
-            var wrap = document.createElement('div');
-            wrap.className = 'meal-photo-wrap';
-            wrap.innerHTML = '<img src="' + url + '" class="meal-photo-thumb"><button class="photo-del" data-pid="' + pid + '" data-meal="' + key + '">\u00d7</button>';
-            container.appendChild(wrap);
-          }).catch(function(){}));
-        })(ids[j]);
-      }
-    })(DIET_MEALS[i]);
-  }
-  return Promise.all(promises);
-}
-document.getElementById('meal-grid').addEventListener('input', function(e){
-  var key = e.target.dataset.mealText;
-  if (key) { appData.meals[key].text = e.target.value; saveData(); }
+document.querySelectorAll('.bag-tab').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    document.querySelectorAll('.bag-tab').forEach(function(t){ t.classList.remove('active'); });
+    tab.classList.add('active');
+    currentBagCat = tab.dataset.cat;
+    renderBagList();
+  });
 });
-document.getElementById('meal-grid').addEventListener('change', function(e){
-  var key = e.target.dataset.mealPhoto;
-  if (key && e.target.files && e.target.files[0]) {
-    var file = e.target.files[0];
-    var pid = 'photo_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
-    dbPut('hudie_photos', 'meal_photos', pid, file).then(function(){
-      appData.meals[key].photos.push(pid);
-      saveData(); renderMealGrid();
-    });
+document.getElementById('bag-list').addEventListener('click', function(e){
+  var cb = e.target.closest ? e.target.closest('.bag-checkbox') : null;
+  if (cb) {
+    var id = parseInt(cb.dataset.id);
+    var item = appData.bagItems.find(function(i){ return i.id === id; });
+    if (item) { item.checked = !item.checked; saveData(); renderBagList(); }
+    return;
   }
-  var manual = e.target.closest ? e.target.closest('[data-manual-cal]') : null;
-  if (manual) {
-    var mk = manual.dataset.manualCal;
-    var val = parseFloat(manual.value);
-    if (!isNaN(val) && val >= 0) { appData.meals[mk].calories = val; saveData(); updateTodayCalories(); }
-  }
-});
-document.getElementById('meal-grid').addEventListener('click', function(e){
-  var btn = e.target.closest ? e.target.closest('.btn-add-cal') : null;
-  if (btn) {
-    var key = btn.dataset.mealCal;
-    var foodInput = document.querySelector('[data-food-search="' + key + '"]');
-    var gramInput = document.querySelector('[data-food-gram="' + key + '"]');
-    var food = foodInput.value.trim();
-    var gram = parseFloat(gramInput.value);
-    if (!food || !gram) return;
-    var calPer100 = FOOD_CALORIES[food];
-    if (!calPer100) { alert('\u672a\u627e\u5230\u8be5\u98df\u7269\u70ed\u91cf\uff0c\u8bf7\u76f4\u63a5\u8f93\u5165 kcal'); return; }
-    appData.meals[key].calories = (parseFloat(appData.meals[key].calories) || 0) + Math.round(calPer100 * gram / 100);
-    saveData(); renderMealGrid(); return;
-  }
-  var delBtn = e.target.closest ? e.target.closest('.photo-del') : null;
+  var delBtn = e.target.closest ? e.target.closest('.bag-item-delete') : null;
   if (delBtn) {
-    var pid = delBtn.dataset.pid, meal = delBtn.dataset.meal;
-    if (confirm('\u5220\u9664\u8fd9\u5f20\u7167\u7247\uff1f')) {
-      appData.meals[meal].photos = appData.meals[meal].photos.filter(function(p){ return p !== pid; });
-      dbDelete('hudie_photos', 'meal_photos', pid).catch(function(){});
-      saveData(); renderMealGrid();
+    var did = parseInt(delBtn.dataset.id);
+    if (confirm('\u5220\u9664\u8fd9\u4e2a\u7269\u54c1\uff1f')) {
+      appData.bagItems = appData.bagItems.filter(function(i){ return i.id !== did; });
+      saveData(); renderBagList();
     }
   }
 });
-document.querySelectorAll('.diet-tab').forEach(function(tab){
+document.getElementById('add-bag-btn').addEventListener('click', function(){
+  var name = document.getElementById('bag-name').value.trim();
+  var cat = document.getElementById('bag-category').value;
+  if (!name) { alert('\u8bf7\u586b\u5199\u7269\u54c1\u540d\u79f0'); return; }
+  appData.bagItems.push({ id:newId(appData.bagItems), name:name, cat:cat, checked:false });
+  saveData(); renderBagList();
+  document.getElementById('bag-name').value = '';
+});
+
+/* ====== \u5b55\u671f\u77e5\u8bc6 ====== */
+var KNOWLEDGE_DATA = [
+  { id:1, cat:'\u5b55\u65e9\u671f', icon:'\ud83c\udfe5', title:'\u7b2c\u4e00\u6b21\u4ea7\u68c0\u653b\u7565', content:'\u5efa\u6863\u3001NT \u68c0\u67e5\u3001\u5404\u9879\u7b5b\u67e5\u2026\u2026\u7b2c\u4e00\u6b21\u6b63\u5f0f\u4ea7\u68c0\u8be5\u51c6\u5907\u4ec0\u4e48\uff1f\n1. \u5e26\u4e0a\u8eab\u4efd\u8bc1\u3001\u533b\u4fdd\u5361\u3001\u672b\u6b21\u6708\u7ecf\u65e5\u671f\n2. \u63d0\u524d\u9884\u7ea6\u4ea7\u68c0\u65f6\u95f4\uff0c\u9886\u53d6\u6bcd\u5b50\u5065\u5eb7\u624b\u518c\n3. \u7a7f\u5bbd\u677e\u8863\u7269\uff0c\u65b9\u4fbf\u68c0\u67e5\uff0c\u907f\u514d\u8fde\u8863\u88d9\n4. \u90e8\u5206\u9879\u76ee\uff08\u8840\u5e38\u89c4\u3001\u8840\u7cd6\uff09\u9700\u7a7a\u8179\uff0c\u8bb0\u5f97\u54a8\u8be2\u533b\u751f\n5. \u9884\u7559\u5145\u8db3\u65f6\u95f4\uff0c\u6bcf\u9879\u68c0\u67e5\u53ef\u80fd\u9700 1-2 \u5c0f\u65f6' },
+  { id:2, cat:'\u5b55\u65e9\u671f', icon:'\ud83d\ude0a', title:'\u5b55\u671f\u60c5\u7eea\u7ba1\u7406', content:'\u8377\u5c14\u8499\u53d8\u5316\u5bfc\u81f4\u60c5\u7eea\u6ce2\u52a8\u5f88\u6b63\u5e38\uff0c\u5b66\u4f1a\u7ba1\u7406\u5b55\u671f\u60c5\u7eea\u3002\n1. \u4fdd\u6301\u5145\u8db3\u7761\u7720\uff0c\u6bcf\u5929 7-9 \u5c0f\u65f6\n2. \u9002\u5ea6\u8fd0\u52a8\uff0c\u5982\u6563\u6b65\u3001\u5b55\u5987\u745c\u4f3d\n3. \u4e0e\u5bb6\u4eba\u3001\u670b\u53cb\u5206\u4eab\u611f\u53d7\uff0c\u4e0d\u8981\u72ec\u81ea\u627f\u53d7\n4. \u9605\u8bfb\u6b63\u80fd\u91cf\u5185\u5bb9\uff0c\u8fdc\u79bb\u8d1f\u9762\u4fe1\u606f\n5. \u9700\u8981\u65f6\u53ef\u54a8\u8be2\u4e13\u4e1a\u5fc3\u7406\u533b\u751f' },
+  { id:3, cat:'\u5b55\u4e2d\u671f', icon:'\ud83e\uddb4', title:'\u5b55\u671f\u8170\u80cc\u75db\u7f13\u89e3\u65b9\u6cd5', content:'\u968f\u7740\u809a\u5b50\u53d8\u5927\uff0c\u8170\u80cc\u75db\u662f\u5b55\u671f\u5e38\u89c1\u56f0\u6270\uff0c\u8bd5\u8bd5\u8fd9\u4e9b\u7f13\u89e3\u6280\u5de7\u3002\n1. \u4fdd\u6301\u6b63\u786e\u59ff\u52bf\uff1a\u7ad9\u5750\u65f6\u80cc\u90e8\u633a\u76f4\uff0c\u907f\u514d\u5f2f\u8170\u9a7c\u80cc\n2. \u4f7f\u7528\u5b55\u5987\u6795\u6216 U \u578b\u6795\u652f\u6491\u8170\u80cc\n3. \u6e29\u70ed\u6577\u7f13\u89e3\u6df1\u5c42\u808c\u8089\u9178\u75db\n4. \u907f\u514d\u957f\u65f6\u95f4\u7ad9\u7acb\u6216\u4e45\u5750\uff0c\u5b9a\u65f6\u53d8\u6362\u59ff\u52bf\n5. \u505a\u5b55\u5987\u666e\u62c9\u63d0\uff0c\u589e\u5f3a\u8170\u80cc\u808c\u8089\u529b\u91cf' },
+  { id:4, cat:'\u5b55\u4e2d\u671f', icon:'\ud83d\udc63', title:'\u611f\u53d7\u80ce\u52a8\u7684\u7f8e\u597d\u65f6\u523b', content:'\u7b2c\u4e00\u6b21\u611f\u53d7\u80ce\u52a8\u662f\u5b55\u671f\u6700\u795e\u5947\u7684\u4f53\u9a8c\u4e4b\u4e00\uff0c\u4e86\u89e3\u80ce\u52a8\u89c4\u5f8b\u3002\n1. \u9996\u6b21\u80ce\u52a8\u591a\u53d1\u751f\u5728 18-20 \u5468\uff0c\u4e8c\u80ce\u5988\u5988\u53ef\u80fd\u66f4\u65e9\n2. \u521d\u671f\u80ce\u52a8\u7c7b\u4f3c\u9c7c\u6e38\u6c34\u3001\u8774\u8776\u6247\u7fc5\u3001\u8c46\u5b50\u8df3\u52a8\n3. \u80ce\u52a8\u6700\u6d3b\u8dc3\u65f6\u95f4\u4e3a\u665a\u4e0a 8-11 \u70b9\n4. \u5b55 28 \u5468\u540e\u5e94\u6bcf\u5929\u6570\u80ce\u52a8\uff0c\u6b63\u5e38\u6bcf\u5c0f\u65f6 3-5 \u6b21\n5. \u80ce\u52a8\u660e\u663e\u51cf\u5c11\u9700\u53ca\u65f6\u5c31\u533b' },
+  { id:5, cat:'\u5b55\u665a\u671f', icon:'\ud83c\udf3a', title:'\u4e34\u4ea7\u4fe1\u53f7\u8bc6\u522b', content:'\u63a5\u8fd1\u9884\u4ea7\u671f\uff0c\u9700\u8981\u4e86\u89e3\u5404\u79cd\u4e34\u4ea7\u4fe1\u53f7\u4ee5\u4fbf\u53ca\u65f6\u5165\u9662\u3002\n1. \u89c4\u5f8b\u5bab\u7f29\uff1a\u6bcf 5 \u5206\u949f\u4e00\u6b21\u3001\u6bcf\u6b21\u6301\u7eed 1 \u5206\u949f\u3001\u6301\u7eed 1 \u5c0f\u65f6\n2. \u89c1\u7ea2\uff1a\u9634\u9053\u6709\u8840\u6027\u5206\u6ccc\u7269\uff0c\u53ef\u80fd 24-48 \u5c0f\u65f6\u540e\u5206\u5a29\n3. \u7834\u6c34\uff1a\u7f8a\u6c34\u6d41\u51fa\uff0c\u9700\u7acb\u5373\u5e73\u8eba\u5e76\u8d76\u5f80\u533b\u9662\n4. \u80ce\u5934\u4e0b\u964d\uff1a\u80ce\u5934\u5165\u76c6\uff0c\u51fa\u73b0\u4e0b\u5760\u611f\u3001\u5c3f\u9891\u52a0\u91cd\n5. \u51fa\u73b0\u4ee5\u4e0a\u4efb\u4e00\u4fe1\u53f7\uff0c\u53ca\u65f6\u8054\u7cfb\u533b\u9662' },
+  { id:6, cat:'\u5b55\u665a\u671f', icon:'\ud83d\udcda', title:'\u5b55\u665a\u671f\u7761\u7720\u6539\u5584\u65b9\u6cd5', content:'\u5b55\u665a\u671f\u7761\u7720\u56f0\u96be\u662f\u5e38\u89c1\u95ee\u9898\uff0c\u8bd5\u8bd5\u8fd9\u4e9b\u5c0f\u6280\u5de7\u3002\n1. \u4f7f\u7528\u5b55\u5987\u6795\u652f\u6491\u8170\u80cc\u548c\u8179\u90e8\n2. \u5de6\u4fa7\u5367\u4f4d\u6700\u4f73\uff0c\u4fc3\u8fdb\u8840\u6db2\u5faa\u73af\n3. \u7761\u524d\u5c11\u559d\u6c34\uff0c\u51cf\u5c11\u591c\u8d77\u6b21\u6570\n4. \u7761\u524d\u907f\u514d\u9971\u98df\u548c\u5496\u5561\u56e0\uff0c\u53ef\u559d\u6e29\u725b\u5976\n5. \u4fdd\u6301\u5367\u5ba4\u51c9\u723d\u5b89\u9759\uff0c\u53ef\u7528\u8033\u585e\u773c\u7f69\u8f85\u52a9' },
+  { id:7, cat:'\u5b55\u665a\u671f', icon:'\ud83d\udcb0', title:'\u5b55\u665a\u671f\u8425\u517b\u91cd\u70b9', content:'\u5b55\u665a\u671f\u662f\u80ce\u513f\u5feb\u901f\u751f\u957f\u9636\u6bb5\uff0c\u6ce8\u610f\u8425\u517b\u4f9b\u7ed9\u3002\n1. \u4f18\u8d28\u86cb\u767d\uff1a\u9c7c\u3001\u867e\u3001\u9e21\u8089\u3001\u9e21\u86cb\u3001\u4e73\u5236\u54c1\n2. \u8865\u9499\uff1a\u725b\u5976\u3001\u8c46\u8150\u3001\u829d\u9ebb\u9171\u3001\u867e\u76ae\n3. \u8865\u94c1\uff1a\u7ea2\u8089\u3001\u52a8\u7269\u809d\u810f\u3001\u83e0\u83dc\uff08\u914d\u7ef4C\u4fc3\u5438\u6536\uff09\n4. \u8865\u5145 DHA \u5e2e\u52a9\u80ce\u513f\u5927\u8111\u53d1\u80b2\n5. \u63a7\u5236\u7cd6\u5206\u548c\u7cbe\u5236\u78b3\u6c34\uff0c\u9884\u9632\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5' },
+  { id:8, cat:'\u5206\u5a29', icon:'\ud83c\udf8a', title:'\u81ea\u7136\u5206\u5a29\u4e0e\u5f85\u4ea7\u51c6\u5907', content:'\u4e86\u89e3\u5206\u5a29\u8fc7\u7a0b\uff0c\u505a\u597d\u5fc3\u7406\u548c\u7269\u54c1\u51c6\u5907\u3002\n1. \u672c\u4eba\u53ca\u5bb6\u5c5e\u8981\u4e86\u89e3\u5206\u5a29\u6d41\u7a0b\uff0c\u505a\u597d\u5fc3\u7406\u51c6\u5907\n2. \u9009\u62e9\u6709\u8d44\u8d28\u3001\u6709\u7ecf\u9a8c\u7684\u533b\u9662\u548c\u4ea7\u79d1\u533b\u751f\n3. \u63d0\u524d\u4e86\u89e3\u4ea7\u623f\u73af\u5883\uff0c\u719f\u6089\u5165\u9662\u6d41\u7a0b\n4. \u51c6\u5907\u597d\u5f85\u4ea7\u5305\uff0c\u4f34\u4ea7\u4eba\u5168\u7a0b\u966a\u4f34\n5. \u7ec3\u4e60\u62c9\u739b\u6cfd\u547c\u5438\u6cd5\uff0c\u5e2e\u52a9\u5e94\u5bf9\u5bab\u7f29\u75bc\u75db' },
+  { id:9, cat:'\u4ea7\u540e', icon:'\ud83d\udcaf', title:'\u4ea7\u540e\u6062\u590d\u8981\u70b9', content:'\u4ea7\u540e 42 \u5929\u662f\u91cd\u8981\u7684\u6062\u590d\u671f\uff0c\u6ce8\u610f\u79d1\u5b66\u8c03\u517b\u3002\n1. \u5145\u8db3\u4f11\u606f\uff0c\u907f\u514d\u8fc7\u5ea6\u52b3\u7d2f\n2. \u8425\u517b\u5747\u8861\uff0c\u591a\u98df\u9ad8\u86cb\u767d\u3001\u5bcc\u542b\u94c1\u548c\u9499\u7684\u98df\u7269\n3. \u5173\u6ce8\u6076\u9732\u6392\u51fa\u60c5\u51b5\uff0c\u53d1\u73b0\u5f02\u5e38\u53ca\u65f6\u5c31\u533b\n4. \u8863\u7740\u5bbd\u677e\u900f\u6c14\uff0c\u6ce8\u610f\u4e2a\u4eba\u536b\u751f\n5. \u4fdd\u6301\u5fc3\u60c5\u8212\u7545\uff0c\u8b66\u60d5\u4ea7\u540e\u6291\u90c1\n6. \u4ea7\u540e 42 \u5929\u590d\u67e5\uff0c\u8bc4\u4f30\u6062\u590d\u60c5\u51b5' }
+];
+
+function renderKnowledgeList() {
+  var list = document.getElementById('knowledge-list');
+  var items = KNOWLEDGE_DATA.slice();
+  if (currentKnowledgeCat !== 'all') items = items.filter(function(k){ return k.cat === currentKnowledgeCat; });
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var k = items[i];
+    var fav = appData.knowledgeFavs.indexOf(k.id) >= 0;
+    html += '<div class="knowledge-item">';
+    html += '<div class="knowledge-item-header">';
+    html += '<div class="knowledge-item-title">' + escapeHtml(k.icon) + ' ' + escapeHtml(k.title) + '<span class="knowledge-item-cat">' + escapeHtml(k.cat) + '</span></div>';
+    html += '<button class="knowledge-item-fav" data-id="' + k.id + '">' + (fav ? '\u2605' : '\u2606') + '</button>';
+    html += '</div>';
+    html += '<div class="knowledge-item-content">' + escapeHtml(k.content) + '</div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+document.querySelectorAll('.knowledge-tab').forEach(function(tab){
   tab.addEventListener('click', function(){
-    document.querySelectorAll('.diet-tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.knowledge-tab').forEach(function(t){ t.classList.remove('active'); });
     tab.classList.add('active');
-    appData.dietMode = tab.dataset.mode;
-    saveData(); renderDietMode();
+    currentKnowledgeCat = tab.dataset.cat;
+    renderKnowledgeList();
   });
 });
-function renderDietMode() {
-  var isPreg = appData.dietMode === 'pregnancy';
-  document.getElementById('diet-title').textContent = isPreg ? '\u5b55\u671f\u996e\u98df' : '\u51cf\u8102\u671f\u996e\u98df';
-  document.querySelectorAll('.pregnancy-only').forEach(function(el){ el.style.display = isPreg ? 'block' : 'none'; });
+document.getElementById('knowledge-list').addEventListener('click', function(e){
+  var btn = e.target.closest ? e.target.closest('.knowledge-item-fav') : null;
+  if (!btn) return;
+  var id = parseInt(btn.dataset.id);
+  if (appData.knowledgeFavs.indexOf(id) >= 0) {
+    appData.knowledgeFavs = appData.knowledgeFavs.filter(function(x){ return x !== id; });
+  } else {
+    appData.knowledgeFavs.push(id);
+  }
+  saveData(); renderKnowledgeList();
+});
+
+/* ====== \u6570\u80ce\u52a8 ====== */
+var fetalState = { count:0, startTime:0, timer:null };
+function updateFetalDisplay() {
+  document.getElementById('fetal-count').textContent = fetalState.count;
+  var elapsed = fetalState.startTime ? Math.floor((Date.now() - fetalState.startTime) / 1000) : 0;
+  var mm = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  var ss = String(elapsed % 60).padStart(2,'0');
+  document.getElementById('fetal-timer').textContent = mm + ':' + ss;
 }
+function startFetalTimer() {
+  if (fetalState.timer) return;
+  if (!fetalState.startTime) fetalState.startTime = Date.now();
+  fetalState.timer = setInterval(updateFetalDisplay, 1000);
+}
+function stopFetalTimer() {
+  if (fetalState.timer) { clearInterval(fetalState.timer); fetalState.timer = null; }
+}
+document.getElementById('fetal-tap').addEventListener('click', function(){
+  if (!fetalState.startTime) fetalState.startTime = Date.now();
+  startFetalTimer();
+  if (fetalState.count < 10) fetalState.count++;
+  updateFetalDisplay();
+  if (fetalState.count >= 10) {
+    stopFetalTimer();
+    if (confirm('\u5df2\u8fbe\u5230 10 \u6b21\u80ce\u52a8\uff0c\u662f\u5426\u4fdd\u5b58\u4eca\u65e5\u8bb0\u5f55\uff1f')) {
+      saveFetalRecord();
+      fetalReset();
+    }
+  }
+});
+document.getElementById('fetal-reset').addEventListener('click', fetalReset);
+function fetalReset() {
+  if (fetalState.count > 0 && fetalState.startTime) {
+    if (!confirm('\u5f53\u524d\u8ba1\u6570 ' + fetalState.count + ' \u6b21\u8981\u4e22\u5f03\u5417\uff1f')) return;
+  }
+  fetalState.count = 0;
+  fetalState.startTime = 0;
+  stopFetalTimer();
+  updateFetalDisplay();
+}
+function saveFetalRecord() {
+  var date = todayISO();
+  var existing = appData.fetalRecords.find(function(r){ return r.date === date; });
+  var elapsed = Math.floor((Date.now() - fetalState.startTime) / 60000);
+  if (existing) {
+    existing.count = Math.max(existing.count, fetalState.count);
+    existing.duration = elapsed;
+  } else {
+    appData.fetalRecords.push({ id:newId(appData.fetalRecords), date:date, count:fetalState.count, duration:elapsed });
+  }
+  saveData(); renderFetalHistory();
+}
+function renderFetalHistory() {
+  var list = document.getElementById('fetal-history');
+  var records = appData.fetalRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).reverse().slice(0, 7);
+  var html = '<h4 style="font-size:14px;color:var(--text);margin:12px 0 8px;">\u6700\u8fd1\u8bb0\u5f55</h4>';
+  if (!records.length) { html += '<div style="text-align:center;color:var(--text-light);font-size:13px;padding:12px;">\u8fd8\u6ca1\u6709\u8bb0\u5f55</div>'; list.innerHTML = html; return; }
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    html += '<div class="fetal-history-item"><span class="fetal-history-date">' + r.date + '</span><span class="fetal-history-count">' + r.count + ' \u6b21 / ' + (r.duration || '--') + ' \u5206\u949f</span></div>';
+  }
+  list.innerHTML = html;
+}
+updateFetalDisplay();
+
+/* ====== \u4f53\u91cd\u8bb0\u5f55 ====== */
 function renderWeightSection() { document.getElementById('weight-date').value = todayISO(); renderWeightChart(); renderWeightList(); }
 document.getElementById('add-weight-btn').addEventListener('click', function(){
   var date = document.getElementById('weight-date').value;
@@ -337,6 +462,8 @@ function renderWeightChart() {
   svg += '</svg>';
   chart.innerHTML = svg;
 }
+
+/* ====== \u4fbf\u4fbf\u8bb0\u5f55 ====== */
 function renderPoopSection() { document.getElementById('poop-date').value = todayISO(); renderPoopList(); }
 document.getElementById('add-poop-btn').addEventListener('click', function(){
   var date = document.getElementById('poop-date').value;
@@ -363,6 +490,8 @@ function renderPoopList() {
   }
   list.innerHTML = html;
 }
+
+/* ====== \u5b9d\u5b9d\u6210\u957f\u72b6\u6001 ====== */
 var BABY_GROWTH_DATA = {
   4:  { length:0.4, weight:'--', baby:'\u53d7\u7cbe\u5375\u7740\u5e8a\uff0c\u5f00\u59cb\u5206\u88c2\u53d1\u80b2\uff0c\u50cf\u829d\u9ebb\u4e00\u6837\u5c0f\u3002', mom:'\u53ef\u80fd\u8fd8\u6ca1\u4ec0\u4e48\u611f\u89c9\uff0c\u6fc0\u7d20\u6c34\u5e73\u5f00\u59cb\u53d8\u5316\u3002' },
   5:  { length:0.6, weight:'--', baby:'\u80da\u80ce\u50cf\u82f9\u679c\u7c7d\uff0c\u795e\u7ecf\u7ba1\u5f00\u59cb\u5f62\u6210\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u8f7b\u5fae\u75b2\u52b3\u3001\u4e73\u623f\u80c0\u75db\u3002' },
@@ -404,7 +533,6 @@ var BABY_GROWTH_DATA = {
 };
 
 function parseWeek(weekStr) {
-  // \u652f\u6301 "15+1"\u3001"15\u5468+1"\u3001"15\u54681\u5929"\u3001"15.1"\u3001"15"
   var s = String(weekStr || '').trim().replace(/\u5468/g, ' ').replace(/\u5929/g, ' ').replace(/\+/g, ' ').replace(/\s+/g, ' ');
   var parts = s.split(' ').filter(function(v){ return v !== ''; });
   if (!parts.length) return 0;
@@ -430,11 +558,6 @@ function formatDate(d) {
   return (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65e5';
 }
 
-function formatISO(d) {
-  if (typeof d === 'string') d = new Date(d);
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-
 function daysBetween(start, end) {
   var s = new Date(start).setHours(0,0,0,0);
   var e = new Date(end).setHours(0,0,0,0);
@@ -447,7 +570,6 @@ function getBabyGrowth(weekObj) {
   if (week > 40) week = 40;
   var data = BABY_GROWTH_DATA[week];
   if (!data) return null;
-  // \u57284-12\u5468\u663e\u793a\u9876\u81c0\u957f\uff0c13\u5468\u540e\u663e\u793a\u8eab\u957f
   var isEarly = week <= 12;
   return {
     length: data.length,
@@ -471,12 +593,9 @@ function renderBabyStatus() {
   var babyChange = document.getElementById('baby-change');
   var momChange = document.getElementById('mom-change');
   var today = new Date();
-  
-  // \u4f18\u5148\u6839\u636e\u672b\u6b21\u6708\u7ecf\u8ba1\u7b97\u5f53\u524d\u5b55\u5468
   var currentWeekObj = null;
   var dueDate = null;
   var daysToDue = null;
-  
   if (appData.lmpDate) {
     var totalDays = daysBetween(appData.lmpDate, today);
     if (totalDays >= 0) {
@@ -487,19 +606,15 @@ function renderBabyStatus() {
     dueDate = addDays(appData.lmpDate, 280);
     daysToDue = daysBetween(today, dueDate);
   }
-  
-  // \u5982\u679c\u6ca1\u6709\u672b\u6b21\u6708\u7ecf\uff0c\u53d6\u6700\u8fd1\u4e00\u6b21\u8bb0\u5f55
   if (!currentWeekObj && appData.babyRecords && appData.babyRecords.length) {
     var last = appData.babyRecords.slice().sort(function(a,b){ return b.totalDays - a.totalDays; })[0];
     if (last && last.totalDays) currentWeekObj = { week:last.week, day:last.day, totalDays:last.totalDays };
   }
-  
   if (!currentWeekObj || currentWeekObj.week < 1) {
     card.innerHTML = '<div class="baby-status-week">\u8bf7\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf\u65e5\u671f</div><div class="baby-status-due">\u6216\u624b\u52a8\u6dfb\u52a0\u6210\u957f\u8bb0\u5f55</div>';
     tips.style.display = 'none';
     return;
   }
-  
   var growth = getBabyGrowth(currentWeekObj);
   var html = '';
   html += '<div class="baby-status-week">\u5b55 ' + formatWeek(currentWeekObj) + '</div>';
@@ -513,7 +628,6 @@ function renderBabyStatus() {
     html += '</div>';
   }
   card.innerHTML = html;
-  
   if (growth) {
     babyChange.textContent = growth.baby;
     momChange.textContent = growth.mom;
@@ -529,6 +643,7 @@ document.getElementById('save-lmp-btn').addEventListener('click', function(){
   appData.lmpDate = lmp;
   saveData();
   renderBabySection();
+  renderDueCard();
 });
 
 document.getElementById('add-baby-btn').addEventListener('click', function(){
@@ -538,7 +653,6 @@ document.getElementById('add-baby-btn').addEventListener('click', function(){
   var note = document.getElementById('baby-note').value.trim();
   var parsed = parseWeek(weekStr);
   if (!parsed || !parsed.week) { alert('\u8bf7\u586b\u5199\u5b55\u5468\uff0c\u5982 15+1'); return; }
-  // \u5982\u679c\u6ca1\u8f93\u5165\u8eab\u957f\u4f53\u91cd\uff0c\u81ea\u52a8\u6839\u636e\u5b55\u5468\u4f30\u7b97
   var growth = getBabyGrowth(parsed);
   if (!length && growth) length = growth.length;
   if (!weight && growth) weight = parseInt(growth.weight) || '';
@@ -564,6 +678,8 @@ function renderBabyList() {
   }
   list.innerHTML = html;
 }
+
+/* ====== \u5b55\u68c0\u8bb0\u5f55 ====== */
 function renderCheckupSection() { document.getElementById('checkup-date').value = todayISO(); renderCheckupList(); }
 document.getElementById('add-checkup-btn').addEventListener('click', function(){
   var date = document.getElementById('checkup-date').value;
@@ -608,6 +724,7 @@ document.getElementById('diet').addEventListener('click', function(e){
   }
 });
 
+/* ====== \u5174\u8da3\u6536\u85cf ====== */
 var currentFavCat = 'all';
 var currentFavQuery = '';
 document.querySelectorAll('.favorite-tab').forEach(function(tab){
@@ -774,6 +891,8 @@ document.getElementById('search-my-favorites').addEventListener('click', functio
   if (!q) { alert('\u8bf7\u5148\u8f93\u5165\u98df\u6750'); return; }
   renderFavoriteResults('weekly-fav-results', q);
 });
+
+/* ====== \u4e00\u5468\u996e\u98df\u8ba1\u5212 ====== */
 function renderWeeklyPlan() {
   var plan = document.getElementById('weekly-plan');
   var html = '<div class="weekly-table-wrap"><table class="weekly-table"><thead><tr><th>\u65e5\u671f</th>';
@@ -807,6 +926,8 @@ function openRecipeSearch(platform) {
 document.getElementById('search-bilibili').addEventListener('click', function(){ openRecipeSearch('bilibili'); });
 document.getElementById('search-douyin').addEventListener('click', function(){ openRecipeSearch('douyin'); });
 document.getElementById('search-xhs').addEventListener('click', function(){ openRecipeSearch('xhs'); });
+
+/* ====== \u6bcf\u65e5\u89c6\u9891\u63a8\u9001 ====== */
 function renderDailyVideos(containerId, category) {
   var container = document.getElementById(containerId);
   var videos = pickDailyVideos(category);
@@ -830,6 +951,8 @@ document.querySelectorAll('.daily-videos').forEach(function(el){
     saveData(); alert('\u5df2\u6536\u85cf\u5230\u300c\u5174\u8da3\u6536\u85cf\u300d');
   });
 });
+
+/* ====== \u5907\u5fd8\u5f55 ====== */
 var memoType = 'text';
 document.querySelectorAll('.memo-tab').forEach(function(tab){
   tab.addEventListener('click', function(){
@@ -925,16 +1048,20 @@ document.getElementById('memo-list').addEventListener('click', function(e){
     saveData(); renderMemos();
   }
 });
+
+/* ====== \u521d\u59cb\u5316 ====== */
 function init() {
   document.getElementById('today-date').textContent = todayStr();
   document.getElementById('today-weekday').textContent = weekdayStr();
   renderTodos();
-  renderDietMode();
-  renderMealGrid();
+  renderDueCard();
   renderWeightSection();
   renderPoopSection();
   renderBabySection();
   renderCheckupSection();
+  renderBagList();
+  renderKnowledgeList();
+  renderFetalHistory();
   renderFavorites();
   renderWeeklyPlan();
   renderDailyVideos('pilates-videos', 'pilates');
@@ -949,4 +1076,3 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js').then(function(){ console.log('SW registered'); }).catch(function(err){ console.log('SW error', err); });
   });
 }
-
