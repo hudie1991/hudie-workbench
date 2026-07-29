@@ -126,10 +126,15 @@
         <h3>⚖️ 体重记录</h3>
         <div class="weight-form">
           <input type="date" id="weight-date">
-          <input type="number" id="weight-value" placeholder="体重(kg)" step="0.1">
+          <div class="weight-input-wrap">
+            <input type="number" id="weight-value" placeholder="体重" step="0.1">
+            <button type="button" id="weight-unit-toggle" class="unit-toggle">kg</button>
+          </div>
+          <input type="hidden" id="weight-edit-id" value="">
           <input type="number" id="weight-week" placeholder="孕周(选填)">
           <input type="text" id="weight-note" placeholder="备注">
           <button id="add-weight-btn">添加</button>
+          <button type="button" id="cancel-weight-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
         <div class="weight-chart" id="weight-chart"></div>
         <div class="record-list" id="weight-list"></div>
@@ -148,8 +153,10 @@
             <option value="difficult">🔴 困难</option>
             <option value="none">⚪ 未排便</option>
           </select>
+          <input type="hidden" id="poop-edit-id" value="">
           <input type="text" id="poop-note" placeholder="备注">
           <button id="add-poop-btn">添加</button>
+          <button type="button" id="cancel-poop-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
         <div class="record-list" id="poop-list"></div>
       </div>
@@ -180,8 +187,10 @@
           <input type="text" id="baby-week" placeholder="孕周（如：15+1）">
           <input type="number" id="baby-length" placeholder="顶臀长/身长(cm)" step="0.1">
           <input type="number" id="baby-weight" placeholder="体重(g)" step="1">
+          <input type="hidden" id="baby-edit-id" value="">
           <input type="text" id="baby-note" placeholder="备注">
           <button id="add-baby-btn">添加</button>
+          <button type="button" id="cancel-baby-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
         <div class="record-list" id="baby-list"></div>
       </div>
@@ -194,7 +203,9 @@
           <input type="text" id="checkup-item" placeholder="检查项目">
           <input type="text" id="checkup-result" placeholder="检查结果">
           <input type="date" id="checkup-next" placeholder="下次产检">
+          <input type="hidden" id="checkup-edit-id" value="">
           <button id="add-checkup-btn">添加</button>
+          <button type="button" id="cancel-checkup-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
         <div class="record-list" id="checkup-list"></div>
       </div>
