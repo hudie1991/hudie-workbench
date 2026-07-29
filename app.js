@@ -471,11 +471,12 @@ function updateWeightInputPlaceholder() {
 document.getElementById('weight-unit-toggle').addEventListener('click', function(){
   var input = document.getElementById('weight-value');
   var currentVal = parseFloat(input.value);
-  var newUnit = getWeightUnit() === 'kg' ? 'jin' : 'kg';
+  var oldUnit = getWeightUnit();
+  var newUnit = oldUnit === 'kg' ? 'jin' : 'kg';
   appData.weightUnit = newUnit;
   updateWeightInputPlaceholder();
   if (!isNaN(currentVal)) {
-    input.value = newUnit === 'jin' ? (currentVal * 2).toFixed(1) : currentVal.toFixed(1);
+    input.value = oldUnit === 'kg' ? (currentVal * 2).toFixed(1) : (currentVal / 2).toFixed(1);
   }
   saveData(); renderWeightSection();
 });
