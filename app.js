@@ -447,10 +447,11 @@ updateFetalDisplay();
 
 /* ====== \u4F53\u91CD\u8BB0\u5F55 ====== */
 function getWeightUnit() { return appData.weightUnit || 'kg'; }
+function weightUnitLabel(unit) { return unit === 'jin' ? '\u65A4' : '\u516C\u65A4'; }
 function formatWeight(weight, unit) {
   unit = unit || getWeightUnit();
   if (unit === 'jin') return (weight * 2).toFixed(1) + ' \u65A4';
-  return weight.toFixed(1) + ' kg';
+  return weight.toFixed(1) + ' \u516C\u65A4';
 }
 function parseInputWeight(val, unit) {
   unit = unit || getWeightUnit();
@@ -461,9 +462,11 @@ function parseInputWeight(val, unit) {
 function updateWeightInputPlaceholder() {
   var unit = getWeightUnit();
   var input = document.getElementById('weight-value');
+  var label = document.getElementById('weight-unit-label');
   var btn = document.getElementById('weight-unit-toggle');
-  if (input) input.placeholder = '\u4F53\u91CD(' + unit + ')';
-  if (btn) btn.textContent = unit;
+  if (input) input.placeholder = '0.0';
+  if (label) label.textContent = weightUnitLabel(unit);
+  if (btn) btn.textContent = unit === 'jin' ? '\u5207\u6362\u4E3A\u516C\u65A4' : '\u5207\u6362\u4E3A\u65A4';
 }
 document.getElementById('weight-unit-toggle').addEventListener('click', function(){
   var input = document.getElementById('weight-value');
@@ -492,7 +495,6 @@ function renderWeightSection() {
 }
 document.getElementById('add-weight-btn').addEventListener('click', function(){
   var date = document.getElementById('weight-date').value;
-  var weightInput = parseFloat(document.getElementById('weight-value').value);
   var week = document.getElementById('weight-week').value;
   var note = document.getElementById('weight-note').value.trim();
   var editId = document.getElementById('weight-edit-id').value;

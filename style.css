@@ -182,12 +182,14 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .record-edit { position:absolute; top:8px; right:36px; width:24px; height:24px; border:none; background:transparent; color:var(--primary); cursor:pointer; border-radius:5px; font-size:13px; }
 .record-edit:hover { background:rgba(90,122,79,0.12); color:var(--primary-dark); }
 
-/* 体重输入区与单位切换 */
-.weight-input-wrap { display:flex; align-items:stretch; gap:0; flex:1; min-width:140px; }
-.weight-input-wrap input { flex:1; border-top-right-radius:0; border-bottom-right-radius:0; min-width:0; }
-.unit-toggle { padding:8px 12px; border:1px solid var(--border); border-left:none; background:var(--bg); color:var(--text); font-size:13px; cursor:pointer; border-top-right-radius:8px; border-bottom-right-radius:8px; min-width:40px; font-weight:500; }
-.unit-toggle:hover { background:rgba(90,122,79,0.08); color:var(--primary); }
-.unit-toggle:active { background:var(--primary); color:white; }
+/* 体重输入区与单位切换（美柚风格） */
+.weight-input-card { background:var(--card-bg); border:1px solid var(--border); border-radius:16px; padding:16px 18px 18px; position:relative; text-align:center; box-shadow:var(--shadow); width:100%; }
+.unit-switch { position:absolute; top:12px; right:12px; padding:5px 12px; border:1px solid var(--border); background:var(--bg); color:var(--text-light); border-radius:14px; font-size:12px; cursor:pointer; }
+.unit-switch:hover { border-color:var(--primary); color:var(--primary); background:rgba(90,122,79,0.06); }
+.weight-input-big { display:flex; align-items:baseline; justify-content:center; gap:8px; margin-top:16px; }
+.weight-input-big input { border:none; background:transparent; font-size:48px; font-weight:700; color:var(--text); width:180px; text-align:right; outline:none; padding:0; line-height:1; }
+.weight-input-big input::placeholder { color:var(--border); opacity:1; }
+.weight-unit-label { font-size:20px; color:var(--text-light); font-weight:500; }
 .cancel-edit-btn { padding:8px 16px; background:transparent; color:var(--text-light); border:1px solid var(--border); border-radius:8px; font-size:13px; cursor:pointer; }
 .cancel-edit-btn:hover { border-color:#c62828; color:#c62828; }
 
@@ -364,11 +366,12 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .meal-grid { grid-template-columns:1fr; }
   .daily-videos-grid { grid-template-columns:1fr; }
   .weight-form, .poop-form, .baby-form, .checkup-form, .baby-basic { flex-direction:column; gap:8px; }
-  .weight-form input, .poop-form input, .poop-form select, .baby-form input, .checkup-form input, .baby-basic input { width:100%; min-height:40px; padding:8px 12px; }
-  .weight-form button, .poop-form button, .baby-form button, .checkup-form button, .baby-basic button { width:100%; min-height:40px; }
-  .weight-input-wrap { width:100%; }
-  .weight-input-wrap input { min-height:40px; }
-  .unit-toggle { min-height:40px; padding:0 14px; }
+  .weight-form input:not(#weight-value), .poop-form input, .poop-form select, .baby-form input, .checkup-form input, .baby-basic input { width:100%; min-height:40px; padding:8px 12px; }
+  .weight-form button:not(.unit-switch), .poop-form button, .baby-form button, .checkup-form button, .baby-basic button { width:100%; min-height:40px; }
+  .weight-input-card { padding:14px; }
+  .weight-input-big input { width:140px; font-size:40px; }
+  .weight-unit-label { font-size:18px; }
+  .unit-switch { top:10px; right:10px; font-size:11px; padding:4px 10px; }
   .search-actions button { flex:1 1 calc(50% - 4px); }
 }
 @media (display-mode: standalone) {

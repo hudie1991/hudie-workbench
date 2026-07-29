@@ -126,9 +126,12 @@
         <h3>⚖️ 体重记录</h3>
         <div class="weight-form">
           <input type="date" id="weight-date">
-          <div class="weight-input-wrap">
-            <input type="number" id="weight-value" placeholder="体重" step="0.1">
-            <button type="button" id="weight-unit-toggle" class="unit-toggle">kg</button>
+          <div class="weight-input-card">
+            <button type="button" id="weight-unit-toggle" class="unit-switch">切换为斤</button>
+            <div class="weight-input-big">
+              <input type="text" inputmode="decimal" id="weight-value" placeholder="0.0" autocomplete="off">
+              <span class="weight-unit-label" id="weight-unit-label">公斤</span>
+            </div>
           </div>
           <input type="hidden" id="weight-edit-id" value="">
           <input type="number" id="weight-week" placeholder="孕周(选填)">
