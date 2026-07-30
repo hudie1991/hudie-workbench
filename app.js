@@ -1156,7 +1156,7 @@ function renderFavorites() {
     html += '<div class="fav-title">' + escapeHtml(it.title) + '</div>';
     html += '<div class="fav-tags">' + (TYPE_LABELS[it.type] || '\u5176\u4ED6') + (it.ingredients ? ' \u00B7 ' + escapeHtml(it.ingredients) : '') + '</div>';
     if (it.link) html += '<a href="' + escapeHtml(it.link) + '" target="_blank" class="fav-link">' + escapeHtml(it.link) + '</a>';
-    if (it.note) html += '<div class="fav-note">' + escapeHtml(it.note) + '</div>';
+    if (it.note) html += '<div class="fav-note collapsed" data-collapsed="1">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle" data-action="toggle-note">\u5C55\u5F00 \u25BE</button>';
     html += '<div class="fav-meta">' + it.date + '</div>';
     html += '</div>';
     html += '<div class="fav-actions">';
@@ -1213,6 +1213,15 @@ document.getElementById('save-favorite-btn').addEventListener('click', function(
   }
 });
 document.getElementById('favorite-list').addEventListener('click', function(e){
+  var noteBtn = e.target.closest ? e.target.closest('.fav-note-toggle') : null;
+  if (noteBtn) {
+    var card = noteBtn.previousElementSibling;
+    if (card && card.classList.contains('fav-note')) {
+      var isCollapsed = card.classList.toggle('collapsed');
+      noteBtn.textContent = isCollapsed ? '\u5C55\u5F00 \u25BE' : '\u6536\u8D77 \u25B4';
+    }
+    return;
+  }
   var delBtn = e.target.closest ? e.target.closest('.fav-delete') : null;
   if (delBtn) {
     var id = parseInt(delBtn.dataset.id);
@@ -1257,7 +1266,7 @@ function renderFavoriteResults(containerId, query) {
       html += '<div class="weekly-fav-body">';
       html += '<div class="weekly-fav-title">' + escapeHtml(it.title) + '</div>';
       if (it.ingredients) html += '<div class="weekly-fav-tags">' + escapeHtml(it.ingredients) + '</div>';
-      if (it.note) html += '<div class="weekly-fav-note">' + escapeHtml(it.note) + '</div>';
+      if (it.note) html += '<div class="weekly-fav-note collapsed">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle">\u5C55\u5F00 \u25BE</button>';
       if (it.link) html += '<a href="' + escapeHtml(it.link) + '" target="_blank">' + escapeHtml(it.link) + '</a>';
       html += '</div>';
       html += '</div>';
@@ -1270,6 +1279,16 @@ document.getElementById('search-my-favorites').addEventListener('click', functio
   var q = document.getElementById('recipe-search').value.trim();
   if (!q) { alert('\u8BF7\u5148\u8F93\u5165\u98DF\u6750'); return; }
   renderFavoriteResults('weekly-fav-results', q);
+});
+document.getElementById('weekly-fav-results').addEventListener('click', function(e){
+  var noteBtn = e.target.closest ? e.target.closest('.fav-note-toggle') : null;
+  if (noteBtn) {
+    var card = noteBtn.previousElementSibling;
+    if (card && card.classList.contains('weekly-fav-note')) {
+      var isCollapsed = card.classList.toggle('collapsed');
+      noteBtn.textContent = isCollapsed ? '\u5C55\u5F00 \u25BE' : '\u6536\u8D77 \u25B4';
+    }
+  }
 });
 
 /* ====== \u4E00\u5468\u996E\u98DF\u8BA1\u5212 ====== */
