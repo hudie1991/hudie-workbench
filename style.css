@@ -170,6 +170,48 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .knowledge-toggle { font-size:12px; color:var(--primary); cursor:pointer; margin-top:4px; display:inline-block; }
 .weight-chart { background:var(--bg); border-radius:12px; padding:10px; margin-bottom:14px; border:1px solid var(--border); }
 .chart-placeholder { text-align:center; color:var(--text-light); padding:40px; font-size:13px; }
+
+/* 孕期体重增长参考表 */
+.preg-info-form { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+.preg-info-title { font-size:13px; color:var(--primary-dark); font-weight:500; display:block; margin-bottom:8px; }
+.preg-info-fields { display:flex; gap:8px; flex-wrap:wrap; }
+.preg-info-fields input { flex:1; min-width:100px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none; background:white; }
+.preg-info-fields input:focus { border-color:var(--primary); }
+.preg-info-fields button { padding:8px 18px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:13px; cursor:pointer; }
+.weight-guide-card { background:var(--card-bg); border-radius:14px; border:1px solid var(--border); box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden; }
+.weight-guide-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; user-select:none; }
+.weight-guide-header h4 { margin:0; font-size:15px; color:var(--primary-dark); }
+.weight-guide-toggle-icon { font-size:12px; color:var(--text-light); transition:transform 0.2s; }
+.weight-guide-card.collapsed .weight-guide-toggle-icon { transform:rotate(-90deg); }
+.weight-guide-card.collapsed .weight-guide-body { display:none; }
+.weight-guide-body { padding:0 16px 16px; }
+.weight-guide-summary { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+.wgs-item { flex:1; min-width:120px; background:rgba(90,122,79,0.08); border-radius:10px; padding:10px 12px; }
+.wgs-item .wgs-label { font-size:11px; color:var(--text-light); margin-bottom:4px; }
+.wgs-item .wgs-value { font-size:16px; font-weight:600; color:var(--primary-dark); }
+.wgs-item .wgs-sub { font-size:11px; color:var(--text-light); margin-top:2px; }
+.wgs-item.alarm { background:rgba(198,40,40,0.08); }
+.wgs-item.alarm .wgs-value { color:#c62828; }
+.wgs-item.warn { background:rgba(200,169,106,0.12); }
+.wgs-item.warn .wgs-value { color:#8a6d2f; }
+.weight-guide-table-wrap { overflow-x:auto; margin-bottom:12px; }
+.weight-guide-table { width:100%; border-collapse:collapse; font-size:13px; }
+.weight-guide-table th { background:var(--bg); color:var(--primary-dark); padding:8px 6px; font-size:12px; border-bottom:2px solid var(--border); text-align:left; }
+.weight-guide-table td { padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.5; }
+.weight-guide-table tr:last-child td { border-bottom:none; }
+.wg-phase { font-weight:600; color:var(--primary); }
+.wg-current { background:rgba(90,122,79,0.06); }
+.wg-current td { font-weight:600; }
+.wg-tag { display:inline-block; font-size:10px; padding:1px 6px; border-radius:6px; margin-left:4px; }
+.wg-tag-current { background:var(--primary); color:white; }
+.wg-tag-over { background:#c62828; color:white; }
+.wg-tag-under { background:#f5b041; color:white; }
+.weight-guide-suggestion { background:rgba(90,122,79,0.06); border-radius:10px; padding:12px 14px; border-left:3px solid var(--primary); }
+.weight-guide-suggestion h5 { margin:0 0 8px; font-size:14px; color:var(--primary-dark); }
+.wgs-section { margin-bottom:10px; font-size:13px; color:var(--text); line-height:1.7; }
+.wgs-section:last-child { margin-bottom:0; }
+.wgs-section strong { color:var(--primary-dark); }
+.wgs-section-title { font-weight:600; color:var(--primary-dark); margin-bottom:4px; display:block; }
 .record-list { display:flex; flex-direction:column; gap:8px; }
 .record-item { display:flex; flex-direction:column; background:var(--bg); border-radius:10px; padding:12px 36px 12px 12px; border:1px solid var(--border); position:relative; gap:6px; }
 .record-main { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }

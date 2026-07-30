@@ -54,6 +54,7 @@ const defaultData = {
     { id:4, text:'\u82F1\u8BED\u7EC3\u4E60 30 \u5206\u949F', time:'\u7075\u6D3B\u5B89\u6392', done:false, category:'english', note:'' }
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
+  height:170, preWeight:null,
   todosDate:null,
   weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]={ content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] }; }); return acc; }, {}),
   interests:[], memos:[], reviews:[]
@@ -492,7 +493,11 @@ function resetWeightForm() {
 function renderWeightSection() {
   document.getElementById('weight-date').value = todayISO();
   updateWeightInputPlaceholder();
-  renderWeightChart(); renderWeightList();
+  var hInput = document.getElementById('preg-height');
+  var wInput = document.getElementById('preg-pre-weight');
+  if (hInput) hInput.value = appData.height || 170;
+  if (wInput) wInput.value = appData.preWeight || '';
+  renderWeightGuide(); renderWeightChart(); renderWeightList();
 }
 document.getElementById('add-weight-btn').addEventListener('click', function(){
   var date = document.getElementById('weight-date').value;
@@ -583,7 +588,162 @@ function renderWeightChart() {
   chart.innerHTML = svg;
 }
 
-/* ====== \u4FBF\u4FBF\u8BB0\u5F55 ====== */
+/* ====== \u5B55\u671F\u4F53\u91CD\u589E\u957F\u53C2\u8003\u8868 ====== */
+var PREGNANCY_WEIGHT_GUIDE = {
+  bmi_low: {
+    label: '\u504F\u7626\uFF08BMI < 18.5\uFF09', totalRange: [12.5, 18],
+    phases: [
+      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '0.5-2 kg', weekly: '0-0.2 kg', note: '\u589E\u957F\u7F13\u6162\uFF0C\u6CE8\u610F\u53F6\u9178\u8865\u5145' },
+      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u8FDB\u5165\u5FEB\u901F\u589E\u957F\u671F\uFF0C\u91CD\u70B9\u8865\u86CB\u767D' },
+      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u7A33\u5B9A\u589E\u957F\uFF0C\u5C11\u98DF\u591A\u9910' }
+    ]
+  },
+  bmi_standard: {
+    label: '\u6807\u51C6\uFF08BMI 18.5-24.0\uFF09', totalRange: [11.5, 16],
+    phases: [
+      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '1-2 kg', weekly: '0-0.2 kg', note: '\u589E\u957F\u7F13\u6162\uFF0C\u6CE8\u610F\u53F6\u9178' },
+      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7A33\u5B9A\u589E\u957F\uFF0C\u8865\u9499\u8865\u94C1' },
+      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7EE7\u7EED\u589E\u957F\uFF0C\u63A7\u7CD6\u63A7\u76D0' }
+    ]
+  },
+  bmi_high: {
+    label: '\u504F\u80D6\uFF08BMI \u2265 24.0\uFF09', totalRange: [7, 11.5],
+    phases: [
+      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '0.5-1.5 kg', weekly: '0-0.1 kg', note: '\u63A7\u5236\u589E\u957F\uFF0C\u4F4E\u7CD6\u4F4E\u8102' },
+      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6CE8\u610F\u996E\u98DF\u7ED3\u6784' },
+      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6301\u7EED\u63A7\u5236\uFF0C\u76D1\u6D4B\u8840\u538B' }
+    ]
+  }
+};
+var DIET_SUGGESTIONS = {
+  '\u5B55\u65E9\u671F': {
+    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u65E9\u671F\uFF09',
+    food: '\u53F6\u9178\u4E30\u5BCC\uFF1A\u83E0\u83DC\u3001\u82A6\u7B0B\u3001\u52A8\u7269\u809D\u810F\u3001\u8C46\u7C7B\uFF1B\u7F13\u89E3\u5B55\u5410\uFF1A\u9999\u8549\u3001\u71D5\u9EA6\u3001\u575A\u679C\u3001\u82CF\u6253\u997C\u5E72',
+    nutrition: '\u53F6\u9178 400-600 \u03BCg/\u5929\u3001\u7EF4\u751F\u7D20 B6\u3001\u94C1 20mg',
+    tips: '\u5C11\u98DF\u591A\u9910\uFF0C\u907F\u514D\u6CB9\u817B\u548C\u6C14\u5473\u91CD\u7684\u98DF\u7269\uFF1B\u6668\u8D77\u5148\u5403\u51E0\u7247\u997C\u5E72\u7F13\u89E3\u5B55\u5410'
+  },
+  '\u5B55\u4E2D\u671F': {
+    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u4E2D\u671F\uFF09',
+    food: '\u4F18\u8D28\u86CB\u767D\uFF1A\u9E21\u86CB\u3001\u725B\u5976\u3001\u9C7C\u3001\u7626\u8089\uFF08\u6BCF\u5929 200g\uFF09\uFF1B\u8865\u9499\uFF1A\u5976\u5236\u54C1\u3001\u8C46\u8150\u3001\u6DF1\u7EFF\u852C\u83DC\uFF1BDHA\uFF1A\u6DF1\u6D77\u9C7C\u6BCF\u5468 2-3 \u6B21\u3001\u6838\u6843',
+    nutrition: '\u86CB\u767D\u8D28 70-80g/\u5929\u3001\u9499 1000mg\u3001\u94C1 28mg\u3001DHA 200-300mg',
+    tips: '\u6BCF\u5929\u52A0\u9910 1-2 \u6B21\uFF08\u9178\u5976+\u575A\u679C/\u6C34\u679C\uFF09\uFF1B\u4E3B\u98DF\u7C97\u7EC6\u642D\u914D\uFF0C\u63A7\u5236\u7CBE\u5236\u7CD6'
+  },
+  '\u5B55\u665A\u671F': {
+    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u665A\u671F\uFF09',
+    food: '\u9AD8\u86CB\u767D\uFF1A\u9C7C\u79BD\u86CB\u7626\u8089\uFF1B\u81B3\u98DF\u7EA4\u7EF4\u9632\u4FBF\u79D8\uFF1A\u5168\u8C37\u7269\u3001\u82B9\u83DC\u3001\u706B\u9F99\u679C\uFF1B\u8865\u94C1\uFF1A\u7EA2\u8089\u3001\u52A8\u7269\u8840',
+    nutrition: '\u86CB\u767D\u8D28 80-100g/\u5929\u3001\u9499 1200mg\u3001\u94C1 28mg\u3001\u81B3\u98DF\u7EA4\u7EF4 25-30g',
+    tips: '\u5C11\u98DF\u591A\u9910\u907F\u514D\u80C3\u53CD\u6D41\uFF1B\u7761\u524D 2 \u5C0F\u65F6\u4E0D\u8FDB\u98DF\uFF1B\u63A7\u5236\u76D0\u5206\u9632\u6C34\u80BF'
+  }
+};
+var EXERCISE_SUGGESTIONS = {
+  '\u5B55\u65E9\u671F': {
+    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u65E9\u671F\uFF09',
+    content: '\u6563\u6B65 20-30 \u5206\u949F/\u5929\uFF1B\u5B55\u5987\u745C\u4F3D\uFF08\u907F\u514D\u8DF3\u8DC3\u548C\u626D\u8F6C\u52A8\u4F5C\uFF09\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8\u6BCF\u5929 3 \u7EC4\u6BCF\u7EC4 10 \u6B21',
+    tips: '\u907F\u514D\u5267\u70C8\u8FD0\u52A8\u548C\u8179\u90E8\u53D7\u538B\uFF1B\u6709\u51FA\u8840\u6216\u5148\u5146\u6D41\u4EA7\u9700\u5367\u5E8A\u4F11\u606F'
+  },
+  '\u5B55\u4E2D\u671F': {
+    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u4E2D\u671F\uFF09',
+    content: '\u5FEB\u6B65\u8D70 30-45 \u5206\u949F/\u5929\uFF1B\u5B55\u5987\u666E\u62C9\u63D0\uFF08\u5F3A\u5316\u6838\u5FC3\u548C\u76C6\u5E95\u808C\uFF09\uFF1B\u6E38\u6CF3\uFF08\u7F13\u89E3\u8170\u80CC\u75DB\uFF09\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8',
+    tips: '\u6700\u4F73\u8FD0\u52A8\u671F\uFF0C\u53EF\u9002\u5F53\u589E\u52A0\u5F3A\u5EA6\uFF1B\u907F\u514D\u4EF0\u5367\u4F4D\u8FC7\u4E45\uFF08\u9632\u6B62\u538B\u8FEB\u4E0B\u8154\u9759\u8109\uFF09'
+  },
+  '\u5B55\u665A\u671F': {
+    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u665A\u671F\uFF09',
+    content: '\u6162\u8D70 30 \u5206\u949F/\u5929\uFF1B\u76D8\u817F\u5750\u62C9\u4F38\u6253\u5F00\u9AA8\u76C6\uFF1B\u6DF1\u8E72\u7EC3\u4E60\uFF08\u6276\u5899\uFF0C\u4E3A\u5206\u5A29\u505A\u51C6\u5907\uFF09\uFF1B\u4F1A\u9634\u6309\u6469\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8',
+    tips: '\u907F\u514D\u5267\u70C8\u8FD0\u52A8\u548C\u957F\u65F6\u95F4\u7AD9\u7ACB\uFF1B\u51FA\u73B0\u89C4\u5F8B\u5BAB\u7F29\u3001\u7834\u6C34\u3001\u89C1\u7EA2\u7ACB\u5373\u505C\u6B62\u8FD0\u52A8\u5C31\u533B'
+  }
+};
+function getPreWeight() {
+  if (appData.preWeight) return appData.preWeight;
+  var records = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  if (records.length) return records[0].weight;
+  return null;
+}
+function getCurrentPregnancyWeek() {
+  if (appData.lmpDate) {
+    var totalDays = daysBetween(appData.lmpDate, new Date());
+    if (totalDays >= 0) return Math.floor(totalDays / 7) + 1;
+  }
+  if (appData.babyRecords && appData.babyRecords.length) {
+    var last = appData.babyRecords.slice().sort(function(a,b){ return b.totalDays - a.totalDays; })[0];
+    if (last && last.week) return last.week;
+  }
+  return null;
+}
+function getBmiCategory(bmi) {
+  if (bmi < 18.5) return 'bmi_low';
+  if (bmi >= 24) return 'bmi_high';
+  return 'bmi_standard';
+}
+function renderWeightGuide() {
+  var summaryEl = document.getElementById('weight-guide-summary');
+  var tableEl = document.getElementById('weight-guide-table-wrap');
+  var suggEl = document.getElementById('weight-guide-suggestion');
+  if (!summaryEl) return;
+  var preWeight = getPreWeight();
+  var records = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  var currentWeight = records.length ? records[records.length - 1].weight : (preWeight || 0);
+  var gained = preWeight ? (currentWeight - preWeight) : 0;
+  var heightM = appData.height ? appData.height / 100 : 1.70;
+  var bmi = preWeight ? preWeight / (heightM * heightM) : (currentWeight / (heightM * heightM));
+  var categoryKey = getBmiCategory(bmi);
+  var guide = PREGNANCY_WEIGHT_GUIDE[categoryKey];
+  var week = getCurrentPregnancyWeek();
+  var weekNum = week || 0;
+  var currentPhase = weekNum < 13 ? '\u5B55\u65E9\u671F' : (weekNum < 28 ? '\u5B55\u4E2D\u671F' : '\u5B55\u665A\u671F');
+  var summaryHtml = '';
+  summaryHtml += '<div class="wgs-item"><div class="wgs-label">BMI \u5206\u7C7B</div><div class="wgs-value">' + bmi.toFixed(1) + '</div><div class="wgs-sub">' + guide.label + '</div></div>';
+  summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u63A8\u8350\u603B\u589E\u91CD</div><div class="wgs-value">' + guide.totalRange[0] + '-' + guide.totalRange[1] + ' kg</div><div class="wgs-sub">\u6574\u4E2A\u5B55\u671F</div></div>';
+  if (preWeight) {
+    var gainStatus = '', gainClass = '';
+    if (gained > guide.totalRange[1]) { gainStatus = '\u5DF2\u8D85\u6807'; gainClass = 'alarm'; }
+    else if (gained < guide.totalRange[0] * (weekNum / 40)) { gainStatus = '\u504F\u6162'; gainClass = 'warn'; }
+    else { gainStatus = '\u6B63\u5E38'; }
+    summaryHtml += '<div class="wgs-item ' + gainClass + '"><div class="wgs-label">\u5DF2\u589E\u91CD</div><div class="wgs-value">' + gained.toFixed(1) + ' kg</div><div class="wgs-sub">' + gainStatus + '</div></div>';
+  } else {
+    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5DF2\u589E\u91CD</div><div class="wgs-value">--</div><div class="wgs-sub">\u8BF7\u5148\u8BB0\u5F55\u4F53\u91CD</div></div>';
+  }
+  if (week) {
+    summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u5F53\u524D\u5B55\u5468</div><div class="wgs-value">' + weekNum + ' \u5468</div><div class="wgs-sub">' + currentPhase + '</div></div>';
+  } else {
+    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5F53\u524D\u5B55\u5468</div><div class="wgs-value">\u672A\u8BBE\u7F6E</div><div class="wgs-sub">\u8BF7\u8BBE\u7F6E\u672B\u6B21\u6708\u7ECF</div></div>';
+  }
+  summaryEl.innerHTML = summaryHtml;
+  var tableHtml = '<table class="weight-guide-table"><thead><tr><th>\u9636\u6BB5</th><th>\u5B55\u5468</th><th>\u7D2F\u8BA1\u589E\u91CD</th><th>\u6BCF\u5468\u589E\u957F</th><th>\u8BF4\u660E</th></tr></thead><tbody>';
+  for (var i = 0; i < guide.phases.length; i++) {
+    var p = guide.phases[i];
+    var isCurrent = p.phase === currentPhase;
+    tableHtml += '<tr class="' + (isCurrent ? 'wg-current' : '') + '">';
+    tableHtml += '<td class="wg-phase">' + p.phase + (isCurrent ? '<span class="wg-tag wg-tag-current">\u5F53\u524D</span>' : '') + '</td>';
+    tableHtml += '<td>' + p.weeks + '</td>';
+    tableHtml += '<td>' + p.total + '</td>';
+    tableHtml += '<td>' + p.weekly + '</td>';
+    tableHtml += '<td>' + p.note + '</td>';
+    tableHtml += '</tr>';
+  }
+  tableHtml += '</tbody></table>';
+  tableEl.innerHTML = tableHtml;
+  var diet = DIET_SUGGESTIONS[currentPhase];
+  var exer = EXERCISE_SUGGESTIONS[currentPhase];
+  var suggHtml = '<h5>\uD83D\uDCCB ' + currentPhase + ' \u4E2A\u6027\u5316\u5EFA\u8BAE</h5>';
+  suggHtml += '<div class="wgs-section"><span class="wgs-section-title">' + diet.title + '</span>';
+  suggHtml += '<strong>\u63A8\u8350\u98DF\u7269\uFF1A</strong>' + diet.food + '<br>';
+  suggHtml += '<strong>\u8425\u517B\u7D20\uFF1A</strong>' + diet.nutrition + '<br>';
+  suggHtml += '<strong>\u5C0F\u8D34\u58EB\uFF1A</strong>' + diet.tips + '</div>';
+  suggHtml += '<div class="wgs-section"><span class="wgs-section-title">' + exer.title + '</span>';
+  suggHtml += exer.content + '<br>';
+  suggHtml += '<strong>\u6CE8\u610F\uFF1A</strong>' + exer.tips + '</div>';
+  suggEl.innerHTML = suggHtml;
+}
+document.getElementById('weight-guide-toggle').addEventListener('click', function(){
+  document.getElementById('weight-guide-card').classList.toggle('collapsed');
+});
+document.getElementById('save-preg-info-btn').addEventListener('click', function(){
+  var h = parseFloat(document.getElementById('preg-height').value);
+  var w = parseFloat(document.getElementById('preg-pre-weight').value);
+  if (!isNaN(h) && h > 0) appData.height = h;
+  if (!isNaN(w) && w > 0) appData.preWeight = w;
+  saveData(); renderWeightSection();
+});
 function renderPoopSection() { document.getElementById('poop-date').value = todayISO(); renderPoopList(); }
 function resetPoopForm() {
   document.getElementById('poop-date').value = todayISO();

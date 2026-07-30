@@ -139,6 +139,25 @@
           <button id="add-weight-btn">添加</button>
           <button type="button" id="cancel-weight-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
+        <div class="preg-info-form">
+          <span class="preg-info-title">📐 孕期基础信息（用于生成增长表）</span>
+          <div class="preg-info-fields">
+            <input type="number" id="preg-height" placeholder="身高(cm)" step="0.1" value="170">
+            <input type="number" id="preg-pre-weight" placeholder="孕前体重(kg)" step="0.1">
+            <button type="button" id="save-preg-info-btn">保存</button>
+          </div>
+        </div>
+        <div class="weight-guide-card" id="weight-guide-card">
+          <div class="weight-guide-header" id="weight-guide-toggle">
+            <h4>📊 孕期体重增长参考表</h4>
+            <span class="weight-guide-toggle-icon">▾</span>
+          </div>
+          <div class="weight-guide-body" id="weight-guide-body">
+            <div class="weight-guide-summary" id="weight-guide-summary"></div>
+            <div class="weight-guide-table-wrap" id="weight-guide-table-wrap"></div>
+            <div class="weight-guide-suggestion" id="weight-guide-suggestion"></div>
+          </div>
+        </div>
         <div class="weight-chart" id="weight-chart"></div>
         <div class="record-list" id="weight-list"></div>
       </div>
