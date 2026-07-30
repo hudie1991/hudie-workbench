@@ -307,11 +307,11 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .weekly-table td.day-label.today { background:rgba(90,122,79,0.12); }
 .weekly-table td.day-label .day-date { font-size:14px; margin-bottom:2px; }
 .weekly-table td.day-label .day-week { font-size:11px; opacity:0.8; }
-.weekly-table td.meal-cell { position:relative; padding-top:22px; }
+.weekly-table td.meal-cell { position:relative; padding-top:22px; overflow:visible; }
 .meal-cell-header { position:absolute; top:2px; right:4px; }
 .meal-detail-toggle { width:22px; height:22px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:5px; font-size:16px; line-height:1; }
 .meal-detail-toggle:hover { background:var(--bg); color:var(--primary); }
-.weekly-table textarea { width:100%; min-width:90px; min-height:72px; height:auto; border:1px solid var(--border); border-radius:6px; padding:6px; font-size:12px; resize:none; font-family:inherit; outline:none; box-sizing:border-box; overflow:visible; line-height:1.5; word-break:break-word; white-space:pre-wrap; }
+.weekly-table textarea { width:100%; min-width:90px; min-height:100px; height:auto; max-height:none; border:1px solid var(--border); border-radius:6px; padding:6px; font-size:12px; resize:none; font-family:inherit; outline:none; box-sizing:border-box; overflow:visible; line-height:1.6; word-break:break-word; white-space:pre-wrap; display:block; }
 .weekly-table textarea:focus { border-color:var(--primary); }
 .meal-tags-preview { display:flex; flex-wrap:wrap; gap:3px; margin-top:4px; min-height:16px; }
 .mtp-tag { font-size:9px; color:var(--primary); background:rgba(90,122,79,0.1); padding:1px 5px; border-radius:6px; }
