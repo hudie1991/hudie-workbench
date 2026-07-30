@@ -1345,6 +1345,7 @@ function renderWeeklyPlan() {
   plan.innerHTML = html;
   bindWeeklyEvents();
   autoResizeWeeklyTextareas();
+  requestAnimationFrame(function(){ autoResizeWeeklyTextareas(); });
 }
 
 function autoResizeWeeklyTextareas() {
@@ -1352,6 +1353,10 @@ function autoResizeWeeklyTextareas() {
     ta.style.height = 'auto';
     ta.style.height = Math.max(54, ta.scrollHeight) + 'px';
   });
+}
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(54, el.scrollHeight) + 'px';
 }
 
 function bindWeeklyEvents() {
@@ -1373,8 +1378,7 @@ document.getElementById('weekly-plan').addEventListener('input', function(e){
   }
   // textarea \u81EA\u52A8\u8C03\u6574\u9AD8\u5EA6
   if (e.target.tagName === 'TEXTAREA') {
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.max(54, e.target.scrollHeight) + 'px';
+    autoResizeTextarea(e.target);
   }
 });
 
