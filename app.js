@@ -56,7 +56,7 @@ const defaultData = {
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
   todosDate:null,
-  weeklyPlan:WEEKDAYS.reduce(function(acc,d){ acc[d]={}; MEAL_KEYS.forEach(function(k){ acc[d][k]={ content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] }; }); return acc; }, {}),
+  weeklyPlan:{},
   interests:[], memos:[], reviews:[]
 };
 function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
@@ -69,21 +69,38 @@ function migrateData(stored) {
       merged[key] = stored[key];
     }
   }
-  if (!merged.weeklyPlan) merged.weeklyPlan = deepClone(defaultData.weeklyPlan);
+  if (!merged.weeklyPlan) merged.weeklyPlan = {};
   if (!merged.lmpDate) merged.lmpDate = null;
-  WEEKDAYS.forEach(function(d){
-    if (!merged.weeklyPlan[d]) merged.weeklyPlan[d] = {};
-    MEAL_KEYS.forEach(function(k){
-      var val = merged.weeklyPlan[d][k];
-      if (val === undefined || val === null) {
-        merged.weeklyPlan[d][k] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
-      } else if (typeof val === 'string') {
-        merged.weeklyPlan[d][k] = { content:val, meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
-      } else if (!val.tags) {
-        val.tags = [];
+  // \u65E7 weeklyPlan \u6309 mon/tue \u5B58\u50A8\uFF0C\u8FC1\u79FB\u5230\u6309 ISO \u65E5\u671F\u5B58\u50A8
+  var hasOldKeys = false;
+  for (var i = 0; i < WEEKDAYS.length; i++) {
+    if (merged.weeklyPlan[WEEKDAYS[i]] && typeof merged.weeklyPlan[WEEKDAYS[i]] === 'object' && Object.keys(merged.weeklyPlan[WEEKDAYS[i]]).length > 0) { hasOldKeys = true; break; }
+  }
+  if (hasOldKeys && (!merged.weeklyPlanMigrated)) {
+    var today = new Date();
+    var todayDow = (today.getDay() + 6) % 7;
+    var monday = new Date(today);
+    monday.setDate(today.getDate() - todayDow);
+    for (var w = 0; w < WEEKDAYS.length; w++) {
+      var wd = WEEKDAYS[w];
+      var oldCell = merged.weeklyPlan[wd];
+      if (!oldCell) continue;
+      var dateObj = new Date(monday);
+      dateObj.setDate(monday.getDate() + w);
+      var iso = dateObj.getFullYear() + '-' + ('0' + (dateObj.getMonth() + 1)).slice(-2) + '-' + ('0' + dateObj.getDate()).slice(-2);
+      if (!merged.weeklyPlan[iso]) merged.weeklyPlan[iso] = {};
+      for (var k = 0; k < MEAL_KEYS.length; k++) {
+        var mk = MEAL_KEYS[k];
+        var val = oldCell[mk];
+        if (val !== undefined && val !== null) {
+          if (typeof val === 'string') { merged.weeklyPlan[iso][mk] = { content:val, meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] }; }
+          else if (val.content || val.tags) { merged.weeklyPlan[iso][mk] = val; }
+        }
       }
-    });
-  });
+      delete merged.weeklyPlan[wd];
+    }
+    merged.weeklyPlanMigrated = true;
+  }
   ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   if (merged.todos) {
     merged.todos.forEach(function(t){ if (t.note === undefined) t.note = ''; });
@@ -864,6 +881,10 @@ function addDays(dateStr, days) {
   d.setDate(d.getDate() + days);
   return d;
 }
+function parseISO(s) {
+  var parts = s.split('-');
+  return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+}
 
 function formatDate(d) {
   if (typeof d === 'string') d = new Date(d);
@@ -1295,12 +1316,12 @@ document.getElementById('weekly-fav-results').addEventListener('click', function
 var currentWeekOffset = 0;
 var currentExpandedCell = null;
 
-function getWeeklyPlan(day, meal) {
-  if (!appData.weeklyPlan[day]) appData.weeklyPlan[day] = {};
-  if (!appData.weeklyPlan[day][meal] || typeof appData.weeklyPlan[day][meal] !== 'object') {
-    appData.weeklyPlan[day][meal] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
+function getWeeklyPlan(dateIso, meal) {
+  if (!appData.weeklyPlan[dateIso]) appData.weeklyPlan[dateIso] = {};
+  if (!appData.weeklyPlan[dateIso][meal] || typeof appData.weeklyPlan[dateIso][meal] !== 'object') {
+    appData.weeklyPlan[dateIso][meal] = { content:'', meat:'', veg:'', staple:'', fruit:'', others:'', tags:[] };
   }
-  return appData.weeklyPlan[day][meal];
+  return appData.weeklyPlan[dateIso][meal];
 }
 
 function renderWeeklyPlan() {
@@ -1319,18 +1340,18 @@ function renderWeeklyPlan() {
   for (var i = 0; i < MEAL_KEYS.length; i++) html += '<th>' + MEAL_LABELS[MEAL_KEYS[i]] + '</th>';
   html += '</tr></thead><tbody>';
   for (var d = 0; d < WEEKDAYS.length; d++) {
-    var day = WEEKDAYS[d];
     var dateInfo = weekDates[d];
-    var isToday = dateInfo.iso === todayISO();
+    var iso = dateInfo.iso;
+    var isToday = iso === todayISO();
     html += '<tr><td class="day-label ' + (isToday ? 'today' : '') + '"><div class="day-date">' + dateInfo.short + '</div><div class="day-week">' + dateInfo.weekday + '</div></td>';
     for (var m = 0; m < MEAL_KEYS.length; m++) {
       var meal = MEAL_KEYS[m];
-      var data = getWeeklyPlan(day, meal);
+      var data = getWeeklyPlan(iso, meal);
       html += '<td class="meal-cell">';
       html += '<div class="meal-cell-header">';
-      html += '<button class="meal-detail-toggle" data-day="' + day + '" data-meal="' + meal + '">\u22EF</button>';
+      html += '<button class="meal-detail-toggle" data-iso="' + iso + '" data-meal="' + meal + '">\u22EF</button>';
       html += '</div>';
-      html += '<textarea data-day="' + day + '" data-meal="' + meal + '" data-field="content" placeholder="\u8BA1\u5212\u5403\u4EC0\u4E48...">' + escapeHtml(data.content || '') + '</textarea>';
+      html += '<textarea data-iso="' + iso + '" data-meal="' + meal + '" data-field="content" placeholder="\u8BA1\u5212\u5403\u4EC0\u4E48...">' + escapeHtml(data.content || '') + '</textarea>';
       html += '<div class="meal-tags-preview">' + (data.tags && data.tags.length ? data.tags.map(function(t){ return '<span class="mtp-tag">' + escapeHtml(t) + '</span>'; }).join('') : '') + '</div>';
       html += '</td>';
     }
@@ -1386,14 +1407,14 @@ function bindWeeklyEvents() {
   document.getElementById('week-today').addEventListener('click', function(){ currentWeekOffset = 0; renderWeeklyPlan(); });
   document.getElementById('analyze-diet-btn').addEventListener('click', analyzeTodayDiet);
   document.querySelectorAll('.meal-detail-toggle').forEach(function(btn){
-    btn.addEventListener('click', function(e){ e.stopPropagation(); openMealDetail(btn.dataset.day, btn.dataset.meal); });
+    btn.addEventListener('click', function(e){ e.stopPropagation(); openMealDetail(btn.dataset.iso, btn.dataset.meal); });
   });
 }
 
 document.getElementById('weekly-plan').addEventListener('input', function(e){
-  var day = e.target.dataset.day, meal = e.target.dataset.meal, field = e.target.dataset.field;
-  if (day && meal && field) {
-    var data = getWeeklyPlan(day, meal);
+  var iso = e.target.dataset.iso, meal = e.target.dataset.meal, field = e.target.dataset.field;
+  if (iso && meal && field) {
+    var data = getWeeklyPlan(iso, meal);
     data[field] = e.target.value;
     saveData();
   }
@@ -1479,11 +1500,15 @@ function updateAutoTags(panel, data) {
   });
 }
 
-function openMealDetail(day, meal) {
-  currentExpandedCell = { day:day, meal:meal };
-  var data = getWeeklyPlan(day, meal);
+function openMealDetail(iso, meal) {
+  currentExpandedCell = { iso:iso, meal:meal };
+  var data = getWeeklyPlan(iso, meal);
   var mealName = MEAL_LABELS[meal];
-  var dateInfo = getWeekDates(new Date().setDate(new Date().getDate() + currentWeekOffset * 7))[WEEKDAYS.indexOf(day)];
+  var dateObj = parseISO(iso);
+  var month = dateObj.getMonth() + 1, day = dateObj.getDate();
+  var dayLabel = month + '.' + day;
+  var weekdayNames = ['\u5468\u65E5','\u5468\u4E00','\u5468\u4E8C','\u5468\u4E09','\u5468\u56DB','\u5468\u4E94','\u5468\u516D'];
+  var weekdayLabel = weekdayNames[dateObj.getDay()];
   var panel = document.createElement('div');
   panel.className = 'meal-detail-panel-overlay';
   panel.id = 'meal-detail-panel';
@@ -1497,7 +1522,7 @@ function openMealDetail(day, meal) {
   var html = '';
   html += '<div class="meal-detail-panel">';
   html += '<div class="meal-detail-header">';
-  html += '<h4>' + dateInfo.short + ' ' + dateInfo.weekday + ' \u00B7 ' + mealName + '</h4>';
+  html += '<h4>' + dayLabel + ' ' + weekdayLabel + ' \u00B7 ' + mealName + '</h4>';
   html += '<button class="meal-detail-close">\u2715</button>';
   html += '</div>';
   html += '<div class="meal-detail-body">';
@@ -1565,11 +1590,10 @@ function closeMealDetail() {
 }
 
 function analyzeTodayDiet() {
-  var today = new Date().getDay();
-  var dayKey = today === 0 ? 'sun' : WEEKDAYS[today - 1];
+  var iso = todayISO();
   var meals = [];
   MEAL_KEYS.forEach(function(meal){
-    var data = getWeeklyPlan(dayKey, meal);
+    var data = getWeeklyPlan(iso, meal);
     if (data && (data.content || data.meat || data.veg || data.staple || data.fruit || (data.tags && data.tags.length))) {
       meals.push({ name:MEAL_LABELS[meal], data:data });
     }
