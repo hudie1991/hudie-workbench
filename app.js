@@ -1365,40 +1365,15 @@ function renderWeeklyPlan() {
   html += '</div>';
   plan.innerHTML = html;
   bindWeeklyEvents();
-  autoResizeWeeklyTextareas();
-  requestAnimationFrame(function(){ autoResizeWeeklyTextareas(); });
 }
 
 function autoResizeWeeklyTextareas() {
   document.querySelectorAll('#weekly-plan textarea').forEach(function(ta){
-    autoResizeTextarea(ta);
+    ta.style.height = '';
   });
 }
 function autoResizeTextarea(el) {
-  // \u4F7F\u7528 mirror div \u51C6\u786E\u8BA1\u7B97\u771F\u5B9E\u9AD8\u5EA6
-  var mirror = document.getElementById('ta-mirror');
-  if (!mirror) {
-    mirror = document.createElement('div');
-    mirror.id = 'ta-mirror';
-    mirror.style.position = 'absolute';
-    mirror.style.visibility = 'hidden';
-    mirror.style.left = '-9999px';
-    mirror.style.top = '0';
-    mirror.style.pointerEvents = 'none';
-    document.body.appendChild(mirror);
-  }
-  var cs = window.getComputedStyle(el);
-  mirror.style.width = el.clientWidth + 'px';
-  mirror.style.font = cs.font;
-  mirror.style.padding = cs.padding;
-  mirror.style.border = cs.border;
-  mirror.style.boxSizing = cs.boxSizing;
-  mirror.style.lineHeight = cs.lineHeight;
-  mirror.style.whiteSpace = 'pre-wrap';
-  mirror.style.wordBreak = 'break-word';
-  mirror.textContent = el.value || el.placeholder || '';
-  var h = mirror.offsetHeight + 4;
-  el.style.height = Math.max(72, h) + 'px';
+  el.style.height = '';
 }
 
 function bindWeeklyEvents() {
@@ -1418,10 +1393,7 @@ document.getElementById('weekly-plan').addEventListener('input', function(e){
     data[field] = e.target.value;
     saveData();
   }
-  // textarea \u81EA\u52A8\u8C03\u6574\u9AD8\u5EA6
-  if (e.target.tagName === 'TEXTAREA') {
-    autoResizeTextarea(e.target);
-  }
+// \u8F93\u5165\u65F6\u5B9E\u65F6\u66F4\u65B0\u6807\u7B7E\uFF08\u9AD8\u5EA6\u56FA\u5B9A\uFF0C\u4E0D\u9700\u8981\u81EA\u9002\u5E94\uFF09
 });
 
 /* ====== \u98DF\u6750\u63A8\u8350\u4E0E\u81EA\u52A8\u6807\u7B7E ====== */
