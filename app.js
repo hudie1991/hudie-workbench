@@ -55,6 +55,8 @@ const defaultData = {
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
+  petBig:{ info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] },
+  petSmall:{ info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] },
   todosDate:null,
   weeklyPlan:{},
   interests:[], memos:[], reviews:[]
@@ -102,6 +104,11 @@ function migrateData(stored) {
     merged.weeklyPlanMigrated = true;
   }
   ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
+  ['petBig','petSmall'].forEach(function(k){
+    if (!merged[k]) merged[k] = { info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] };
+    if (!merged[k].info) merged[k].info = {name:'',birth:'',weight:''};
+    ['health','vaccine','food','memo'].forEach(function(c){ if (!Array.isArray(merged[k][c])) merged[k][c] = []; });
+  });
   if (merged.todos) {
     merged.todos.forEach(function(t){ if (t.note === undefined) t.note = ''; });
   }
@@ -1710,6 +1717,119 @@ recordBtn.addEventListener('pointerup', stopRecording);
 recordBtn.addEventListener('pointerleave', stopRecording);
 recordBtn.addEventListener('touchstart', function(e){ e.preventDefault(); startRecording(); });
 recordBtn.addEventListener('touchend', function(e){ e.preventDefault(); stopRecording(); });
+/* ====== \u5BA0\u7269\u8BB0\u5F55\uFF08\u5927\u5B9D/\u5C0F\u5B9D\uFF09 ====== */
+function renderPet(petKey) {
+  var data = appData[petKey] || {};
+  if (!data.info) data.info = {name:'',birth:'',weight:''};
+  var info = data.info;
+  document.getElementById('pet-' + petKey + '-name').value = info.name || '';
+  document.getElementById('pet-' + petKey + '-birth').value = info.birth || '';
+  document.getElementById('pet-' + petKey + '-weight').value = info.weight || '';
+  renderPetList(petKey, 'health');
+  renderPetList(petKey, 'vaccine');
+  renderPetList(petKey, 'food');
+  renderPetList(petKey, 'memo');
+}
+function renderPetList(petKey, cat) {
+  var list = document.getElementById('pet-' + petKey + '-' + cat + '-list');
+  if (!list) return;
+  var arr = (appData[petKey] && appData[petKey][cat]) || [];
+  if (!arr.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
+  var sorted = arr.slice().sort(function(a,b){ return (b.date || '').localeCompare(a.date || ''); });
+  var html = '';
+  for (var i = 0; i < sorted.length; i++) {
+    var r = sorted[i];
+    html += '<div class="record-item">';
+    var main = '<span class="record-date">' + (r.date || '') + '</span>';
+    if (cat === 'health') main += '<span class="record-value">' + escapeHtml(r.item || '') + '</span>';
+    else if (cat === 'vaccine') main += '<span class="record-value">' + escapeHtml(r.name || '') + '</span>' + (r.next ? '<span class="record-tag">\u4E0B\u6B21 ' + r.next + '</span>' : '');
+    else if (cat === 'food') main += '<span class="record-value">' + escapeHtml(r.item || '') + '</span>' + (r.amount ? '<span class="record-tag">' + escapeHtml(r.amount) + '</span>' : '');
+    else if (cat === 'memo') main += '<span class="record-value">' + (r.text || '').substring(0, 20) + (r.text && r.text.length > 20 ? '...' : '') + '</span>';
+    html += '<div class="record-main">' + main + '</div>';
+    if (cat === 'memo' && r.text) html += '<div class="record-note">' + escapeHtml(r.text) + '</div>';
+    if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
+    html += '<button class="record-delete" data-pet="' + petKey + '" data-cat="' + cat + '" data-id="' + r.id + '">\u2715</button>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+['big','small'].forEach(function(petKey){
+  document.getElementById('save-pet-' + petKey + '-btn').addEventListener('click', function(){
+    if (!appData[petKey]) appData[petKey] = { info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] };
+    appData[petKey].info.name = document.getElementById('pet-' + petKey + '-name').value.trim();
+    appData[petKey].info.birth = document.getElementById('pet-' + petKey + '-birth').value;
+    appData[petKey].info.weight = document.getElementById('pet-' + petKey + '-weight').value.trim();
+    saveData();
+    alert('\u5DF2\u4FDD\u5B58');
+  });
+  document.getElementById('add-pet-' + petKey + '-health-btn').addEventListener('click', function(){
+    var date = document.getElementById('pet-' + petKey + '-health-date').value || todayISO();
+    var item = document.getElementById('pet-' + petKey + '-health-item').value.trim();
+    var note = document.getElementById('pet-' + petKey + '-health-note').value.trim();
+    if (!item) { alert('\u8BF7\u586B\u5199\u5065\u5EB7\u4E8B\u9879'); return; }
+    appData[petKey].health.push({ id:newId(appData[petKey].health), date:date, item:item, note:note });
+    saveData(); renderPet(petKey);
+    document.getElementById('pet-' + petKey + '-health-item').value = '';
+    document.getElementById('pet-' + petKey + '-health-note').value = '';
+  });
+  document.getElementById('add-pet-' + petKey + '-vaccine-btn').addEventListener('click', function(){
+    var date = document.getElementById('pet-' + petKey + '-vaccine-date').value || todayISO();
+    var name = document.getElementById('pet-' + petKey + '-vaccine-name').value.trim();
+    var next = document.getElementById('pet-' + petKey + '-vaccine-next').value;
+    if (!name) { alert('\u8BF7\u586B\u5199\u75AB\u82D7\u540D\u79F0'); return; }
+    appData[petKey].vaccine.push({ id:newId(appData[petKey].vaccine), date:date, name:name, next:next });
+    saveData(); renderPet(petKey);
+    document.getElementById('pet-' + petKey + '-vaccine-name').value = '';
+    document.getElementById('pet-' + petKey + '-vaccine-next').value = '';
+  });
+  document.getElementById('add-pet-' + petKey + '-food-btn').addEventListener('click', function(){
+    var date = document.getElementById('pet-' + petKey + '-food-date').value.trim() || todayISO();
+    var item = document.getElementById('pet-' + petKey + '-food-item').value.trim();
+    var amount = document.getElementById('pet-' + petKey + '-food-amount').value.trim();
+    if (!item) { alert('\u8BF7\u586B\u5199\u98DF\u7269'); return; }
+    appData[petKey].food.push({ id:newId(appData[petKey].food), date:date, item:item, amount:amount });
+    saveData(); renderPet(petKey);
+    document.getElementById('pet-' + petKey + '-food-item').value = '';
+    document.getElementById('pet-' + petKey + '-food-amount').value = '';
+  });
+  document.getElementById('add-pet-' + petKey + '-memo-btn').addEventListener('click', function(){
+    var date = document.getElementById('pet-' + petKey + '-memo-date').value || todayISO();
+    var text = document.getElementById('pet-' + petKey + '-memo-text').value.trim();
+    if (!text) { alert('\u8BF7\u586B\u5199\u5185\u5BB9'); return; }
+    appData[petKey].memo.push({ id:newId(appData[petKey].memo), date:date, text:text });
+    saveData(); renderPet(petKey);
+    document.getElementById('pet-' + petKey + '-memo-text').value = '';
+  });
+  document.getElementById('pet-' + petKey + '-info').addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.record-delete') : null;
+    if (!btn) return;
+    var cat = btn.dataset.cat, id = parseInt(btn.dataset.id);
+    if (!confirm('\u5220\u9664\u8FD9\u6761\u8BB0\u5F55\uFF1F')) return;
+    appData[petKey][cat] = appData[petKey][cat].filter(function(r){ return r.id !== id; });
+    saveData(); renderPet(petKey);
+  });
+});
+// \u5BA0\u7269 tab \u5207\u6362
+document.querySelectorAll('.pet-tab').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    var petKey = tab.dataset.pet, cat = tab.dataset.cat;
+    document.querySelectorAll('.pet-tab[data-pet="' + petKey + '"]').forEach(function(t){ t.classList.remove('active'); });
+    tab.classList.add('active');
+    document.querySelectorAll('.pet-panel[data-pet-panel^="' + petKey + '"]').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelector('.pet-panel[data-pet-panel="' + petKey + '-' + cat + '"]').classList.add('active');
+  });
+});
+// \u6210\u957F\u677F\u5757 sub-nav \u5207\u6362
+document.querySelectorAll('.growth-nav-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var panel = btn.dataset.panel;
+    document.querySelectorAll('.growth-nav-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('.growth-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelector('.growth-panel[data-panel="' + panel + '"]').classList.add('active');
+  });
+});
+
 function renderMemos() {
   var list = document.getElementById('memo-list');
   var memos = (appData.memos || []).slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
@@ -1796,6 +1916,8 @@ function init() {
   renderDailyVideos('beauty-videos', 'beauty');
   renderDailyVideos('nutrition-videos', 'nutrition');
   renderDailyVideos('english-videos', 'english');
+  renderPet('big');
+  renderPet('small');
   renderMemos();
 }
 init();

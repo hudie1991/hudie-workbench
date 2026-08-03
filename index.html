@@ -33,6 +33,14 @@
         <span class="icon">🤰</span>
         <span class="label">孕期指南</span>
       </button>
+      <button class="nav-item" data-section="pet-big" title="大宝">
+        <span class="icon">🐱</span>
+        <span class="label">大宝</span>
+      </button>
+      <button class="nav-item" data-section="pet-small" title="小宝">
+        <span class="icon">🐶</span>
+        <span class="label">小宝</span>
+      </button>
       <button class="nav-item" data-section="favorites" title="兴趣收藏">
         <span class="icon">⭐</span>
         <span class="label">兴趣收藏</span>
@@ -41,21 +49,9 @@
         <span class="icon">📅</span>
         <span class="label">一周饮食</span>
       </button>
-      <button class="nav-item" data-section="pilates" title="普拉提">
-        <span class="icon">🧘</span>
-        <span class="label">普拉提</span>
-      </button>
-      <button class="nav-item" data-section="beauty" title="化妆·穿搭">
-        <span class="icon">💄</span>
-        <span class="label">化妆穿搭</span>
-      </button>
-      <button class="nav-item" data-section="nutrition" title="营养学知识">
-        <span class="icon">🥑</span>
-        <span class="label">营养学</span>
-      </button>
-      <button class="nav-item" data-section="english" title="英语学习">
-        <span class="icon">🌍</span>
-        <span class="label">英语</span>
+      <button class="nav-item" data-section="growth" title="自我提升">
+        <span class="icon">📈</span>
+        <span class="label">自我提升</span>
       </button>
       <button class="nav-item" data-section="memo" title="备忘录">
         <span class="icon">📝</span>
@@ -357,51 +353,163 @@
       <div class="weekly-plan" id="weekly-plan"></div>
     </section>
 
-    <!-- 5. 普拉提 -->
-    <section id="pilates" class="section">
+    <!-- 5. 大宝 -->
+    <section id="pet-big" class="section">
       <div class="section-header">
-        <h2>普拉提</h2>
-        <div class="date-info">每日精选 5 个练习</div>
+        <h2>🐱 大宝</h2>
+        <div class="date-info">喵星人的日常记录</div>
       </div>
-      <div class="daily-videos" id="pilates-videos"></div>
-    </section>
-
-    <!-- 6. 化妆·穿搭 -->
-    <section id="beauty" class="section">
-      <div class="section-header">
-        <h2>化妆 · 穿搭</h2>
-        <div class="date-info">每日精选 5 个灵感</div>
+      <div class="pet-info-card" id="pet-big-info">
+        <div class="pet-info-row"><span class="pet-info-label">名字</span><input type="text" id="pet-big-name" placeholder="大宝的名字"></div>
+        <div class="pet-info-row"><span class="pet-info-label">生日</span><input type="date" id="pet-big-birth"></div>
+        <div class="pet-info-row"><span class="pet-info-label">体重(kg)</span><input type="text" inputmode="decimal" id="pet-big-weight" placeholder="0.0"></div>
+        <button id="save-pet-big-btn" class="data-btn">保存信息</button>
       </div>
-      <div class="daily-videos" id="beauty-videos"></div>
-    </section>
-
-    <!-- 7. 营养学知识 -->
-    <section id="nutrition" class="section">
-      <div class="section-header">
-        <h2>营养学知识</h2>
-        <div class="date-info">每日精选 5 条</div>
+      <div class="pet-tabs">
+        <button class="pet-tab active" data-pet="big" data-cat="health">🏥 健康</button>
+        <button class="pet-tab" data-pet="big" data-cat="vaccine">💉 疫苗</button>
+        <button class="pet-tab" data-pet="big" data-cat="food">🍽️ 饮食</button>
+        <button class="pet-tab" data-pet="big" data-cat="memo">📝 记录</button>
       </div>
-      <div class="daily-videos" id="nutrition-videos"></div>
-    </section>
-
-    <!-- 8. 英语 -->
-    <section id="english" class="section">
-      <div class="section-header">
-        <h2>英语学习</h2>
-        <div class="date-info">每日精选 5 个日常对话</div>
-      </div>
-      <div class="voca-card">
-        <div class="voca-icon">🎙️</div>
-        <div class="voca-info">
-          <h4>Voca AI 口语神器</h4>
-          <p>可直接与 AI 英语对话练习</p>
+      <div class="pet-panel active" data-pet-panel="big-health">
+        <div class="pet-form">
+          <input type="date" id="pet-big-health-date">
+          <input type="text" id="pet-big-health-item" placeholder="健康事项（体检/驱虫/看病等）">
+          <input type="text" id="pet-big-health-note" placeholder="备注">
+          <button id="add-pet-big-health-btn">添加</button>
         </div>
-        <a href="https://www.voca.ai" target="_blank" class="voca-btn">去对话</a>
+        <div class="record-list" id="pet-big-health-list"></div>
       </div>
-      <div class="daily-videos" id="english-videos"></div>
+      <div class="pet-panel" data-pet-panel="big-vaccine">
+        <div class="pet-form">
+          <input type="date" id="pet-big-vaccine-date">
+          <input type="text" id="pet-big-vaccine-name" placeholder="疫苗名称（如：猫三联）">
+          <input type="date" id="pet-big-vaccine-next" placeholder="下次接种">
+          <button id="add-pet-big-vaccine-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-big-vaccine-list"></div>
+      </div>
+      <div class="pet-panel" data-pet-panel="big-food">
+        <div class="pet-form">
+          <input type="text" id="pet-big-food-date" placeholder="日期（可选）">
+          <input type="text" id="pet-big-food-item" placeholder="吃的食物/猫粮">
+          <input type="text" id="pet-big-food-amount" placeholder="量（如 50g）">
+          <button id="add-pet-big-food-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-big-food-list"></div>
+      </div>
+      <div class="pet-panel" data-pet-panel="big-memo">
+        <div class="pet-form">
+          <input type="date" id="pet-big-memo-date">
+          <textarea id="pet-big-memo-text" placeholder="关于大宝的日常记录、趣事..."></textarea>
+          <button id="add-pet-big-memo-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-big-memo-list"></div>
+      </div>
     </section>
 
-    <!-- 9. 备忘录 -->
+    <!-- 6. 小宝 -->
+    <section id="pet-small" class="section">
+      <div class="section-header">
+        <h2>🐶 小宝</h2>
+        <div class="date-info">汪星人的日常记录</div>
+      </div>
+      <div class="pet-info-card" id="pet-small-info">
+        <div class="pet-info-row"><span class="pet-info-label">名字</span><input type="text" id="pet-small-name" placeholder="小宝的名字"></div>
+        <div class="pet-info-row"><span class="pet-info-label">生日</span><input type="date" id="pet-small-birth"></div>
+        <div class="pet-info-row"><span class="pet-info-label">体重(kg)</span><input type="text" inputmode="decimal" id="pet-small-weight" placeholder="0.0"></div>
+        <button id="save-pet-small-btn" class="data-btn">保存信息</button>
+      </div>
+      <div class="pet-tabs">
+        <button class="pet-tab active" data-pet="small" data-cat="health">🏥 健康</button>
+        <button class="pet-tab" data-pet="small" data-cat="vaccine">💉 疫苗</button>
+        <button class="pet-tab" data-pet="small" data-cat="food">🍽️ 饮食</button>
+        <button class="pet-tab" data-pet="small" data-cat="memo">📝 记录</button>
+      </div>
+      <div class="pet-panel active" data-pet-panel="small-health">
+        <div class="pet-form">
+          <input type="date" id="pet-small-health-date">
+          <input type="text" id="pet-small-health-item" placeholder="健康事项">
+          <input type="text" id="pet-small-health-note" placeholder="备注">
+          <button id="add-pet-small-health-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-small-health-list"></div>
+      </div>
+      <div class="pet-panel" data-pet-panel="small-vaccine">
+        <div class="pet-form">
+          <input type="date" id="pet-small-vaccine-date">
+          <input type="text" id="pet-small-vaccine-name" placeholder="疫苗名称">
+          <input type="date" id="pet-small-vaccine-next" placeholder="下次接种">
+          <button id="add-pet-small-vaccine-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-small-vaccine-list"></div>
+      </div>
+      <div class="pet-panel" data-pet-panel="small-food">
+        <div class="pet-form">
+          <input type="text" id="pet-small-food-date" placeholder="日期">
+          <input type="text" id="pet-small-food-item" placeholder="食物/狗粮">
+          <input type="text" id="pet-small-food-amount" placeholder="量">
+          <button id="add-pet-small-food-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-small-food-list"></div>
+      </div>
+      <div class="pet-panel" data-pet-panel="small-memo">
+        <div class="pet-form">
+          <input type="date" id="pet-small-memo-date">
+          <textarea id="pet-small-memo-text" placeholder="关于小宝的日常记录、趣事..."></textarea>
+          <button id="add-pet-small-memo-btn">添加</button>
+        </div>
+        <div class="record-list" id="pet-small-memo-list"></div>
+      </div>
+    </section>
+
+    <!-- 7. 兴趣收藏 -->
+    <!-- 8. 一周饮食计划 -->
+    <!-- 9. 自我提升（含普拉提、化妆穿搭、营养学、英语） -->
+    <section id="growth" class="section">
+      <div class="section-header">
+        <h2>📈 自我提升</h2>
+        <div class="date-info">成长每一天</div>
+      </div>
+      <div class="growth-nav" id="growth-nav">
+        <button class="growth-nav-btn active" data-panel="pilates">🧘 普拉提</button>
+        <button class="growth-nav-btn" data-panel="beauty">💄 化妆穿搭</button>
+        <button class="growth-nav-btn" data-panel="nutrition">🥑 营养学</button>
+        <button class="growth-nav-btn" data-panel="english">🌍 英语</button>
+      </div>
+      <div class="growth-panels" id="growth-panels">
+        <div class="growth-panel active" data-panel="pilates">
+          <h3>🧘 普拉提</h3>
+          <div class="date-info" style="margin-bottom:14px;">每日精选 5 个练习</div>
+          <div class="daily-videos" id="pilates-videos"></div>
+        </div>
+        <div class="growth-panel" data-panel="beauty">
+          <h3>💄 化妆穿搭</h3>
+          <div class="date-info" style="margin-bottom:14px;">每日精选 5 个灵感</div>
+          <div class="daily-videos" id="beauty-videos"></div>
+        </div>
+        <div class="growth-panel" data-panel="nutrition">
+          <h3>🥑 营养学</h3>
+          <div class="date-info" style="margin-bottom:14px;">每日精选 5 条</div>
+          <div class="daily-videos" id="nutrition-videos"></div>
+        </div>
+        <div class="growth-panel" data-panel="english">
+          <h3>🌍 英语</h3>
+          <div class="date-info" style="margin-bottom:14px;">每日精选 5 个日常对话</div>
+          <div class="voca-card">
+            <div class="voca-icon">🎙️</div>
+            <div class="voca-info">
+              <h4>Voca AI 口语神器</h4>
+              <p>可直接与 AI 英语对话练习</p>
+            </div>
+            <a href="https://www.voca.ai" target="_blank" class="voca-btn">去对话</a>
+          </div>
+          <div class="daily-videos" id="english-videos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. 备忘录 -->
     <section id="memo" class="section">
       <div class="section-header">
         <h2>备忘录</h2>
