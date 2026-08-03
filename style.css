@@ -104,6 +104,47 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .pet-form textarea { width:100%; min-height:60px; resize:vertical; }
 .pet-form button { padding:8px 20px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:13px; cursor:pointer; }
 
+/* 学习类目模块 */
+.learning-modules { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:12px; margin-bottom:18px; }
+.learning-card { background:var(--card-bg); border-radius:12px; padding:14px; border:1px solid var(--border); text-align:center; cursor:pointer; transition:all 0.2s; position:relative; }
+.learning-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-hover); }
+.learning-card .lc-icon { font-size:28px; margin-bottom:8px; }
+.learning-card .lc-name { font-size:13px; font-weight:600; color:var(--text); }
+.learning-card .lc-count { font-size:11px; color:var(--text-light); margin-top:4px; }
+.learning-card .lc-delete { position:absolute; top:6px; right:6px; width:20px; height:20px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:4px; font-size:12px; }
+.learning-card .lc-delete:hover { background:#ffebee; color:#c62828; }
+.learning-add-card { background:var(--bg); border:2px dashed var(--border); border-radius:12px; padding:14px; text-align:center; cursor:pointer; color:var(--text-light); font-size:13px; }
+
+/* 发育指导 */
+.growth-stage-selector, .food-stage-selector { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.stage-btn { padding:8px 14px; border:1px solid var(--border); background:var(--card-bg); border-radius:20px; cursor:pointer; font-size:13px; color:var(--text-light); }
+.stage-btn:hover { border-color:var(--primary); color:var(--primary); }
+.stage-btn.active { background:var(--primary); color:white; border-color:var(--primary); }
+.growth-detail, .food-detail { background:var(--card-bg); border-radius:14px; padding:16px; border:1px solid var(--border); box-shadow:var(--shadow); }
+.gd-section { margin-bottom:14px; }
+.gd-section:last-child { margin-bottom:0; }
+.gd-section h5 { margin:0 0 6px; font-size:14px; color:var(--primary-dark); }
+.gd-section p { margin:0; font-size:13px; color:var(--text); line-height:1.7; }
+.gd-section ul { margin:4px 0 0; padding-left:18px; font-size:13px; color:var(--text); line-height:1.8; }
+
+/* 早教打卡卡片 */
+.earlyedu-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:12px; }
+.earlyedu-card { background:var(--card-bg); border-radius:14px; padding:16px; border:1px solid var(--border); box-shadow:var(--shadow); text-align:center; }
+.earlyedu-card .ee-icon { font-size:32px; margin-bottom:8px; }
+.earlyedu-card .ee-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.earlyedu-card .ee-desc { font-size:12px; color:var(--text-light); margin-bottom:10px; line-height:1.5; }
+.earlyedu-card .ee-check { padding:6px 16px; border:1px solid var(--primary); background:transparent; color:var(--primary); border-radius:20px; font-size:12px; cursor:pointer; }
+.earlyedu-card .ee-check.checked { background:var(--primary); color:white; }
+.earlyedu-card .ee-streak { font-size:11px; color:var(--accent); margin-top:6px; }
+
+/* 音乐推荐 */
+.music-recommend { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px; }
+.music-card { background:var(--card-bg); border-radius:14px; padding:16px; border:1px solid var(--border); box-shadow:var(--shadow); }
+.music-card .mc-icon { font-size:28px; margin-bottom:8px; }
+.music-card .mc-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.music-card .mc-desc { font-size:12px; color:var(--text-light); margin-bottom:8px; line-height:1.5; }
+.music-card .mc-link { display:inline-block; padding:4px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px; font-size:12px; color:var(--primary); text-decoration:none; }
+
 .meal-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; }
 .meal-card { background:var(--bg); border-radius:12px; padding:14px; border:1px solid var(--border); }
 .meal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }

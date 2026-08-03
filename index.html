@@ -356,52 +356,57 @@
     <!-- 5. 大宝 -->
     <section id="pet-big" class="section">
       <div class="section-header">
-        <h2>🐱 大宝</h2>
-        <div class="date-info">喵星人的日常记录</div>
+        <h2>👦 大宝</h2>
+        <div class="date-info">幼儿园中班 · 成长记录</div>
       </div>
-      <div class="pet-info-card" id="pet-big-info">
-        <div class="pet-info-row"><span class="pet-info-label">名字</span><input type="text" id="pet-big-name" placeholder="大宝的名字"></div>
+      <div class="pet-info-card">
+        <div class="pet-info-row"><span class="pet-info-label">姓名</span><input type="text" id="pet-big-name" placeholder="大宝的名字"></div>
         <div class="pet-info-row"><span class="pet-info-label">生日</span><input type="date" id="pet-big-birth"></div>
-        <div class="pet-info-row"><span class="pet-info-label">体重(kg)</span><input type="text" inputmode="decimal" id="pet-big-weight" placeholder="0.0"></div>
+        <div class="pet-info-row"><span class="pet-info-label">班级</span><input type="text" id="pet-big-class" placeholder="如：中班（1）班"></div>
         <button id="save-pet-big-btn" class="data-btn">保存信息</button>
       </div>
-      <div class="pet-tabs">
-        <button class="pet-tab active" data-pet="big" data-cat="health">🏥 健康</button>
-        <button class="pet-tab" data-pet="big" data-cat="vaccine">💉 疫苗</button>
-        <button class="pet-tab" data-pet="big" data-cat="food">🍽️ 饮食</button>
-        <button class="pet-tab" data-pet="big" data-cat="memo">📝 记录</button>
+      <div class="pet-tabs" id="pet-big-tabs">
+        <button class="pet-tab active" data-cat="supplies">🎒 入园清单</button>
+        <button class="pet-tab" data-cat="learning">📖 学习</button>
+        <button class="pet-tab" data-cat="health">🏥 健康</button>
+        <button class="pet-tab" data-cat="memo">📝 成长记录</button>
       </div>
-      <div class="pet-panel active" data-pet-panel="big-health">
+      <div class="pet-panel active" data-panel="big-supplies">
+        <div class="bag-progress"><span>入园物品已备齐</span><span id="big-supplies-count">0 / 0</span></div>
+        <div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" id="big-supplies-progress"></div></div>
+        <div class="bag-list" id="big-supplies-list"></div>
+      </div>
+      <div class="pet-panel" data-panel="big-learning">
+        <div class="learning-modules" id="big-learning-modules"></div>
+        <div class="add-resource">
+          <h3>+ 添加学习类目</h3>
+          <input type="text" id="big-learning-name" placeholder="类目名称（如：识字、拼音、算术）">
+          <select id="big-learning-icon">
+            <option value="📖">📖 阅读</option>
+            <option value="🔤">🔤 识字</option>
+            <option value="🔢">🔢 数学</option>
+            <option value="🎨">🎨 美术</option>
+            <option value="🎵">🎵 音乐</option>
+            <option value="🏃">🏃 运动</option>
+            <option value="🧩">🧩 思维</option>
+            <option value="🌍">🌍 英语</option>
+          </select>
+          <button id="add-big-learning-btn">添加</button>
+        </div>
+      </div>
+      <div class="pet-panel" data-panel="big-health">
         <div class="pet-form">
           <input type="date" id="pet-big-health-date">
-          <input type="text" id="pet-big-health-item" placeholder="健康事项（体检/驱虫/看病等）">
+          <input type="text" id="pet-big-health-item" placeholder="健康事项（体检/看病/用药等）">
           <input type="text" id="pet-big-health-note" placeholder="备注">
           <button id="add-pet-big-health-btn">添加</button>
         </div>
         <div class="record-list" id="pet-big-health-list"></div>
       </div>
-      <div class="pet-panel" data-pet-panel="big-vaccine">
-        <div class="pet-form">
-          <input type="date" id="pet-big-vaccine-date">
-          <input type="text" id="pet-big-vaccine-name" placeholder="疫苗名称（如：猫三联）">
-          <input type="date" id="pet-big-vaccine-next" placeholder="下次接种">
-          <button id="add-pet-big-vaccine-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-big-vaccine-list"></div>
-      </div>
-      <div class="pet-panel" data-pet-panel="big-food">
-        <div class="pet-form">
-          <input type="text" id="pet-big-food-date" placeholder="日期（可选）">
-          <input type="text" id="pet-big-food-item" placeholder="吃的食物/猫粮">
-          <input type="text" id="pet-big-food-amount" placeholder="量（如 50g）">
-          <button id="add-pet-big-food-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-big-food-list"></div>
-      </div>
-      <div class="pet-panel" data-pet-panel="big-memo">
+      <div class="pet-panel" data-panel="big-memo">
         <div class="pet-form">
           <input type="date" id="pet-big-memo-date">
-          <textarea id="pet-big-memo-text" placeholder="关于大宝的日常记录、趣事..."></textarea>
+          <textarea id="pet-big-memo-text" placeholder="记录大宝的成长趣事、进步..."></textarea>
           <button id="add-pet-big-memo-btn">添加</button>
         </div>
         <div class="record-list" id="pet-big-memo-list"></div>
@@ -411,55 +416,33 @@
     <!-- 6. 小宝 -->
     <section id="pet-small" class="section">
       <div class="section-header">
-        <h2>🐶 小宝</h2>
-        <div class="date-info">汪星人的日常记录</div>
+        <h2>👶 小宝</h2>
+        <div class="date-info">0-1岁成长发育指导</div>
       </div>
-      <div class="pet-info-card" id="pet-small-info">
-        <div class="pet-info-row"><span class="pet-info-label">名字</span><input type="text" id="pet-small-name" placeholder="小宝的名字"></div>
+      <div class="pet-info-card">
+        <div class="pet-info-row"><span class="pet-info-label">姓名</span><input type="text" id="pet-small-name" placeholder="小宝的名字"></div>
         <div class="pet-info-row"><span class="pet-info-label">生日</span><input type="date" id="pet-small-birth"></div>
-        <div class="pet-info-row"><span class="pet-info-label">体重(kg)</span><input type="text" inputmode="decimal" id="pet-small-weight" placeholder="0.0"></div>
         <button id="save-pet-small-btn" class="data-btn">保存信息</button>
       </div>
-      <div class="pet-tabs">
-        <button class="pet-tab active" data-pet="small" data-cat="health">🏥 健康</button>
-        <button class="pet-tab" data-pet="small" data-cat="vaccine">💉 疫苗</button>
-        <button class="pet-tab" data-pet="small" data-cat="food">🍽️ 饮食</button>
-        <button class="pet-tab" data-pet="small" data-cat="memo">📝 记录</button>
+      <div class="pet-tabs" id="pet-small-tabs">
+        <button class="pet-tab active" data-cat="growth">📊 发育指导</button>
+        <button class="pet-tab" data-cat="earlyedu">🎮 早教打卡</button>
+        <button class="pet-tab" data-cat="music">🎵 音乐推荐</button>
+        <button class="pet-tab" data-cat="food">🥣 辅食计划</button>
       </div>
-      <div class="pet-panel active" data-pet-panel="small-health">
-        <div class="pet-form">
-          <input type="date" id="pet-small-health-date">
-          <input type="text" id="pet-small-health-item" placeholder="健康事项">
-          <input type="text" id="pet-small-health-note" placeholder="备注">
-          <button id="add-pet-small-health-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-small-health-list"></div>
+      <div class="pet-panel active" data-panel="small-growth">
+        <div class="growth-stage-selector" id="small-growth-stages"></div>
+        <div class="growth-detail" id="small-growth-detail"></div>
       </div>
-      <div class="pet-panel" data-pet-panel="small-vaccine">
-        <div class="pet-form">
-          <input type="date" id="pet-small-vaccine-date">
-          <input type="text" id="pet-small-vaccine-name" placeholder="疫苗名称">
-          <input type="date" id="pet-small-vaccine-next" placeholder="下次接种">
-          <button id="add-pet-small-vaccine-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-small-vaccine-list"></div>
+      <div class="pet-panel" data-panel="small-earlyedu">
+        <div class="earlyedu-cards" id="small-earlyedu-cards"></div>
       </div>
-      <div class="pet-panel" data-pet-panel="small-food">
-        <div class="pet-form">
-          <input type="text" id="pet-small-food-date" placeholder="日期">
-          <input type="text" id="pet-small-food-item" placeholder="食物/狗粮">
-          <input type="text" id="pet-small-food-amount" placeholder="量">
-          <button id="add-pet-small-food-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-small-food-list"></div>
+      <div class="pet-panel" data-panel="small-music">
+        <div class="music-recommend" id="small-music-list"></div>
       </div>
-      <div class="pet-panel" data-pet-panel="small-memo">
-        <div class="pet-form">
-          <input type="date" id="pet-small-memo-date">
-          <textarea id="pet-small-memo-text" placeholder="关于小宝的日常记录、趣事..."></textarea>
-          <button id="add-pet-small-memo-btn">添加</button>
-        </div>
-        <div class="record-list" id="pet-small-memo-list"></div>
+      <div class="pet-panel" data-panel="small-food">
+        <div class="food-stage-selector" id="small-food-stages"></div>
+        <div class="food-detail" id="small-food-detail"></div>
       </div>
     </section>
 

@@ -55,8 +55,8 @@ const defaultData = {
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
-  petBig:{ info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] },
-  petSmall:{ info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] },
+  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], health:[], memo:[] },
+  petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
   todosDate:null,
   weeklyPlan:{},
   interests:[], memos:[], reviews:[]
@@ -105,9 +105,18 @@ function migrateData(stored) {
   }
   ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   ['petBig','petSmall'].forEach(function(k){
-    if (!merged[k]) merged[k] = { info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] };
-    if (!merged[k].info) merged[k].info = {name:'',birth:'',weight:''};
-    ['health','vaccine','food','memo'].forEach(function(c){ if (!Array.isArray(merged[k][c])) merged[k][c] = []; });
+    if (!merged[k]) merged[k] = {};
+    if (k === 'petBig') {
+      if (!merged[k].info) merged[k].info = {name:'',birth:'',cls:''};
+      if (!merged[k].suppliesChecked) merged[k].suppliesChecked = {};
+      if (!merged[k].learning || !merged[k].learning.length) merged[k].learning = deepClone(DEFAULT_LEARNING_MODULES);
+      if (!merged[k].health) merged[k].health = [];
+      if (!merged[k].memo) merged[k].memo = [];
+    } else {
+      if (!merged[k].info) merged[k].info = {name:'',birth:''};
+      if (!merged[k].earlyEduChecked) merged[k].earlyEduChecked = {};
+      if (!merged[k].earlyEduStreak) merged[k].earlyEduStreak = {};
+    }
   });
   if (merged.todos) {
     merged.todos.forEach(function(t){ if (t.note === undefined) t.note = ''; });
@@ -1717,108 +1726,459 @@ recordBtn.addEventListener('pointerup', stopRecording);
 recordBtn.addEventListener('pointerleave', stopRecording);
 recordBtn.addEventListener('touchstart', function(e){ e.preventDefault(); startRecording(); });
 recordBtn.addEventListener('touchend', function(e){ e.preventDefault(); stopRecording(); });
-/* ====== \u5BA0\u7269\u8BB0\u5F55\uFF08\u5927\u5B9D/\u5C0F\u5B9D\uFF09 ====== */
-function renderPet(petKey) {
-  var data = appData[petKey] || {};
-  if (!data.info) data.info = {name:'',birth:'',weight:''};
-  var info = data.info;
-  document.getElementById('pet-' + petKey + '-name').value = info.name || '';
-  document.getElementById('pet-' + petKey + '-birth').value = info.birth || '';
-  document.getElementById('pet-' + petKey + '-weight').value = info.weight || '';
-  renderPetList(petKey, 'health');
-  renderPetList(petKey, 'vaccine');
-  renderPetList(petKey, 'food');
-  renderPetList(petKey, 'memo');
+/* ====== \u5927\u5B9D\uFF08\u5E7C\u513F\u56ED\uFF09 & \u5C0F\u5B9D\uFF080-1\u5C81\uFF09 ====== */
+var KINDERGARTEN_SUPPLIES = [
+  { cat:'\u8863\u7269\u7C7B\uFF08\u5FC5\u5907\uFF09', items:[
+    { name:'\u6362\u6D17\u8863\u7269\u5957\u88C5\uFF08\u5185\u8863+\u88E4\u5B50+\u889C\u5B50\uFF09', qty:'2\u5957', note:'\u51FA\u6C57\u3001\u5C3F\u6E7F\u5907\u7528\uFF0C\u6240\u6709\u7269\u54C1\u5FC5\u987B\u7EE3/\u8D34\u59D3\u540D\u6807\u8BC6' },
+    { name:'\u8584\u6B3E\u9632\u98CE\u5916\u5957/\u9A6C\u7532', qty:'1\u4EF6', note:'\u5E94\u5BF9\u65E9\u665A\u6E29\u5DEE\uFF0C\u4F18\u5148\u9009\u62E9\u65B9\u4FBF\u7A7F\u8131\u7684\u6B3E\u5F0F' },
+    { name:'\u5907\u7528\u5185\u88E4', qty:'2\u6761', note:'\u4E2D\u73ED\u5C0F\u670B\u53CB\u5076\u5C14\u4F1A\u618B\u5C3F\u3001\u73A9\u6C34\u5F04\u6E7F\uFF0C\u989D\u5916\u5907\u7528' },
+    { name:'\u5BA4\u5185\u8F6F\u5E95\u978B', qty:'1\u53CC', note:'\u5305\u8DDF\u9632\u6ED1\u5E06\u5E03\u978B/\u8FD0\u52A8\u978B\uFF0C\u4E25\u7981\u7A7F\u6D1E\u6D1E\u978B\u3001\u62D6\u978B' },
+    { name:'\u5BA4\u5916\u8FD0\u52A8\u978B', qty:'1\u53CC', note:'\u65B9\u4FBF\u6237\u5916\u6D3B\u52A8\uFF0C\u8D34\u5408\u811A\u578B\u4E0D\u6613\u8131\u843D' }
+  ]},
+  { cat:'\u5BDD\u5177\u7C7B\uFF08\u5348\u4F11\u7528\u54C1\uFF09', items:[
+    { name:'\u5348\u7761\u5C0F\u88AB\u5B50/\u8584\u590F\u88AB', qty:'1\u5957', note:'\u6839\u636E\u5B63\u8282\u66F4\u6362\uFF0C\u9075\u5FAA\u5E7C\u513F\u56ED\u5C3A\u5BF8\u8981\u6C42' },
+    { name:'\u6795\u5934+\u6795\u5957', qty:'1\u5957', note:'\u4F18\u5148\u9009\u62E9\u5C0F\u670B\u53CB\u719F\u6089\u7684\u6795\u5934\uFF0C\u63D0\u5347\u5348\u4F11\u9002\u5E94\u5EA6' },
+    { name:'\u5E8A\u57AB/\u57AB\u88AB\u5957', qty:'1\u5957', note:'\u90E8\u5206\u5E7C\u513F\u56ED\u7EDF\u4E00\u914D\u5907\uFF0C\u63D0\u524D\u786E\u8BA4\u56ED\u6240\u8981\u6C42' }
+  ]},
+  { cat:'\u4E2A\u4EBA\u536B\u751F\u7528\u54C1', items:[
+    { name:'\u7EAF\u68C9\u6BDB\u5DFE', qty:'1-2\u6761', note:'\u64E6\u624B\u64E6\u6C57\uFF0C\u5FC5\u987B\u6807\u8BB0\u59D3\u540D' },
+    { name:'\u76F4\u996E\u4FDD\u6E29\u676F/\u6C34\u676F', qty:'1\u4E2A', note:'\u9075\u5FAA\u56ED\u6240\u8981\u6C42\uFF0C\u4F18\u5148\u76F4\u996E\u6B3E\uFF0C\u4E0D\u5EFA\u8BAE\u5438\u7BA1\u676F' },
+    { name:'\u62BD\u7EB8/\u968F\u8EAB\u5C0F\u5305\u7EB8\u5DFE', qty:'1\u5305', note:'\u65E5\u5E38\u6E05\u6D01\u4F7F\u7528' },
+    { name:'\u65E0\u9152\u7CBE\u5A74\u513F\u6E7F\u5DFE', qty:'1\u5305', note:'\u6E05\u6D01\u624B\u90E8\u3001\u9910\u5177\u3001\u684C\u9762\u4F7F\u7528' },
+    { name:'\u7259\u5237\u7259\u818F', qty:'1\u5957', note:'\u90E8\u5206\u4E2D\u73ED\u5F00\u8BBE\u5348\u95F4\u5237\u7259\uFF0C\u6309\u73ED\u7EA7\u901A\u77E5\u51C6\u5907' }
+  ]},
+  { cat:'\u5B66\u4E60&\u6D3B\u52A8\u7528\u54C1', items:[
+    { name:'\u7F8E\u672F\u56F4\u88D9/\u53CD\u7A7F\u8863', qty:'1\u4EF6', note:'\u753B\u753B\u3001\u624B\u5DE5\u8BFE\u9632\u810F\uFF0C\u4F18\u5148\u9009\u62E9\u9632\u6C34\u6B3E' },
+    { name:'\u810F\u8863\u6536\u7EB3\u888B', qty:'1\u4E2A', note:'\u88C5\u6E7F\u8863\u670D\u3001\u810F\u6BDB\u5DFE\uFF0C\u907F\u514D\u6C61\u67D3\u5176\u4ED6\u7269\u54C1' },
+    { name:'\u9632\u6C34\u59D3\u540D\u8D34', qty:'1\u5957', note:'\u5927\u91CF\u5907\u7528\uFF0C\u8D34\u5728\u6240\u6709\u7269\u54C1\u4E0A\u9632\u6B62\u6DF7\u6DC6' }
+  ]},
+  { cat:'\u7279\u6B8A&\u836F\u54C1\u7528\u54C1', items:[
+    { name:'\u8FC7\u654F/\u5E38\u5907\u836F\u7269', qty:'\u6309\u9700', note:'\u5FC5\u987B\u586B\u5199\u670D\u836F\u59D4\u6258\u4E66\u4EA4\u7ED9\u8001\u5E08\uFF0C\u4E25\u7981\u81EA\u884C\u653E\u4E66\u5305' },
+    { name:'\u8FC7\u654F\u5E94\u6025\u8BF4\u660E', qty:'1\u4EFD', note:'\u8FC7\u654F\u5C0F\u670B\u53CB\u9700\u63D0\u524D\u51C6\u5907\uFF0C\u660E\u786E\u8FC7\u654F\u539F\u548C\u5E94\u6025\u65B9\u6848' }
+  ]},
+  { cat:'\u7981\u6B62\u643A\u5E26\u7269\u54C1', items:[
+    { name:'\u96F6\u98DF\u3001\u7CD6\u679C\u3001\u996E\u6599', qty:'\u4E25\u7981', note:'\u907F\u514D\u5C0F\u670B\u53CB\u95F4\u5206\u4EAB\u5F15\u53D1\u8FC7\u654F\u3001\u545B\u54B3\u98CE\u9669' },
+    { name:'\u786C\u5E01\u3001\u5C0F\u73E0\u5B50\u3001\u5C16\u9510\u73A9\u5177', qty:'\u4E25\u7981', note:'\u9632\u6B62\u8BEF\u98DF\u3001\u5212\u4F24\u3001\u7A92\u606F\u7B49\u5B89\u5168\u4E8B\u6545' },
+    { name:'\u8D35\u91CD\u9996\u9970\u3001\u7535\u5B50\u4EA7\u54C1', qty:'\u4E25\u7981', note:'\u907F\u514D\u4E22\u5931\u3001\u635F\u574F\uFF0C\u5206\u6563\u5C0F\u670B\u53CB\u6CE8\u610F\u529B' }
+  ]}
+];
+
+var BABY_GROWTH_GUIDE = [
+  { stage:'0-1\u6708', label:'\u65B0\u751F\u513F\u671F', growth:'\u4F53\u91CD\u8F83\u51FA\u751F\u589E\u957F1-1.5kg\uFF0C\u8EAB\u9AD8\u589E\u957F3-5cm\uFF0C\u5934\u56F4\u589E\u957F2-3cm\uFF1B\u4FEF\u5367\u65F6\u80FD\u62AC\u59341-2\u79D2\uFF1B\u5C0F\u624B\u63E1\u62F3\u6709\u6293\u63E1\u53CD\u5C04\uFF1B\u80FD\u53D1\u51FA\u7EC6\u5C0F\u5589\u97F3\uFF1B\u80FD\u6CE8\u89C6\u4EBA\u8138\u5BF9\u5B89\u629A\u6709\u53CD\u5E94',
+    feeding:'\u4F18\u5148\u7EAF\u6BCD\u4E73\u5582\u517B\uFF0C\u6309\u9700\u5582\u517B\u6BCF\u65E58-12\u6B21\u6BCF\u6B2115-30\u5206\u949F\uFF1B\u914D\u65B9\u5976\u6BCF\u65E5600-800ml\u6BCF3-4\u5C0F\u65F6\u4E00\u6B21\uFF1B\u51FA\u751F15\u5929\u8D77\u8865\u5145\u7EF4D3\u6BCF\u65E5400IU\u6301\u7EED\u81F31\u5C81\uFF1B\u65E0\u9700\u989D\u5916\u5582\u6C34',
+    care:'\u8110\u90E8\u62A4\u7406\u6BCF\u65E5\u7898\u4F0F\u6D88\u6BD2\u4FDD\u6301\u5E72\u71E5\uFF1B\u6BCF\u65E5\u7761\u772016-20\u5C0F\u65F6\u4EF0\u5367\u4F4D\uFF1B\u6BCF\u65E5\u6E29\u6C34\u6D17\u6FA1\u8936\u76B1\u5904\u91CD\u70B9\u6E05\u6D01\uFF1B\u591A\u5BF9\u89C6\u8BF4\u8BDD\u7528\u9ED1\u767D\u5361\u8FFD\u89C6\u8BAD\u7EC3',
+    caution:'\u8B66\u60D5\u65B0\u751F\u513F\u9EC4\u75B82-3\u5929\u51FA\u73B07-10\u5929\u6D88\u9000\u6301\u7EED\u4E0D\u9000\u9700\u5C31\u533B\uFF1B\u907F\u514D\u6447\u6643\u5B9D\u5B9D\u5934\u90E8\uFF1B\u4E0D\u8981\u7ED1\u817F\u88F9\u8721\u70DB\u5305\uFF1B42\u5929\u505A\u7B2C\u4E00\u6B21\u4F53\u68C0' },
+  { stage:'2-3\u6708', label:'\u5A74\u513F\u65E9\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.8-1.2kg\u8EAB\u9AD8\u6BCF\u67082-3cm\u5934\u56F4\u6BCF\u67081.5-2cm\uFF1B\u4FEF\u5367\u62AC\u593445-90\u5EA6\u80FD\u8F6C\u5934\u8FFD\u89C6180\u5EA6\uFF1B\u5C0F\u624B\u5F20\u5F00\u6293\u63E1\u73A9\u5177\u80FD\u6447\u6643\u62E8\u6D6A\u9F13\uFF1B\u53D1\u51FAa/o/e\u5143\u97F3\u4F1A\u7B11\u51FA\u58F0\uFF1B\u8BA4\u51FA\u5988\u5988\u4F1A\u5FAE\u7B11',
+    feeding:'\u7EAF\u6BCD\u4E73\u6309\u9700\u6BCF\u65E56-8\u6B21\uFF1B\u914D\u65B9\u5976\u6BCF\u65E5800-1000ml\u6BCF4\u5C0F\u65F6\u4E00\u6B21\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u7EC3\u4E60\u7528\u52FA\u5B50\u559D\u6C34\u4E3A\u8F85\u98DF\u505A\u51C6\u5907',
+    care:'\u6BCF\u65E5\u7761\u772014-16\u5C0F\u65F6\u767D\u59292-3\u6B21\u5C0F\u7761\uFF1B\u591A\u4E92\u52A8\u8BF4\u8BDD\u7528\u5F69\u8272\u73A9\u5177\u8FFD\u89C6\u8BAD\u7EC3\u7EC3\u4E60\u4FEF\u5367\u62AC\u5934\uFF1B\u591A\u505A\u629A\u89E6\u6309\u6469\u589E\u5F3A\u5B89\u5168\u611F\uFF1B\u5582\u5976\u540E\u5582\u5C11\u91CF\u6E29\u6C34\u6E05\u6D01\u53E3\u8154',
+    caution:'\u907F\u514D\u542B\u7740\u4E73\u5934/\u5976\u74F6\u5165\u7761\u9632\u9F8B\u9F7F\u7A92\u606F\uFF1B\u4E0D\u8981\u8FC7\u65E9\u7AD6\u62B1\u9700\u6258\u4F4F\u5934\u9888\uFF1B\u73A9\u5177\u9700\u5B9A\u671F\u6D88\u6BD2\uFF1B3\u4E2A\u6708\u505A\u7B2C\u4E8C\u6B21\u4F53\u68C0' },
+  { stage:'4-6\u6708', label:'\u5A74\u513F\u4E2D\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.6-0.8kg\u8EAB\u9AD8\u6BCF\u67082-2.5cm\u5934\u56F4\u6BCF\u67081-1.5cm\uFF1B\u80FD\u719F\u7EC3\u7FFB\u8EAB\u4FEF\u5367\u7528\u624B\u652F\u6491\u4E0A\u534A\u8EAB\u72EC\u5750\u7247\u523B\uFF1B\u4F38\u624B\u6293\u63E1\u73A9\u5177\u4E24\u624B\u4F20\u9012\u80FD\u6495\u7EB8\uFF1B\u53D1\u51FA\u8FDE\u7EED\u5143\u97F3\u6A21\u4EFF\u53D1\u97F3\uFF1B\u533A\u5206\u719F\u4EBA\u751F\u4EBA\u7528\u7B11\u58F0\u54ED\u58F0\u8868\u8FBE\u60C5\u7EEA',
+    feeding:'4-6\u6708\u662F\u8F85\u98DF\u6DFB\u52A0\u7A97\u53E3\u671F\u4F18\u5148\u9AD8\u94C1\u7C73\u7C89\u4ECE1\u52FA\u5F00\u59CB\u9010\u6E10\u52A0\u91CF\uFF1B\u7531\u5C11\u5230\u591A\u7531\u7A00\u5230\u7A20\u7531\u7EC6\u5230\u7C97\u9010\u6837\u6DFB\u52A0\u89C2\u5BDF3-5\u5929\u65E0\u8FC7\u654F\u518D\u52A0\u4E0B\u4E00\u79CD\uFF1B\u5976\u91CF\u4ECD\u9700\u6BCF\u65E5800-1000ml\u8F85\u98DF\u4E3A\u8865\u5145\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u6DFB\u52A0\u83DC\u6CE5\u679C\u6CE5\u8089\u6CE56\u6708\u8BD5\u86CB\u9EC4',
+    care:'\u6BCF\u65E5\u7761\u772013-15\u5C0F\u65F6\u767D\u59292\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED6-8\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u72EC\u5750\u7FFB\u8EAB\u7528\u73A9\u5177\u5F15\u5BFC\u722C\u884C\u591A\u8BF4\u8BDD\u8BFB\u7ED8\u672C\uFF1B\u7528\u6307\u5957\u7259\u5237\u6E05\u6D01\u7259\u9F88\u840C\u7259\u540E\u5F00\u59CB\u5237\u7259\uFF1B\u7528\u7845\u80F6\u9910\u5177\u9F13\u52B1\u81EA\u4E3B\u8FDB\u98DF\u5F04\u810F\u4E0D\u8981\u6279\u8BC4',
+    caution:'\u8F85\u98DF\u6DFB\u52A0\u8FC7\u65E9(<4\u6708)\u6216\u8FC7\u665A(>6\u6708)\u5F71\u54CD\u53D1\u80B2\uFF1B1\u5C81\u5185\u8F85\u98DF\u4E0D\u80FD\u52A0\u76D0\u7CD6\u8702\u871C\uFF1B\u4E0D\u7ED9\u6574\u9897\u575A\u679C\u8461\u8404\u679C\u51BB\u7B49\u6613\u7A92\u606F\u98DF\u7269\uFF1B\u5B9A\u671F\u4F53\u68C0\u76D1\u6D4B\u8EAB\u9AD8\u4F53\u91CD\u5934\u56F4' },
+  { stage:'7-9\u6708', label:'\u5A74\u513F\u665A\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.5-0.6kg\u8EAB\u9AD8\u6BCF\u67081.5-2cm\u5934\u56F4\u6BCF\u67080.8-1cm\uFF1B\u719F\u7EC3\u72EC\u5750\u4F1A\u530D\u5310\u722C\u884C\u6276\u7269\u7AD9\u7ACB\uFF1B\u7528\u62C7\u6307\u98DF\u6307\u634F\u5C0F\u7269\u4F53\u4F1A\u62CD\u624B\u6325\u624B\u80FD\u5F00\u62BD\u5C49\uFF1B\u53D1\u51FAba/ma/da\u8F85\u97F3\u6A21\u4EFF\u52A8\u4F5C\u58F0\u97F3\uFF1B\u4F1A\u8BA4\u751F\u542C\u61C2\u81EA\u5DF1\u540D\u5B57\u7528\u52A8\u4F5C\u8868\u8FBE\u9700\u6C42',
+    feeding:'\u5976\u91CF\u6BCF\u65E5600-800ml\u8F85\u98DF\u6BCF\u65E52\u6B21\uFF1B\u8D28\u5730\u4ECE\u6CE5\u7CCA\u8FC7\u6E21\u5230\u672B\u72B6\u5C0F\u9897\u7C92\u953B\u70BC\u5480\u56BC\uFF1B\u53EF\u6DFB\u52A0\u788E\u83DC\u8089\u672B\u70C2\u7CA5\u70C2\u9762\u6761\u5C1D\u8BD5\u624B\u6307\u98DF\u7269\uFF08\u84B8\u7CD5\u80E1\u841D\u535C\u6761\uFF09\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u8BD5\u9178\u5976\u5976\u916A\u8865\u9499\u548C\u86CB\u767D\u8D28',
+    care:'\u6BCF\u65E5\u7761\u772012-14\u5C0F\u65F6\u767D\u59291-2\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED8-10\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u722C\u884C\u6276\u7AD9\u7528\u79EF\u6728\u953B\u70BC\u624B\u773C\u534F\u8C03\u591A\u4E92\u52A8\u6E38\u620F\uFF1B\u505A\u597D\u5B89\u5168\u9632\u62A4\u63D2\u5EA7\u76D6\u9632\u62A4\u5C16\u9510\u7269\u54C1\u6536\u8D77\uFF1B\u7528\u8F6F\u6BDB\u7259\u5237\u5237\u7259\u65E9\u665A\u5404\u4E00\u6B21\u996D\u540E\u6F31\u53E3',
+    caution:'\u4F1A\u722C\u540E\u5FC5\u987B\u5168\u7A0B\u4E13\u4EBA\u770B\u62A4\u907F\u514D\u5760\u5E8A\u8BEF\u98DF\u5F02\u7269\uFF1B\u4E0D\u7528\u5B66\u6B65\u8F66\u5F71\u54CD\u817F\u90E8\u53D1\u80B2\u548C\u5E73\u8861\u611F\uFF1B\u907F\u514D\u957F\u65F6\u95F4\u770B\u7535\u89C6\u624B\u673A\u5F71\u54CD\u89C6\u529B\uFF1B9\u6708\u4F53\u68C0\u8BC4\u4F30\u53D1\u80B2\u5FC5\u8981\u65F6\u67E5\u8840\u5E38\u89C4\u770B\u662F\u5426\u8D2B\u8840' },
+  { stage:'10-12\u6708', label:'\u5E7C\u513F\u524D\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.3-0.5kg\u8EAB\u9AD8\u6BCF\u67081-1.5cm\u5934\u56F4\u6BCF\u67080.5cm\uFF1B\u6276\u7269\u8D70\u72EC\u7AD9\u7247\u523B12\u6708\u5DE6\u53F3\u80FD\u72EC\u8D70\u51E0\u6B65\u4F1A\u8E72\u7AD9\uFF1B\u80FD\u6D82\u9E26\u7FFB\u4E66\u628A\u79EF\u6728\u653E\u8FDB\u76D2\u5B50\u4F1A\u7528\u52FA\u5B50\u5403\u996D\uFF1B\u80FD\u8BF41-2\u4E2A\u6709\u610F\u4E49\u7684\u8BCD\uFF08\u7238\u7238/\u5988\u5988\uFF09\u542C\u61C2\u7B80\u5355\u6307\u4EE4\uFF1B\u548C\u5C0F\u670B\u53CB\u4E92\u52A8\u5206\u4EAB\u73A9\u5177\u8868\u8FBE\u559C\u6012\u54C0\u4E50',
+    feeding:'\u5976\u91CF\u6BCF\u65E5500-600ml\u8F85\u98DF\u6BCF\u65E53\u6B21\u9010\u6E10\u5411\u6210\u4EBA\u996E\u98DF\u8FC7\u6E21\uFF1B\u8D28\u5730\u8FC7\u6E21\u5230\u5C0F\u4E01\u72B6\u5757\u72B6\u953B\u70BC\u5480\u56BC\u541E\u54BD\uFF1B\u53EF\u6DFB\u52A0\u8F6F\u996D\u9762\u6761\u5207\u788E\u83DC\u8089\u8BD5\u5168\u86CB\u9C7C\u867E\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\u53EF\u8865\u9499\u5242\uFF1B\u9F13\u52B1\u81EA\u4E3B\u8FDB\u98DF\u7EC3\u4E60\u7528\u52FA\u5B50\u676F\u5B50\u559D\u6C34',
+    care:'\u6BCF\u65E5\u7761\u772011-13\u5C0F\u65F6\u767D\u59291\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED10-12\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u8D70\u8DEF\u8E72\u7AD9\u7528\u7ED8\u672C\u79EF\u6728\u953B\u70BC\u8BA4\u77E5\u624B\u773C\u534F\u8C03\u591A\u8BF4\u8BDD\uFF1B\u505A\u597D\u5B89\u5168\u9632\u62A4\u907F\u514D\u63A5\u89E6\u70ED\u6C34\u7535\u6E90\u5C16\u9510\u7269\u54C1\uFF1B\u5EFA\u7ACB\u7B80\u5355\u89C4\u5219\u5F15\u5BFC\u7528\u8BED\u8A00\u8868\u8FBE\u9700\u6C42\u4E0D\u8981\u7528\u54ED\u95F9\u89E3\u51B3\u95EE\u9898',
+    caution:'1\u5C81\u5185\u5976\u91CF\u4E0D\u80FD\u4F4E\u4E8E500ml\u907F\u514D\u8F85\u98DF\u8FC7\u591A\u5F71\u54CD\u5976\u91CF\uFF1B\u4E0D\u7ED9\u6CB9\u70B8\u814C\u5236\u8F9B\u8FA3\u98DF\u7269\u996E\u98DF\u6E05\u6DE1\uFF1B\u9F13\u52B1\u591A\u722C\u884C\u8D70\u8DEF\u953B\u70BC\u5927\u8FD0\u52A8\uFF1B1\u5C81\u5FC5\u987B\u4F53\u68C0\u8BC4\u4F30\u751F\u957F\u53D1\u80B2\u63A5\u79CD\u75AB\u82D7' }
+];
+
+var EARLY_EDU_CARDS = [
+  { icon:'\uD83D\uDC40', title:'\u9ED1\u767D\u5361\u8FFD\u89C6', desc:'0-3\u6708\uFF1A\u5728\u5B9D\u5B9D\u773C\u524D20-30cm\u79FB\u52A8\u9ED1\u767D\u5361\uFF0C\u8BAD\u7EC3\u89C6\u89C9\u8FFD\u8E2A', age:'0-3\u6708' },
+  { icon:'\uD83E\uDD32', title:'\u6293\u63E1\u7EC3\u4E60', desc:'2-4\u6708\uFF1A\u628A\u6447\u94C3/\u5C0F\u73A9\u5177\u653E\u8FDB\u5B9D\u5B9D\u624B\u5FC3\uFF0C\u7EC3\u4E60\u6293\u63E1\u548C\u677E\u5F00', age:'2-4\u6708' },
+  { icon:'\uD83D\uDDE3\uFE0F', title:'\u9762\u5BF9\u9762\u8BF4\u8BDD', desc:'0-6\u6708\uFF1A\u591A\u548C\u5B9D\u5B9D\u8BF4\u8BDD\u3001\u6A21\u4EFF\u4ED6\u7684\u58F0\u97F3\uFF0C\u4FC3\u8FDB\u8BED\u8A00\u53D1\u80B2', age:'0-6\u6708' },
+  { icon:'\uD83E\uDD31', title:'\u629A\u89E6\u6309\u6469', desc:'0-6\u6708\uFF1A\u6BCF\u5929\u629A\u89E610-15\u5206\u949F\uFF0C\u589E\u5F3A\u5B89\u5168\u611F\u548C\u4EB2\u5B50\u8054\u7ED3', age:'0-6\u6708' },
+  { icon:'\uD83C\uDFCB\uFE0F', title:'\u4FEF\u5367\u62AC\u5934', desc:'1-4\u6708\uFF1A\u6BCF\u5929\u8BA9\u5B9D\u5B9D\u8DB4\u77402-3\u6B21\uFF0C\u6BCF\u6B211-5\u5206\u949F\uFF0C\u953B\u70BC\u9888\u90E8\u80CC\u90E8', age:'1-4\u6708' },
+  { icon:'\uD83C\uDFB5', title:'\u542C\u89C9\u523A\u6FC0', desc:'0-12\u6708\uFF1A\u6447\u94C3\u3001\u97F3\u4E50\u76D2\u3001\u81EA\u7136\u58F0\u97F3\uFF0C\u8BAD\u7EC3\u542C\u89C9\u8FA8\u522B', age:'0-12\u6708' },
+  { icon:'\uD83D\uDCD6', title:'\u7ED8\u672C\u9605\u8BFB', desc:'4-12\u6708\uFF1A\u6BCF\u5929\u8BFB\u7ED8\u672C10\u5206\u949F\uFF0C\u57F9\u517B\u9605\u8BFB\u5174\u8DA3\u548C\u8BED\u8A00\u80FD\u529B', age:'4-12\u6708' },
+  { icon:'\uD83E\uDE80', title:'\u7FFB\u8EAB\u7EC3\u4E60', desc:'4-7\u6708\uFF1A\u7528\u73A9\u5177\u5F15\u5BFC\u5B9D\u5B9D\u7FFB\u8EAB\uFF0C\u4ECE\u4EF0\u5367\u5230\u4FEF\u5367', age:'4-7\u6708' },
+  { icon:'\uD83E\uDDF8', title:'\u4F20\u9012\u73A9\u5177', desc:'5-8\u6708\uFF1A\u5F15\u5BFC\u5B9D\u5B9D\u4E24\u624B\u95F4\u4F20\u9012\u73A9\u5177\uFF0C\u7EC3\u4E60\u53CC\u624B\u534F\u8C03', age:'5-8\u6708' },
+  { icon:'\uD83D\uDC45', title:'\u5C1D\u5473\u6E38\u620F', desc:'6-12\u6708\uFF1A\u8F85\u98DF\u65F6\u8BA9\u5B9D\u5B9D\u95FB\u3001\u6478\u3001\u5C1D\u4E0D\u540C\u98DF\u6750\u5473\u9053', age:'6-12\u6708' },
+  { icon:'\uD83E\uDEF3', title:'\u634F\u53D6\u7EC3\u4E60', desc:'8-12\u6708\uFF1A\u8BA9\u5B9D\u5B9D\u7528\u62C7\u6307\u98DF\u6307\u634F\u5C0F\u6EB6\u8C46/\u9992\u5934\u4E01\uFF0C\u7EC3\u4E60\u7CBE\u7EC6\u52A8\u4F5C', age:'8-12\u6708' },
+  { icon:'\uD83E\uDDE9', title:'\u5BB9\u5668\u6E38\u620F', desc:'9-12\u6708\uFF1A\u628A\u73A9\u5177\u653E\u8FDB\u62FF\u51FA\u5BB9\u5668\uFF0C\u7406\u89E3"\u91CC\u5916"\u6982\u5FF5', age:'9-12\u6708' },
+  { icon:'\uD83D\uDC4B', title:'\u6325\u624B\u518D\u89C1', desc:'9-12\u6708\uFF1A\u6559\u5B9D\u5B9D\u6325\u624B\u3001\u62CD\u624B\uFF0C\u5EFA\u7ACB\u624B\u52BF\u6C9F\u901A', age:'9-12\u6708' },
+  { icon:'\uD83D\uDEB6', title:'\u6276\u8D70\u7EC3\u4E60', desc:'10-12\u6708\uFF1A\u6276\u7740\u5B9D\u5B9D\u814B\u4E0B\u6216\u624B\uFF0C\u7EC3\u4E60\u7AD9\u7ACB\u548C\u8FC8\u6B65', age:'10-12\u6708' }
+];
+
+var BABY_MUSIC_REC = [
+  { icon:'\uD83C\uDF19', title:'\u767D\u566A\u97F3\u00B7\u96E8\u58F0', desc:'\u6A21\u62DF\u5B50\u5BAB\u73AF\u5883\uFF0C\u5E2E\u52A90-3\u6708\u5B9D\u5B9D\u5B89\u9759\u5165\u7761', source:'\u641C\u7D22\u300C\u767D\u566A\u97F3\u96E8\u58F0\u300D' },
+  { icon:'\uD83C\uDF0A', title:'\u767D\u566A\u97F3\u00B7\u6D77\u6D6A', desc:'\u89C4\u5F8B\u7684\u6F6E\u6C50\u58F0\uFF0C\u5B89\u629A\u54ED\u95F9\uFF0C\u9002\u5408\u54C4\u7761', source:'\u641C\u7D22\u300Cbaby ocean sound\u300D' },
+  { icon:'\uD83D\uDD25', title:'\u767D\u566A\u97F3\u00B7\u7BDD\u706B', desc:'\u6E29\u6696\u7684\u567C\u556A\u58F0\uFF0C\u8425\u9020\u5B89\u5168\u611F', source:'\u641C\u7D22\u300Cfireplace white noise\u300D' },
+  { icon:'\uD83C\uDFB5', title:'\u83AB\u624E\u7279\u6548\u5E94', desc:'\u83AB\u624E\u7279\u594F\u9E23\u66F2\uFF0C\u7814\u7A76\u8868\u660E\u6709\u52A9\u4E8E\u5927\u8111\u53D1\u80B2', source:'\u641C\u7D22\u300CMozart for babies\u300D' },
+  { icon:'\uD83C\uDFBB', title:'\u53E4\u5178\u6447\u7BEE\u66F2', desc:'\u52C3\u62C9\u59C6\u65AF\u3001\u8096\u90A6\u6447\u7BEE\u66F2\uFF0C\u7ECF\u5178\u54C4\u7761\u97F3\u4E50', source:'\u641C\u7D22\u300Cbaby lullaby classical\u300D' },
+  { icon:'\uD83E\uDD41', title:'\u81EA\u7136\u6253\u51FB\u4E50', desc:'\u6728\u9C7C\u3001\u6C99\u9524\u7B49\u67D4\u548C\u6253\u51FB\u4E50\uFF0C\u8282\u594F\u611F\u542F\u8499', source:'\u641C\u7D22\u300Cbaby percussion\u300D' },
+  { icon:'\uD83C\uDFB6', title:'\u7AE5\u58F0\u5408\u5531', desc:'\u7EAF\u51C0\u7684\u7AE5\u58F0\u6F14\u5531\uFF0C\u57F9\u517B\u97F3\u4E50\u611F\u53D7\u529B', source:'\u641C\u7D22\u300Cchildren choir\u300D' },
+  { icon:'\uD83C\uDFB9', title:'\u94A2\u7434\u8F7B\u97F3\u4E50', desc:'\u8212\u7F13\u94A2\u7434\u66F2\uFF0C\u9002\u5408\u73A9\u800D\u548C\u9605\u8BFB\u65F6\u80CC\u666F', source:'\u641C\u7D22\u300Cbaby piano music\u300D' }
+];
+
+var BABY_FOOD_PLAN = [
+  { stage:'4-6\u6708', label:'\u8F85\u98DF\u521D\u671F\uFF08\u7B2C1-5\u5929\uFF09', items:[
+    { day:'\u7B2C1\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF081\u52FA\u5151\u6210\u7A00\u7CCA\uFF09', note:'\u4E0A\u5348\u5582\uFF0C\u89C2\u5BDF\u8FC7\u654F' },
+    { day:'\u7B2C2\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF082\u52FA\uFF09', note:'\u65E0\u8FC7\u654F\u53EF\u52A0\u91CF' },
+    { day:'\u7B2C3\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF083\u52FA\u7A0D\u7A20\uFF09', note:'\u9010\u6E10\u52A0\u7A20\u5EA6' },
+    { day:'\u7B2C4\u5929', food:'\u7C73\u7C89+\u80E1\u841D\u535C\u6CE5\uFF081\u5C0F\u52FA\uFF09', note:'\u65B0\u98DF\u6750\u4E0A\u5348\u52A0\u89C2\u5BDF3\u5929' },
+    { day:'\u7B2C5\u5929', food:'\u7C73\u7C89+\u80E1\u841D\u535C\u6CE5\uFF08\u52A0\u91CF\uFF09', note:'\u65E0\u8FC7\u654F\u7EE7\u7EED' }
+  ]},
+  { stage:'4-6\u6708', label:'\u8F85\u98DF\u521D\u671F\uFF08\u7B2C6-10\u5929\uFF09', items:[
+    { day:'\u7B2C6\u5929', food:'\u7C73\u7C89+\u5357\u74DC\u6CE5', note:'\u65B0\u98DF\u6750\u66FF\u6362\u80E1\u841D\u535C' },
+    { day:'\u7B2C7\u5929', food:'\u7C73\u7C89+\u5357\u74DC\u6CE5', note:'\u89C2\u5BDF\u8FC7\u654F\u53CD\u5E94' },
+    { day:'\u7B2C8\u5929', food:'\u7C73\u7C89+\u82F9\u679C\u6CE5', note:'\u6C34\u679C\u6CE5\u521D\u6B21\u5C1D\u8BD5' },
+    { day:'\u7B2C9\u5929', food:'\u7C73\u7C89+\u82F9\u679C\u6CE5', note:'\u65E0\u8FC7\u654F\u7EE7\u7EED' },
+    { day:'\u7B2C10\u5929', food:'\u7C73\u7C89+\u68A8\u6CE5', note:'\u66F4\u6362\u6C34\u679C' }
+  ]},
+  { stage:'6-8\u6708', label:'\u8F85\u98DF\u4E2D\u671F', items:[
+    { day:'\u6BCF\u65E52\u9910', food:'\u7C73\u7C89/\u7CA5+\u83DC\u6CE5+\u679C\u6CE5+\u86CB\u9EC4', note:'\u4ECE\u6CE5\u8FC7\u6E21\u5230\u672B\u72B6' },
+    { day:'\u8089\u7C7B\u6DFB\u52A0', food:'\u9E21\u80F8\u8089\u6CE5\u2192\u732A\u8089\u6CE5\u2192\u732A\u809D\u6CE5', note:'\u6BCF\u79CD\u89C2\u5BDF3\u5929\u8865\u94C1\u8865\u86CB\u767D' },
+    { day:'\u852C\u83DC\u7C7B', food:'\u83E0\u83DC\u3001\u897F\u5170\u82B1\u3001\u571F\u8C46\u3001\u7EA2\u85AF\u6CE5', note:'\u8F6E\u6362\u642D\u914D' },
+    { day:'\u6C34\u679C\u7C7B', food:'\u9999\u8549\u3001\u82F9\u679C\u3001\u68A8\u3001\u725B\u6CB9\u679C\u6CE5', note:'\u4E0D\u8FC7\u654F\u53EF\u6DF7\u642D' },
+    { day:'\u4E3B\u98DF\u7C7B', food:'\u5F3A\u5316\u94C1\u7C73\u7C89\u3001\u70C2\u7CA5\u3001\u8F6F\u70C2\u9762\u6761', note:'\u9010\u6E10\u589E\u52A0\u7A20\u5EA6' }
+  ]},
+  { stage:'8-10\u6708', label:'\u8F85\u98DF\u540E\u671F', items:[
+    { day:'\u6BCF\u65E52-3\u9910', food:'\u8F6F\u996D+\u788E\u83DC\u8089\u672B+\u86CB\u9EC4+\u6C34\u679C', note:'\u4ECE\u672B\u72B6\u8FC7\u6E21\u5230\u5C0F\u9897\u7C92' },
+    { day:'\u624B\u6307\u98DF\u7269', food:'\u84B8\u7CD5\u6761\u3001\u80E1\u841D\u535C\u6761\u3001\u9992\u5934\u7247', note:'\u953B\u70BC\u81EA\u4E3B\u8FDB\u98DF' },
+    { day:'\u86CB\u767D\u8D28', food:'\u5168\u86CB\u3001\u9C7C\u8089\u3001\u9E21\u8089\u672B\u3001\u8C46\u8150', note:'\u6CE8\u610F\u9C7C\u523A\u548C\u8FC7\u654F' },
+    { day:'\u4E3B\u98DF\u7C7B', food:'\u8F6F\u996D\u3001\u70C2\u9762\u6761\u3001\u5C0F\u9984\u9968', note:'\u63A5\u8FD1\u6210\u4EBA\u8D28\u5730' },
+    { day:'\u5976\u91CF', food:'\u6BCF\u65E5600-800ml', note:'\u5976\u4ECD\u662F\u4E3B\u98DF' }
+  ]},
+  { stage:'10-12\u6708', label:'\u8F85\u98DF\u672B\u671F', items:[
+    { day:'\u6BCF\u65E53\u9910', food:'\u8F6F\u996D+\u83DC\u8089+\u6C34\u679C', note:'\u5411\u6210\u4EBA\u996E\u98DF\u8FC7\u6E21' },
+    { day:'\u4E3B\u98DF', food:'\u8F6F\u996D\u3001\u9762\u6761\u3001\u5C0F\u997A\u5B50\u3001\u9992\u5934', note:'\u5757\u72B6\u953B\u70BC\u5480\u56BC' },
+    { day:'\u83DC\u54C1', food:'\u7092\u788E\u83DC\u3001\u84B8\u86CB\u7FB9\u3001\u8089\u4E38\u3001\u9C7C\u6BB5', note:'\u5C11\u76D0\u5C11\u7CD6\u6E05\u6DE1' },
+    { day:'\u52A0\u9910', food:'\u9178\u5976\u3001\u6C34\u679C\u5757\u3001\u5C0F\u997C\u5E72', note:'2\u6B21\u52A0\u9910' },
+    { day:'\u5976\u91CF', food:'\u6BCF\u65E5500-600ml', note:'\u4E0D\u80FD\u4F4E\u4E8E500ml' }
+  ]}
+];
+
+var DEFAULT_LEARNING_MODULES = [
+  { id:1, icon:'\uD83D\uDD24', name:'\u8BC6\u5B57\u542F\u8499', desc:'\u5E38\u7528\u5B57\u3001\u8C61\u5F62\u5B57\u3001\u751F\u6D3B\u5B57' },
+  { id:2, icon:'\uD83D\uDD22', name:'\u6570\u5B66\u601D\u7EF4', desc:'\u6570\u6570\u3001\u5206\u7C7B\u3001\u7B80\u5355\u52A0\u51CF' },
+  { id:3, icon:'\uD83C\uDFA8', name:'\u7F8E\u672F\u521B\u610F', desc:'\u6D82\u9E26\u3001\u624B\u5DE5\u3001\u8272\u5F69' },
+  { id:4, icon:'\uD83C\uDFB5', name:'\u97F3\u4E50\u5F8B\u52A8', desc:'\u5531\u6B4C\u3001\u8282\u594F\u3001\u5F8B\u52A8' },
+  { id:5, icon:'\uD83C\uDFC3', name:'\u8FD0\u52A8\u4F53\u80FD', desc:'\u8DD1\u6B65\u3001\u8DF3\u8DC3\u3001\u5E73\u8861' },
+  { id:6, icon:'\uD83E\uDDE9', name:'\u903B\u8F91\u601D\u7EF4', desc:'\u62FC\u56FE\u3001\u79EF\u6728\u3001\u627E\u89C4\u5F8B' }
+];
+
+function renderBig() {
+  var d = appData.petBig || {};
+  if (!d.info) d.info = {name:'',birth:'',cls:''};
+  if (!d.suppliesChecked) d.suppliesChecked = {};
+  if (!d.learning) d.learning = deepClone(DEFAULT_LEARNING_MODULES);
+  if (!d.health) d.health = [];
+  if (!d.memo) d.memo = [];
+  document.getElementById('pet-big-name').value = d.info.name || '';
+  document.getElementById('pet-big-birth').value = d.info.birth || '';
+  var clsInput = document.getElementById('pet-big-class');
+  if (clsInput) clsInput.value = d.info.cls || '';
+  renderBigSupplies();
+  renderBigLearning();
+  renderBigHealth();
+  renderBigMemo();
 }
-function renderPetList(petKey, cat) {
-  var list = document.getElementById('pet-' + petKey + '-' + cat + '-list');
-  if (!list) return;
-  var arr = (appData[petKey] && appData[petKey][cat]) || [];
-  if (!arr.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
-  var sorted = arr.slice().sort(function(a,b){ return (b.date || '').localeCompare(a.date || ''); });
+function renderBigSupplies() {
+  var checked = (appData.petBig && appData.petBig.suppliesChecked) || {};
+  var total = 0, done = 0;
+  var html = '';
+  for (var i = 0; i < KINDERGARTEN_SUPPLIES.length; i++) {
+    var group = KINDERGARTEN_SUPPLIES[i];
+    html += '<div style="font-size:13px;font-weight:600;color:var(--primary-dark);margin:10px 0 6px;">' + group.cat + '</div>';
+    for (var j = 0; j < group.items.length; j++) {
+      var item = group.items[j];
+      var key = i + '_' + j;
+      var isChecked = checked[key];
+      total++;
+      if (isChecked) done++;
+      html += '<div class="bag-item">';
+      html += '<div class="bag-checkbox ' + (isChecked ? 'checked' : '') + '" data-supply-key="' + key + '">' + (isChecked ? '\u2713' : '') + '</div>';
+      html += '<div class="bag-item-body"><div class="bag-item-name ' + (isChecked ? 'completed' : '') + '">' + escapeHtml(item.name) + '</div>';
+      html += '<div style="font-size:11px;color:var(--text-light);">' + escapeHtml(item.qty) + ' \u00B7 ' + escapeHtml(item.note) + '</div></div>';
+      html += '</div>';
+    }
+  }
+  document.getElementById('big-supplies-list').innerHTML = html;
+  document.getElementById('big-supplies-count').textContent = done + ' / ' + total;
+  document.getElementById('big-supplies-progress').style.width = (total ? (done / total * 100) : 0) + '%';
+}
+function renderBigLearning() {
+  var modules = (appData.petBig && appData.petBig.learning) || DEFAULT_LEARNING_MODULES;
+  var html = '';
+  for (var i = 0; i < modules.length; i++) {
+    var m = modules[i];
+    html += '<div class="learning-card">';
+    html += '<button class="lc-delete" data-learn-id="' + m.id + '">\u2715</button>';
+    html += '<div class="lc-icon">' + m.icon + '</div>';
+    html += '<div class="lc-name">' + escapeHtml(m.name) + '</div>';
+    html += '<div class="lc-count">' + escapeHtml(m.desc || '') + '</div>';
+    html += '</div>';
+  }
+  html += '<div class="learning-add-card" data-action="add-learning">+ \u6DFB\u52A0\u7C7B\u76EE</div>';
+  document.getElementById('big-learning-modules').innerHTML = html;
+}
+function renderBigHealth() {
+  var records = (appData.petBig && appData.petBig.health) || [];
+  var list = document.getElementById('pet-big-health-list');
+  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
+  var sorted = records.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
   var html = '';
   for (var i = 0; i < sorted.length; i++) {
     var r = sorted[i];
-    html += '<div class="record-item">';
-    var main = '<span class="record-date">' + (r.date || '') + '</span>';
-    if (cat === 'health') main += '<span class="record-value">' + escapeHtml(r.item || '') + '</span>';
-    else if (cat === 'vaccine') main += '<span class="record-value">' + escapeHtml(r.name || '') + '</span>' + (r.next ? '<span class="record-tag">\u4E0B\u6B21 ' + r.next + '</span>' : '');
-    else if (cat === 'food') main += '<span class="record-value">' + escapeHtml(r.item || '') + '</span>' + (r.amount ? '<span class="record-tag">' + escapeHtml(r.amount) + '</span>' : '');
-    else if (cat === 'memo') main += '<span class="record-value">' + (r.text || '').substring(0, 20) + (r.text && r.text.length > 20 ? '...' : '') + '</span>';
-    html += '<div class="record-main">' + main + '</div>';
-    if (cat === 'memo' && r.text) html += '<div class="record-note">' + escapeHtml(r.text) + '</div>';
+    html += '<div class="record-item"><div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + escapeHtml(r.item) + '</span></div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
-    html += '<button class="record-delete" data-pet="' + petKey + '" data-cat="' + cat + '" data-id="' + r.id + '">\u2715</button>';
-    html += '</div>';
+    html += '<button class="record-delete" data-big-health-id="' + r.id + '">\u2715</button></div>';
   }
   list.innerHTML = html;
 }
-['big','small'].forEach(function(petKey){
-  document.getElementById('save-pet-' + petKey + '-btn').addEventListener('click', function(){
-    if (!appData[petKey]) appData[petKey] = { info:{name:'',birth:'',weight:''}, health:[], vaccine:[], food:[], memo:[] };
-    appData[petKey].info.name = document.getElementById('pet-' + petKey + '-name').value.trim();
-    appData[petKey].info.birth = document.getElementById('pet-' + petKey + '-birth').value;
-    appData[petKey].info.weight = document.getElementById('pet-' + petKey + '-weight').value.trim();
-    saveData();
-    alert('\u5DF2\u4FDD\u5B58');
-  });
-  document.getElementById('add-pet-' + petKey + '-health-btn').addEventListener('click', function(){
-    var date = document.getElementById('pet-' + petKey + '-health-date').value || todayISO();
-    var item = document.getElementById('pet-' + petKey + '-health-item').value.trim();
-    var note = document.getElementById('pet-' + petKey + '-health-note').value.trim();
-    if (!item) { alert('\u8BF7\u586B\u5199\u5065\u5EB7\u4E8B\u9879'); return; }
-    appData[petKey].health.push({ id:newId(appData[petKey].health), date:date, item:item, note:note });
-    saveData(); renderPet(petKey);
-    document.getElementById('pet-' + petKey + '-health-item').value = '';
-    document.getElementById('pet-' + petKey + '-health-note').value = '';
-  });
-  document.getElementById('add-pet-' + petKey + '-vaccine-btn').addEventListener('click', function(){
-    var date = document.getElementById('pet-' + petKey + '-vaccine-date').value || todayISO();
-    var name = document.getElementById('pet-' + petKey + '-vaccine-name').value.trim();
-    var next = document.getElementById('pet-' + petKey + '-vaccine-next').value;
-    if (!name) { alert('\u8BF7\u586B\u5199\u75AB\u82D7\u540D\u79F0'); return; }
-    appData[petKey].vaccine.push({ id:newId(appData[petKey].vaccine), date:date, name:name, next:next });
-    saveData(); renderPet(petKey);
-    document.getElementById('pet-' + petKey + '-vaccine-name').value = '';
-    document.getElementById('pet-' + petKey + '-vaccine-next').value = '';
-  });
-  document.getElementById('add-pet-' + petKey + '-food-btn').addEventListener('click', function(){
-    var date = document.getElementById('pet-' + petKey + '-food-date').value.trim() || todayISO();
-    var item = document.getElementById('pet-' + petKey + '-food-item').value.trim();
-    var amount = document.getElementById('pet-' + petKey + '-food-amount').value.trim();
-    if (!item) { alert('\u8BF7\u586B\u5199\u98DF\u7269'); return; }
-    appData[petKey].food.push({ id:newId(appData[petKey].food), date:date, item:item, amount:amount });
-    saveData(); renderPet(petKey);
-    document.getElementById('pet-' + petKey + '-food-item').value = '';
-    document.getElementById('pet-' + petKey + '-food-amount').value = '';
-  });
-  document.getElementById('add-pet-' + petKey + '-memo-btn').addEventListener('click', function(){
-    var date = document.getElementById('pet-' + petKey + '-memo-date').value || todayISO();
-    var text = document.getElementById('pet-' + petKey + '-memo-text').value.trim();
-    if (!text) { alert('\u8BF7\u586B\u5199\u5185\u5BB9'); return; }
-    appData[petKey].memo.push({ id:newId(appData[petKey].memo), date:date, text:text });
-    saveData(); renderPet(petKey);
-    document.getElementById('pet-' + petKey + '-memo-text').value = '';
-  });
-  document.getElementById('pet-' + petKey + '-info').addEventListener('click', function(e){
-    var btn = e.target.closest ? e.target.closest('.record-delete') : null;
-    if (!btn) return;
-    var cat = btn.dataset.cat, id = parseInt(btn.dataset.id);
-    if (!confirm('\u5220\u9664\u8FD9\u6761\u8BB0\u5F55\uFF1F')) return;
-    appData[petKey][cat] = appData[petKey][cat].filter(function(r){ return r.id !== id; });
-    saveData(); renderPet(petKey);
-  });
+function renderBigMemo() {
+  var records = (appData.petBig && appData.petBig.memo) || [];
+  var list = document.getElementById('pet-big-memo-list');
+  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
+  var sorted = records.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  var html = '';
+  for (var i = 0; i < sorted.length; i++) {
+    var r = sorted[i];
+    html += '<div class="record-item"><div class="record-main"><span class="record-date">' + r.date + '</span></div>';
+    if (r.text) html += '<div class="record-note">' + escapeHtml(r.text) + '</div>';
+    html += '<button class="record-delete" data-big-memo-id="' + r.id + '">\u2715</button></div>';
+  }
+  list.innerHTML = html;
+}
+
+function renderSmall() {
+  var d = appData.petSmall || {};
+  if (!d.info) d.info = {name:'',birth:''};
+  document.getElementById('pet-small-name').value = d.info.name || '';
+  document.getElementById('pet-small-birth').value = d.info.birth || '';
+  renderSmallGrowth();
+  renderSmallEarlyEdu();
+  renderSmallMusic();
+  renderSmallFood();
+}
+function renderSmallGrowth() {
+  var stagesEl = document.getElementById('small-growth-stages');
+  var detailEl = document.getElementById('small-growth-detail');
+  var html = '';
+  for (var i = 0; i < BABY_GROWTH_GUIDE.length; i++) {
+    html += '<button class="stage-btn ' + (i === 0 ? 'active' : '') + '" data-growth-idx="' + i + '">' + BABY_GROWTH_GUIDE[i].stage + '</button>';
+  }
+  stagesEl.innerHTML = html;
+  renderSmallGrowthDetail(0);
+}
+function renderSmallGrowthDetail(idx) {
+  var g = BABY_GROWTH_GUIDE[idx];
+  if (!g) return;
+  var html = '<h4 style="margin:0 0 12px;font-size:16px;color:var(--primary-dark);">' + g.stage + ' \u00B7 ' + g.label + '</h4>';
+  html += '<div class="gd-section"><h5>\uD83D\uDCCA \u751F\u957F\u53D1\u80B2</h5><p>' + escapeHtml(g.growth) + '</p></div>';
+  html += '<div class="gd-section"><h5>\uD83C\uDF7C \u5582\u517B\u996E\u98DF</h5><p>' + escapeHtml(g.feeding) + '</p></div>';
+  html += '<div class="gd-section"><h5>\uD83D\uDEC1 \u62A4\u7406\u5EFA\u8BAE</h5><p>' + escapeHtml(g.care) + '</p></div>';
+  html += '<div class="gd-section"><h5>\u26A0\uFE0F \u6CE8\u610F\u4E8B\u9879</h5><p>' + escapeHtml(g.caution) + '</p></div>';
+  document.getElementById('small-growth-detail').innerHTML = html;
+}
+function renderSmallEarlyEdu() {
+  var checked = (appData.petSmall && appData.petSmall.earlyEduChecked) || {};
+  var streak = (appData.petSmall && appData.petSmall.earlyEduStreak) || {};
+  var today = todayISO();
+  var html = '';
+  for (var i = 0; i < EARLY_EDU_CARDS.length; i++) {
+    var c = EARLY_EDU_CARDS[i];
+    var key = String(i);
+    var isChecked = checked[key + '_' + today];
+    var streakCount = streak[key] || 0;
+    html += '<div class="earlyedu-card">';
+    html += '<div class="ee-icon">' + c.icon + '</div>';
+    html += '<div class="ee-title">' + escapeHtml(c.title) + '</div>';
+    html += '<div class="ee-desc">' + escapeHtml(c.desc) + '</div>';
+    html += '<button class="ee-check ' + (isChecked ? 'checked' : '') + '" data-ee-idx="' + i + '">' + (isChecked ? '\u2713 \u5DF2\u6253\u5361' : '\u6253\u5361') + '</button>';
+    if (streakCount > 0) html += '<div class="ee-streak">\u8FDE\u7EED ' + streakCount + ' \u5929 \uD83D\uDD25</div>';
+    html += '</div>';
+  }
+  document.getElementById('small-earlyedu-cards').innerHTML = html;
+}
+function renderSmallMusic() {
+  var html = '';
+  for (var i = 0; i < BABY_MUSIC_REC.length; i++) {
+    var m = BABY_MUSIC_REC[i];
+    html += '<div class="music-card">';
+    html += '<div class="mc-icon">' + m.icon + '</div>';
+    html += '<div class="mc-title">' + escapeHtml(m.title) + '</div>';
+    html += '<div class="mc-desc">' + escapeHtml(m.desc) + '</div>';
+    html += '<div class="mc-link" data-music-search="' + escapeHtml(m.source) + '">' + escapeHtml(m.source) + '</div>';
+    html += '</div>';
+  }
+  document.getElementById('small-music-list').innerHTML = html;
+}
+function renderSmallFood() {
+  var stagesEl = document.getElementById('small-food-stages');
+  var html = '';
+  for (var i = 0; i < BABY_FOOD_PLAN.length; i++) {
+    html += '<button class="stage-btn ' + (i === 0 ? 'active' : '') + '" data-food-idx="' + i + '">' + BABY_FOOD_PLAN[i].label + '</button>';
+  }
+  stagesEl.innerHTML = html;
+  renderSmallFoodDetail(0);
+}
+function renderSmallFoodDetail(idx) {
+  var f = BABY_FOOD_PLAN[idx];
+  if (!f) return;
+  var html = '<h4 style="margin:0 0 12px;font-size:16px;color:var(--primary-dark);">' + f.label + '</h4>';
+  html += '<div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">\u6708\u9F84\u9636\u6BB5\uFF1A' + f.stage + '</div>';
+  for (var i = 0; i < f.items.length; i++) {
+    var item = f.items[i];
+    html += '<div style="background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;">';
+    html += '<div style="font-size:13px;font-weight:600;color:var(--primary);margin-bottom:4px;">' + escapeHtml(item.day) + '</div>';
+    html += '<div style="font-size:13px;color:var(--text);">' + escapeHtml(item.food) + '</div>';
+    html += '<div style="font-size:12px;color:var(--text-light);margin-top:4px;">' + escapeHtml(item.note) + '</div>';
+    html += '</div>';
+  }
+  document.getElementById('small-food-detail').innerHTML = html;
+}
+
+// \u5927\u5B9D\u4FE1\u606F\u4FDD\u5B58
+document.getElementById('save-pet-big-btn').addEventListener('click', function(){
+  if (!appData.petBig) appData.petBig = { info:{}, suppliesChecked:{}, learning:deepClone(DEFAULT_LEARNING_MODULES), health:[], memo:[] };
+  appData.petBig.info.name = document.getElementById('pet-big-name').value.trim();
+  appData.petBig.info.birth = document.getElementById('pet-big-birth').value;
+  var clsInput = document.getElementById('pet-big-class');
+  if (clsInput) appData.petBig.info.cls = clsInput.value.trim();
+  saveData(); alert('\u5DF2\u4FDD\u5B58');
 });
-// \u5BA0\u7269 tab \u5207\u6362
-document.querySelectorAll('.pet-tab').forEach(function(tab){
-  tab.addEventListener('click', function(){
-    var petKey = tab.dataset.pet, cat = tab.dataset.cat;
-    document.querySelectorAll('.pet-tab[data-pet="' + petKey + '"]').forEach(function(t){ t.classList.remove('active'); });
+// \u5927\u5B9D\u5065\u5EB7\u8BB0\u5F55
+document.getElementById('add-pet-big-health-btn').addEventListener('click', function(){
+  var date = document.getElementById('pet-big-health-date').value || todayISO();
+  var item = document.getElementById('pet-big-health-item').value.trim();
+  var note = document.getElementById('pet-big-health-note').value.trim();
+  if (!item) { alert('\u8BF7\u586B\u5199\u5065\u5EB7\u4E8B\u9879'); return; }
+  if (!appData.petBig.health) appData.petBig.health = [];
+  appData.petBig.health.push({ id:newId(appData.petBig.health), date:date, item:item, note:note });
+  saveData(); renderBigHealth();
+  document.getElementById('pet-big-health-item').value = '';
+  document.getElementById('pet-big-health-note').value = '';
+});
+// \u5927\u5B9D\u6210\u957F\u8BB0\u5F55
+document.getElementById('add-pet-big-memo-btn').addEventListener('click', function(){
+  var date = document.getElementById('pet-big-memo-date').value || todayISO();
+  var text = document.getElementById('pet-big-memo-text').value.trim();
+  if (!text) { alert('\u8BF7\u586B\u5199\u5185\u5BB9'); return; }
+  if (!appData.petBig.memo) appData.petBig.memo = [];
+  appData.petBig.memo.push({ id:newId(appData.petBig.memo), date:date, text:text });
+  saveData(); renderBigMemo();
+  document.getElementById('pet-big-memo-text').value = '';
+});
+// \u5927\u5B9D\u5B66\u4E60\u7C7B\u76EE\u6DFB\u52A0
+document.getElementById('add-big-learning-btn').addEventListener('click', function(){
+  var name = document.getElementById('big-learning-name').value.trim();
+  var icon = document.getElementById('big-learning-icon').value;
+  if (!name) { alert('\u8BF7\u586B\u5199\u7C7B\u76EE\u540D\u79F0'); return; }
+  if (!appData.petBig.learning) appData.petBig.learning = deepClone(DEFAULT_LEARNING_MODULES);
+  appData.petBig.learning.push({ id:newId(appData.petBig.learning), icon:icon, name:name, desc:'\u81EA\u5B9A\u4E49\u7C7B\u76EE' });
+  saveData(); renderBigLearning();
+  document.getElementById('big-learning-name').value = '';
+});
+// \u5927\u5B9D\u533A\u57DF\u70B9\u51FB\u59D4\u6258
+document.getElementById('pet-big').addEventListener('click', function(e){
+  var supplyBox = e.target.closest ? e.target.closest('[data-supply-key]') : null;
+  if (supplyBox) {
+    var key = supplyBox.dataset.supplyKey;
+    if (!appData.petBig.suppliesChecked) appData.petBig.suppliesChecked = {};
+    appData.petBig.suppliesChecked[key] = !appData.petBig.suppliesChecked[key];
+    saveData(); renderBigSupplies();
+    return;
+  }
+  var learnDel = e.target.closest ? e.target.closest('[data-learn-id]') : null;
+  if (learnDel) {
+    var lid = parseInt(learnDel.dataset.learnId);
+    appData.petBig.learning = appData.petBig.learning.filter(function(m){ return m.id !== lid; });
+    saveData(); renderBigLearning();
+    return;
+  }
+  var addCard = e.target.closest ? e.target.closest('[data-action="add-learning"]') : null;
+  if (addCard) {
+    document.getElementById('big-learning-name').focus();
+    window.scrollTo({ top:document.getElementById('big-learning-name').getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth' });
+    return;
+  }
+  var healthDel = e.target.closest ? e.target.closest('[data-big-health-id]') : null;
+  if (healthDel) {
+    var hid = parseInt(healthDel.dataset.bigHealthId);
+    appData.petBig.health = appData.petBig.health.filter(function(r){ return r.id !== hid; });
+    saveData(); renderBigHealth();
+    return;
+  }
+  var memoDel = e.target.closest ? e.target.closest('[data-big-memo-id]') : null;
+  if (memoDel) {
+    var mid = parseInt(memoDel.dataset.bigMemoId);
+    appData.petBig.memo = appData.petBig.memo.filter(function(r){ return r.id !== mid; });
+    saveData(); renderBigMemo();
+    return;
+  }
+  var tab = e.target.closest ? e.target.closest('.pet-tab') : null;
+  if (tab && tab.dataset.cat) {
+    var cat = tab.dataset.cat;
+    document.querySelectorAll('#pet-big-tabs .pet-tab').forEach(function(t){ t.classList.remove('active'); });
     tab.classList.add('active');
-    document.querySelectorAll('.pet-panel[data-pet-panel^="' + petKey + '"]').forEach(function(p){ p.classList.remove('active'); });
-    document.querySelector('.pet-panel[data-pet-panel="' + petKey + '-' + cat + '"]').classList.add('active');
-  });
+    document.querySelectorAll('#pet-big .pet-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelector('#pet-big .pet-panel[data-panel="big-' + cat + '"]').classList.add('active');
+  }
 });
+
+// \u5C0F\u5B9D\u4FE1\u606F\u4FDD\u5B58
+document.getElementById('save-pet-small-btn').addEventListener('click', function(){
+  if (!appData.petSmall) appData.petSmall = { info:{}, earlyEduChecked:{}, earlyEduStreak:{} };
+  appData.petSmall.info.name = document.getElementById('pet-small-name').value.trim();
+  appData.petSmall.info.birth = document.getElementById('pet-small-birth').value;
+  saveData(); alert('\u5DF2\u4FDD\u5B58');
+});
+// \u5C0F\u5B9D\u533A\u57DF\u70B9\u51FB\u59D4\u6258
+document.getElementById('pet-small').addEventListener('click', function(e){
+  var growthBtn = e.target.closest ? e.target.closest('[data-growth-idx]') : null;
+  if (growthBtn) {
+    var idx = parseInt(growthBtn.dataset.growthIdx);
+    document.querySelectorAll('#small-growth-stages .stage-btn').forEach(function(b){ b.classList.remove('active'); });
+    growthBtn.classList.add('active');
+    renderSmallGrowthDetail(idx);
+    return;
+  }
+  var foodBtn = e.target.closest ? e.target.closest('[data-food-idx]') : null;
+  if (foodBtn) {
+    var fidx = parseInt(foodBtn.dataset.foodIdx);
+    document.querySelectorAll('#small-food-stages .stage-btn').forEach(function(b){ b.classList.remove('active'); });
+    foodBtn.classList.add('active');
+    renderSmallFoodDetail(fidx);
+    return;
+  }
+  var eeBtn = e.target.closest ? e.target.closest('[data-ee-idx]') : null;
+  if (eeBtn) {
+    var eidx = eeBtn.dataset.eeIdx;
+    var today = todayISO();
+    var key = eidx + '_' + today;
+    if (!appData.petSmall.earlyEduChecked) appData.petSmall.earlyEduChecked = {};
+    if (!appData.petSmall.earlyEduStreak) appData.petSmall.earlyEduStreak = {};
+    if (appData.petSmall.earlyEduChecked[key]) {
+      appData.petSmall.earlyEduChecked[key] = false;
+    } else {
+      appData.petSmall.earlyEduChecked[key] = true;
+      var streakKey = String(eidx);
+      appData.petSmall.earlyEduStreak[streakKey] = (appData.petSmall.earlyEduStreak[streakKey] || 0) + 1;
+    }
+    saveData(); renderSmallEarlyEdu();
+    return;
+  }
+  var musicLink = e.target.closest ? e.target.closest('[data-music-search]') : null;
+  if (musicLink) {
+    var q = musicLink.dataset.musicSearch;
+    window.open('https://www.bilibili.com/search?keyword=' + encodeURIComponent(q), '_blank');
+    return;
+  }
+  var tab = e.target.closest ? e.target.closest('.pet-tab') : null;
+  if (tab && tab.dataset.cat) {
+    var cat2 = tab.dataset.cat;
+    document.querySelectorAll('#pet-small-tabs .pet-tab').forEach(function(t){ t.classList.remove('active'); });
+    tab.classList.add('active');
+    document.querySelectorAll('#pet-small .pet-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelector('#pet-small .pet-panel[data-panel="small-' + cat2 + '"]').classList.add('active');
+  }
+});
+
 // \u6210\u957F\u677F\u5757 sub-nav \u5207\u6362
 document.querySelectorAll('.growth-nav-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
@@ -1916,8 +2276,8 @@ function init() {
   renderDailyVideos('beauty-videos', 'beauty');
   renderDailyVideos('nutrition-videos', 'nutrition');
   renderDailyVideos('english-videos', 'english');
-  renderPet('big');
-  renderPet('small');
+  renderBig();
+  renderSmall();
   renderMemos();
 }
 init();
