@@ -1,61 +1,61 @@
-/* ====== \u80E1\u789F\u7684\u5DE5\u4F5C\u53F0 2.0 ====== */
+/* ====== \u80e1\u789f\u7684\u5de5\u4f5c\u53f0 2.0 ====== */
 const STORAGE_KEY = 'hudie_workbench_v3';
 const WEEKDAYS = ['mon','tue','wed','thu','fri','sat','sun'];
-const WEEKDAY_LABELS = { mon:'\u5468\u4E00', tue:'\u5468\u4E8C', wed:'\u5468\u4E09', thu:'\u5468\u56DB', fri:'\u5468\u4E94', sat:'\u5468\u516D', sun:'\u5468\u65E5' };
+const WEEKDAY_LABELS = { mon:'\u5468\u4e00', tue:'\u5468\u4e8c', wed:'\u5468\u4e09', thu:'\u5468\u56db', fri:'\u5468\u4e94', sat:'\u5468\u516d', sun:'\u5468\u65e5' };
 const MEAL_KEYS = ['breakfast','morningSnack','lunch','afternoonSnack','dinner','eveningSnack'];
-const MEAL_LABELS = { breakfast:'\u65E9\u9910', morningSnack:'\u65E9\u52A0\u9910', lunch:'\u5348\u9910', afternoonSnack:'\u5348\u52A0\u9910', dinner:'\u665A\u9910', eveningSnack:'\u665A\u52A0\u9910' };
+const MEAL_LABELS = { breakfast:'\u65e9\u9910', morningSnack:'\u65e9\u52a0\u9910', lunch:'\u5348\u9910', afternoonSnack:'\u5348\u52a0\u9910', dinner:'\u665a\u9910', eveningSnack:'\u665a\u52a0\u9910' };
 const DAILY_VIDEOS = {
   pilates: [
-    { title:'\u5B55\u671F\u666E\u62C9\u63D0 20 \u5206\u949F\uFF08\u5B89\u5168\u8212\u7F13\uFF09', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
-    { title:'\u5C45\u5BB6\u666E\u62C9\u63D0 10 \u5206\u949F\u5165\u95E8', link:'https://m.bilibili.com/search?keyword=%E5%B1%85%E5%AE%B6%E6%99%AE%E6%8B%89%E6%8F%90%E5%85%A5%E9%97%A8' },
-    { title:'\u4EA7\u540E\u6062\u590D\u666E\u62C9\u63D0 15 \u5206\u949F', link:'https://m.bilibili.com/search?keyword=%E4%BA%A7%E5%90%8E%E6%99%AE%E6%8B%89%E6%8F%90%E6%81%A2%E5%A4%8D' },
-    { title:'\u666E\u62C9\u63D0\u6838\u5FC3\u8BAD\u7EC3 \u521D\u7EA7', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E6%A0%B8%E5%BF%83%E8%AE%AD%E7%BB%83%E5%88%9D%E7%BA%A7' },
-    { title:'\u7761\u524D\u666E\u62C9\u63D0\u62C9\u4F38 12 \u5206\u949F', link:'https://m.bilibili.com/search?keyword=%E7%9D%A1%E5%89%8D%E6%99%AE%E6%8B%89%E6%8F%90%E6%8B%89%E4%BC%B8' },
-    { title:'\u5B55\u5987\u666E\u62C9\u63D0 \u7F13\u89E3\u8170\u80CC\u75BC\u75DB', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E5%A6%87%E6%99%AE%E6%8B%89%E6%8F%90%E8%85%B0%E8%83%8C' },
-    { title:'30 \u5929\u666E\u62C9\u63D0\u5851\u5F62 \u00B7 \u7B2C 1 \u5929', link:'https://m.bilibili.com/search?keyword=30%E5%A4%A9%E6%99%AE%E6%8B%89%E6%8F%90%E5%A1%91%E5%BD%A2' },
-    { title:'\u666E\u62C9\u63D0\u547C\u5438\u6CD5\u7EC3\u4E60 5 \u5206\u949F', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E5%91%BC%E5%90%B8%E6%B3%95' }
+    { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
+    { title:'\u5c45\u5bb6\u666e\u62c9\u63d0 10 \u5206\u949f\u5165\u95e8', link:'https://m.bilibili.com/search?keyword=%E5%B1%85%E5%AE%B6%E6%99%AE%E6%8B%89%E6%8F%90%E5%85%A5%E9%97%A8' },
+    { title:'\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d0 15 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E4%BA%A7%E5%90%8E%E6%99%AE%E6%8B%89%E6%8F%90%E6%81%A2%E5%A4%8D' },
+    { title:'\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3 \u521d\u7ea7', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E6%A0%B8%E5%BF%83%E8%AE%AD%E7%BB%83%E5%88%9D%E7%BA%A7' },
+    { title:'\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f38 12 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E7%9D%A1%E5%89%8D%E6%99%AE%E6%8B%89%E6%8F%90%E6%8B%89%E4%BC%B8' },
+    { title:'\u5b55\u5987\u666e\u62c9\u63d0 \u7f13\u89e3\u8170\u80cc\u75bc\u75db', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E5%A6%87%E6%99%AE%E6%8B%89%E6%8F%90%E8%85%B0%E8%83%8C' },
+    { title:'30 \u5929\u666e\u62c9\u63d0\u5851\u5f62 \u00b7 \u7b2c 1 \u5929', link:'https://m.bilibili.com/search?keyword=30%E5%A4%A9%E6%99%AE%E6%8B%89%E6%8F%90%E5%A1%91%E5%BD%A2' },
+    { title:'\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e60 5 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E5%91%BC%E5%90%B8%E6%B3%95' }
   ],
   beauty: [
-    { title:'\u5B55\u671F\u901A\u52E4\u7A7F\u642D 5 \u5957 LOOK', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E9%80%9A%E5%8B%A4' },
-    { title:'\u65B0\u624B\u5316\u5986\u6559\u7A0B \u4F2A\u7D20\u989C\u5986', link:'https://m.bilibili.com/search?keyword=%E6%96%B0%E6%89%8B%E5%8C%96%E5%A6%86%E6%95%99%E7%A8%8B' },
-    { title:'\u68A8\u5F62\u8EAB\u6750\u7A7F\u642D\u516C\u5F0F', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%A2%A8%E5%BD%A2%E8%BA%AB%E6%9D%90%E7%A9%BF%E6%90%AD%E5%85%AC%E5%BC%8F' },
-    { title:'\u5B55\u671F\u7A7F\u642D\u663E\u7626 10 \u4E2A\u6280\u5DE7', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E6%98%BE%E7%98%A6' },
-    { title:'\u65E9\u516B\u5FEB\u901F\u51FA\u95E8\u5986 5 \u5206\u949F', link:'https://m.bilibili.com/search?keyword=%E6%97%A9%E5%85%AB%E5%BF%AB%E9%80%9F%E5%87%BA%E9%97%A8%E5%A6%86' },
-    { title:'\u5B55\u671F\u7A7F\u642D\u535A\u4E3B\u5408\u96C6\u63A8\u8350', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E5%8D%9A%E4%B8%BB' },
-    { title:'\u5355\u773C\u76AE\u773C\u5986\u6559\u7A0B \u81EA\u7136\u653E\u5927', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%95%E7%9C%BC%E7%9A%AE%E7%9C%BC%E5%A6%86%E6%95%99%E7%A8%8B' },
-    { title:'\u57FA\u7840\u6B3E\u7A7F\u642D\u9AD8\u7EA7\u611F', link:'https://www.douyin.com/search/%E5%9F%BA%E7%A1%80%E6%AC%BE%E9%AB%98%E7%BA%A7%E6%84%9F%E7%A9%BF%E6%90%AD' }
+    { title:'\u5b55\u671f\u901a\u52e4\u7a7f\u642d 5 \u5957 LOOK', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E9%80%9A%E5%8B%A4' },
+    { title:'\u65b0\u624b\u5316\u5986\u6559\u7a0b \u4f2a\u7d20\u989c\u5986', link:'https://m.bilibili.com/search?keyword=%E6%96%B0%E6%89%8B%E5%8C%96%E5%A6%86%E6%95%99%E7%A8%8B' },
+    { title:'\u68a8\u5f62\u8eab\u6750\u7a7f\u642d\u516c\u5f0f', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%A2%A8%E5%BD%A2%E8%BA%AB%E6%9D%90%E7%A9%BF%E6%90%AD%E5%85%AC%E5%BC%8F' },
+    { title:'\u5b55\u671f\u7a7f\u642d\u663e\u7626 10 \u4e2a\u6280\u5de7', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E6%98%BE%E7%98%A6' },
+    { title:'\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u5986 5 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E6%97%A9%E5%85%AB%E5%BF%AB%E9%80%9F%E5%87%BA%E9%97%A8%E5%A6%86' },
+    { title:'\u5b55\u671f\u7a7f\u642d\u535a\u4e3b\u5408\u96c6\u63a8\u8350', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E5%8D%9A%E4%B8%BB' },
+    { title:'\u5355\u773c\u76ae\u773c\u5986\u6559\u7a0b \u81ea\u7136\u653e\u5927', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%95%E7%9C%BC%E7%9A%AE%E7%9C%BC%E5%A6%86%E6%95%99%E7%A8%8B' },
+    { title:'\u57fa\u7840\u6b3e\u7a7f\u642d\u9ad8\u7ea7\u611f', link:'https://www.douyin.com/search/%E5%9F%BA%E7%A1%80%E6%AC%BE%E9%AB%98%E7%BA%A7%E6%84%9F%E7%A9%BF%E6%90%AD' }
   ],
   nutrition: [
-    { title:'\u5B55\u671F\u63A7\u7CD6\u996E\u98DF\u5168\u653B\u7565', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%8E%A7%E7%B3%96%E9%A5%AE%E9%A3%9F' },
-    { title:'\u4E2D\u56FD\u5C45\u6C11\u81B3\u98DF\u6307\u5357\u89E3\u8BFB', link:'https://m.bilibili.com/search?keyword=%E4%B8%AD%E5%9B%BD%E5%B1%85%E6%B0%91%E8%86%B3%E9%A3%9F%E6%8C%87%E5%8D%97' },
-    { title:'\u51CF\u8102\u671F\u86CB\u767D\u8D28\u600E\u4E48\u5403', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E8%9B%8B%E7%99%BD%E8%B4%A8' },
-    { title:'\u5B55\u671F\u8865\u94C1\u8865\u9499\u98DF\u7269\u6E05\u5355', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%A1%A5%E9%93%81%E8%A1%A5%E9%92%99' },
-    { title:'\u4F4E GI \u98DF\u7269\u9009\u62E9\u6307\u5357', link:'https://m.bilibili.com/search?keyword=%E4%BD%8EGI%E9%A3%9F%E7%89%A9' },
-    { title:'\u598A\u5A20\u671F\u7CD6\u5C3F\u75C5\u996E\u98DF\u7BA1\u7406', link:'https://m.bilibili.com/search?keyword=%E5%A6%8A%E5%A8%A0%E6%9C%9F%E7%B3%96%E5%B0%BF%E7%97%85%E9%A5%AE%E9%A3%9F' },
-    { title:'\u5B55\u671F\u8425\u517B\u8865\u5145\u5242\u600E\u4E48\u9009', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%90%A5%E5%85%BB%E8%A1%A5%E5%85%85%E5%89%82' },
-    { title:'\u51CF\u8102\u671F\u4E00\u65E5\u4E09\u9910\u642D\u914D', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E4%B8%80%E6%97%A5%E4%B8%89%E9%A4%90' }
+    { title:'\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%8E%A7%E7%B3%96%E9%A5%AE%E9%A3%9F' },
+    { title:'\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb', link:'https://m.bilibili.com/search?keyword=%E4%B8%AD%E5%9B%BD%E5%B1%85%E6%B0%91%E8%86%B3%E9%A3%9F%E6%8C%87%E5%8D%97' },
+    { title:'\u51cf\u8102\u671f\u86cb\u767d\u8d28\u600e\u4e48\u5403', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E8%9B%8B%E7%99%BD%E8%B4%A8' },
+    { title:'\u5b55\u671f\u8865\u94c1\u8865\u9499\u98df\u7269\u6e05\u5355', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%A1%A5%E9%93%81%E8%A1%A5%E9%92%99' },
+    { title:'\u4f4e GI \u98df\u7269\u9009\u62e9\u6307\u5357', link:'https://m.bilibili.com/search?keyword=%E4%BD%8EGI%E9%A3%9F%E7%89%A9' },
+    { title:'\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406', link:'https://m.bilibili.com/search?keyword=%E5%A6%8A%E5%A8%A0%E6%9C%9F%E7%B3%96%E5%B0%BF%E7%97%85%E9%A5%AE%E9%A3%9F' },
+    { title:'\u5b55\u671f\u8425\u517b\u8865\u5145\u5242\u600e\u4e48\u9009', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%90%A5%E5%85%BB%E8%A1%A5%E5%85%85%E5%89%82' },
+    { title:'\u51cf\u8102\u671f\u4e00\u65e5\u4e09\u9910\u642d\u914d', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E4%B8%80%E6%97%A5%E4%B8%89%E9%A4%90' }
   ],
   english: [
-    { title:'\u65E5\u5E38\u82F1\u8BED\u53E3\u8BED 100 \u53E5', link:'https://m.bilibili.com/search?keyword=%E6%97%A5%E5%B8%B8%E8%8B%B1%E8%AF%AD%E5%8F%A3%E8%AF%AD100%E5%8F%A5' },
-    { title:'\u673A\u573A\u901A\u5173\u82F1\u8BED\u5BF9\u8BDD', link:'https://m.bilibili.com/search?keyword=%E6%9C%BA%E5%9C%BA%E9%80%9A%E5%85%B3%E8%8B%B1%E8%AF%AD%E5%AF%B9%E8%AF%9D' },
-    { title:'\u9910\u5385\u70B9\u9910\u82F1\u8BED \u5B9E\u7528\u53E5\u578B', link:'https://m.bilibili.com/search?keyword=%E9%A4%90%E5%8E%85%E7%82%B9%E9%A4%90%E8%8B%B1%E8%AF%AD' },
-    { title:'\u8D2D\u7269\u82F1\u8BED \u8BA8\u4EF7\u8FD8\u4EF7', link:'https://m.bilibili.com/search?keyword=%E8%B4%AD%E7%89%A9%E8%8B%B1%E8%AF%AD%E8%AE%A8%E4%BB%B7%E8%BF%98%E4%BB%B7' },
-    { title:'\u81EA\u6211\u4ECB\u7ECD\u82F1\u8BED 30 \u79D2\u7248', link:'https://m.bilibili.com/search?keyword=%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D%E8%8B%B1%E8%AF%AD30%E7%A7%92' },
-    { title:'\u7535\u8BDD\u82F1\u8BED \u9884\u7EA6/\u53D6\u6D88', link:'https://m.bilibili.com/search?keyword=%E7%94%B5%E8%AF%9D%E8%8B%B1%E8%AF%AD%E9%A2%84%E7%BA%A6' },
-    { title:'\u9152\u5E97\u5165\u4F4F\u82F1\u8BED\u5BF9\u8BDD', link:'https://m.bilibili.com/search?keyword=%E9%85%92%E5%BA%97%E5%85%A5%E4%BD%8F%E8%8B%B1%E8%AF%AD' },
-    { title:'\u770B\u75C5\u5C31\u533B\u82F1\u8BED\u5E38\u7528\u8868\u8FBE', link:'https://m.bilibili.com/search?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
+    { title:'\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed 100 \u53e5', link:'https://m.bilibili.com/search?keyword=%E6%97%A5%E5%B8%B8%E8%8B%B1%E8%AF%AD%E5%8F%A3%E8%AF%AD100%E5%8F%A5' },
+    { title:'\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd', link:'https://m.bilibili.com/search?keyword=%E6%9C%BA%E5%9C%BA%E9%80%9A%E5%85%B3%E8%8B%B1%E8%AF%AD%E5%AF%B9%E8%AF%9D' },
+    { title:'\u9910\u5385\u70b9\u9910\u82f1\u8bed \u5b9e\u7528\u53e5\u578b', link:'https://m.bilibili.com/search?keyword=%E9%A4%90%E5%8E%85%E7%82%B9%E9%A4%90%E8%8B%B1%E8%AF%AD' },
+    { title:'\u8d2d\u7269\u82f1\u8bed \u8ba8\u4ef7\u8fd8\u4ef7', link:'https://m.bilibili.com/search?keyword=%E8%B4%AD%E7%89%A9%E8%8B%B1%E8%AF%AD%E8%AE%A8%E4%BB%B7%E8%BF%98%E4%BB%B7' },
+    { title:'\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed 30 \u79d2\u7248', link:'https://m.bilibili.com/search?keyword=%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D%E8%8B%B1%E8%AF%AD30%E7%A7%92' },
+    { title:'\u7535\u8bdd\u82f1\u8bed \u9884\u7ea6/\u53d6\u6d88', link:'https://m.bilibili.com/search?keyword=%E7%94%B5%E8%AF%9D%E8%8B%B1%E8%AF%AD%E9%A2%84%E7%BA%A6' },
+    { title:'\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd', link:'https://m.bilibili.com/search?keyword=%E9%85%92%E5%BA%97%E5%85%A5%E4%BD%8F%E8%8B%B1%E8%AF%AD' },
+    { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://m.bilibili.com/search?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
   ]
 };
 const defaultData = {
   todos: [
-    { id:1, text:'\u666E\u62C9\u63D0\u7EC3\u4E60 30 \u5206\u949F', time:'\u7075\u6D3B\u5B89\u6392', done:false, category:'pilates', note:'' },
-    { id:2, text:'\u8425\u517B\u5B66\u77E5\u8BC6\u5B66\u4E60 30 \u5206\u949F', time:'\u7075\u6D3B\u5B89\u6392', done:false, category:'nutrition', note:'' },
-    { id:3, text:'\u5316\u5986\u7A7F\u642D\u5B66\u4E60 30 \u5206\u949F', time:'\u7075\u6D3B\u5B89\u6392', done:false, category:'beauty', note:'' },
-    { id:4, text:'\u82F1\u8BED\u7EC3\u4E60 30 \u5206\u949F', time:'\u7075\u6D3B\u5B89\u6392', done:false, category:'english', note:'' }
+    { id:1, text:'\u666e\u62c9\u63d0\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'pilates', note:'' },
+    { id:2, text:'\u8425\u517b\u5b66\u77e5\u8bc6\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'nutrition', note:'' },
+    { id:3, text:'\u5316\u5986\u7a7f\u642d\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'beauty', note:'' },
+    { id:4, text:'\u82f1\u8bed\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'english', note:'' }
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
-  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], health:[], memo:[] },
+  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[] },
   petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
   todosDate:null,
   weeklyPlan:{},
@@ -65,7 +65,7 @@ function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 function migrateData(stored) {
   if (!stored) return deepClone(defaultData);
   var merged = deepClone(defaultData);
-  // \u628A stored \u7684\u5B57\u6BB5\u5408\u5E76\u5230 merged\uFF08\u6DF1\u5408\u5E76\uFF09
+  // \u628a stored \u7684\u5b57\u6bb5\u5408\u5e76\u5230 merged\uff08\u6df1\u5408\u5e76\uff09
   for (var key in stored) {
     if (stored.hasOwnProperty(key) && stored[key] !== undefined && stored[key] !== null) {
       merged[key] = stored[key];
@@ -73,7 +73,7 @@ function migrateData(stored) {
   }
   if (!merged.weeklyPlan) merged.weeklyPlan = {};
   if (!merged.lmpDate) merged.lmpDate = null;
-  // \u65E7 weeklyPlan \u6309 mon/tue \u5B58\u50A8\uFF0C\u8FC1\u79FB\u5230\u6309 ISO \u65E5\u671F\u5B58\u50A8
+  // \u65e7 weeklyPlan \u6309 mon/tue \u5b58\u50a8\uff0c\u8fc1\u79fb\u5230\u6309 ISO \u65e5\u671f\u5b58\u50a8
   var hasOldKeys = false;
   for (var i = 0; i < WEEKDAYS.length; i++) {
     if (merged.weeklyPlan[WEEKDAYS[i]] && typeof merged.weeklyPlan[WEEKDAYS[i]] === 'object' && Object.keys(merged.weeklyPlan[WEEKDAYS[i]]).length > 0) { hasOldKeys = true; break; }
@@ -110,6 +110,8 @@ function migrateData(stored) {
       if (!merged[k].info) merged[k].info = {name:'',birth:'',cls:''};
       if (!merged[k].suppliesChecked) merged[k].suppliesChecked = {};
       if (!merged[k].learning || !merged[k].learning.length) merged[k].learning = deepClone(DEFAULT_LEARNING_MODULES);
+      if (!merged[k].learningCompleted) merged[k].learningCompleted = {};
+      if (!merged[k].learningCustom) merged[k].learningCustom = {};
       if (!merged[k].health) merged[k].health = [];
       if (!merged[k].memo) merged[k].memo = [];
     } else {
@@ -129,7 +131,7 @@ function loadData() {
     try {
       return migrateData(JSON.parse(stored));
     } catch(e) {
-      // JSON \u89E3\u6790\u5931\u8D25\uFF0C\u5C1D\u8BD5\u4ECE\u5907\u4EFD\u6062\u590D
+      // JSON \u89e3\u6790\u5931\u8d25\uff0c\u5c1d\u8bd5\u4ece\u5907\u4efd\u6062\u590d
       var backup = localStorage.getItem(STORAGE_KEY + '_backup');
       if (backup) {
         try { return migrateData(JSON.parse(backup)); } catch(e2) {}
@@ -140,15 +142,15 @@ function loadData() {
   return deepClone(defaultData);
 }
 function saveData() {
-  // \u5148\u5907\u4EFD\uFF0C\u518D\u4FDD\u5B58\uFF0C\u9632\u6B62\u6570\u636E\u4E22\u5931
+  // \u5148\u5907\u4efd\uff0c\u518d\u4fdd\u5b58\uff0c\u9632\u6b62\u6570\u636e\u4e22\u5931
   try {
     localStorage.setItem(STORAGE_KEY + '_backup', localStorage.getItem(STORAGE_KEY) || JSON.stringify(appData));
   } catch(e) {}
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
 }
 var appData = loadData();
-function todayStr() { var d = new Date(); return d.getFullYear() + '\u5E74' + (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65E5'; }
-function weekdayStr() { return ['\u661F\u671F\u65E5','\u661F\u671F\u4E00','\u661F\u671F\u4E8C','\u661F\u671F\u4E09','\u661F\u671F\u56DB','\u661F\u671F\u4E94','\u661F\u671F\u516D'][new Date().getDay()]; }
+function todayStr() { var d = new Date(); return d.getFullYear() + '\u5e74' + (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65e5'; }
+function weekdayStr() { return ['\u661f\u671f\u65e5','\u661f\u671f\u4e00','\u661f\u671f\u4e8c','\u661f\u671f\u4e09','\u661f\u671f\u56db','\u661f\u671f\u4e94','\u661f\u671f\u516d'][new Date().getDay()]; }
 function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function nowStr() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
 function getWeekDates(baseDate) {
@@ -163,7 +165,7 @@ function getWeekDates(baseDate) {
     dates.push({
       iso: cur.getFullYear() + '-' + String(cur.getMonth()+1).padStart(2,'0') + '-' + String(cur.getDate()).padStart(2,'0'),
       short: (cur.getMonth()+1) + '.' + cur.getDate(),
-      weekday: ['\u5468\u4E00','\u5468\u4E8C','\u5468\u4E09','\u5468\u56DB','\u5468\u4E94','\u5468\u516D','\u5468\u65E5'][i]
+      weekday: ['\u5468\u4e00','\u5468\u4e8c','\u5468\u4e09','\u5468\u56db','\u5468\u4e94','\u5468\u516d','\u5468\u65e5'][i]
     });
   }
   return dates;
@@ -198,7 +200,7 @@ document.querySelectorAll('.nav-item').forEach(function(btn){
   });
 });
 
-/* ====== \u6BCF\u65E5\u4EFB\u52A1 ====== */
+/* ====== \u6bcf\u65e5\u4efb\u52a1 ====== */
 function checkDailyReset() {
   var today = todayISO();
   if (appData.todosDate !== today) {
@@ -218,7 +220,7 @@ function renderTodos() {
     html += '<span class="todo-text">' + escapeHtml(t.text) + '</span>';
     html += '<span class="todo-time">' + escapeHtml(t.time || '') + '</span>';
     html += '<button class="todo-delete" data-id="' + t.id + '">\u2715</button>';
-    html += '<input class="todo-note-input" data-id="' + t.id + '" placeholder="\u5907\u6CE8\u7279\u6B8A\u60C5\u51B5..." value="' + escapeHtml(t.note || '') + '">';
+    html += '<input class="todo-note-input" data-id="' + t.id + '" placeholder="\u5907\u6ce8\u7279\u6b8a\u60c5\u51b5..." value="' + escapeHtml(t.note || '') + '">';
     html += '</div>';
   }
   list.innerHTML = html;
@@ -231,7 +233,7 @@ document.getElementById('todo-list').addEventListener('click', function(e){
     var todo = appData.todos.find(function(t){ return t.id === id; });
     if (todo) { todo.done = !todo.done; saveData(); renderTodos(); }
   } else if (e.target.classList.contains('todo-delete')) {
-    if (confirm('\u5220\u9664\u8FD9\u6761\u4EFB\u52A1\uFF1F')) { appData.todos = appData.todos.filter(function(t){ return t.id !== id; }); saveData(); renderTodos(); }
+    if (confirm('\u5220\u9664\u8fd9\u6761\u4efb\u52a1\uff1f')) { appData.todos = appData.todos.filter(function(t){ return t.id !== id; }); saveData(); renderTodos(); }
   }
 });
 document.getElementById('todo-list').addEventListener('input', function(e){
@@ -247,51 +249,51 @@ function addTask() {
   var input = document.getElementById('new-task-input'), text = input.value.trim();
   if (!text) return;
   var category = 'other';
-  if (/\u666E\u62C9\u63D0|pilates/i.test(text)) category = 'pilates';
-  else if (/\u8425\u517B|nutrition|\u98DF\u8C31|\u996E\u98DF/i.test(text)) category = 'nutrition';
-  else if (/\u5316\u5986|\u7A7F\u642D|\u642D\u914D|\u670D\u88C5|\u7F8E\u5986/i.test(text)) category = 'beauty';
-  else if (/\u82F1\u8BED|english|\u53E3\u8BED|\u5355\u8BCD/i.test(text)) category = 'english';
-  appData.todos.push({ id:newId(appData.todos), text:text, time:'\u81EA\u5B9A\u4E49', done:false, category:category, note:'' });
+  if (/\u666e\u62c9\u63d0|pilates/i.test(text)) category = 'pilates';
+  else if (/\u8425\u517b|nutrition|\u98df\u8c31|\u996e\u98df/i.test(text)) category = 'nutrition';
+  else if (/\u5316\u5986|\u7a7f\u642d|\u642d\u914d|\u670d\u88c5|\u7f8e\u5986/i.test(text)) category = 'beauty';
+  else if (/\u82f1\u8bed|english|\u53e3\u8bed|\u5355\u8bcd/i.test(text)) category = 'english';
+  appData.todos.push({ id:newId(appData.todos), text:text, time:'\u81ea\u5b9a\u4e49', done:false, category:category, note:'' });
   saveData(); input.value = ''; renderTodos();
 }
 
-/* ====== \u5F85\u4EA7\u5305\u6E05\u5355 ====== */
+/* ====== \u5f85\u4ea7\u5305\u6e05\u5355 ====== */
 var currentBagCat = 'all';
 var currentKnowledgeCat = 'all';
 
 function ensureBagDefaults() {
   if (appData.bagItems && appData.bagItems.length) return;
   appData.bagItems = [
-    { id:1, name:'\u592B\u59BB\u53CC\u65B9\u8EAB\u4EFD\u8BC1', cat:'\u8BC1\u4EF6\u8D44\u6599', checked:false },
-    { id:2, name:'\u533B\u4FDD\u5361/\u793E\u4FDD\u5361', cat:'\u8BC1\u4EF6\u8D44\u6599', checked:false },
-    { id:3, name:'\u4EA7\u68C0\u6863\u6848/\u6BCD\u5B50\u5065\u5EB7\u624B\u518C', cat:'\u8BC1\u4EF6\u8D44\u6599', checked:false },
-    { id:4, name:'\u7ED3\u5A5A\u8BC1', cat:'\u8BC1\u4EF6\u8D44\u6599', checked:false },
-    { id:5, name:'\u6237\u53E3\u672C', cat:'\u8BC1\u4EF6\u8D44\u6599', checked:false },
-    { id:6, name:'\u536B\u751F\u5DFE\uFF08\u4EA7\u5987\u4E13\u7528\uFF09', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:7, name:'\u4EA7\u5987\u8BA1\u91CF\u7EB8/\u62A4\u7406\u57AB', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:8, name:'\u4E00\u6B21\u6027\u7EAF\u68C9\u5185\u88E4', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:9, name:'\u54FA\u4E73\u6587\u80F8/\u9632\u6EA2\u4E73\u57AB', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:10, name:'\u4E73\u5934\u4FDD\u62A4\u971C', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:11, name:'\u62BD\u7EB8/\u5377\u7EB8', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:12, name:'\u6708\u5B50\u670D/\u7761\u8863\uFF08\u524D\u5F00\u6263\uFF09', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:13, name:'\u62D6\u978B\uFF08\u9632\u6ED1\uFF09', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:14, name:'\u5438\u7BA1\u676F/\u4FDD\u6E29\u676F', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:15, name:'\u6D17\u6F31\u7528\u54C1\uFF08\u7259\u5237\u3001\u6BDB\u5DFE\u7B49\uFF09', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:16, name:'\u51FA\u9662\u670D', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:17, name:'\u6536\u8179\u5E26', cat:'\u5988\u5988\u7528\u54C1', checked:false },
-    { id:18, name:'\u5A74\u513F\u5305\u88AB\uFF08\u8584\u539A\u5404\u4E00\uFF09', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:19, name:'\u5A74\u513F\u8FDE\u4F53\u8863\uFF0852\u7801\uFF09', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:20, name:'\u5A74\u513F\u53E3\u6C34\u5DFE/\u5C0F\u6BDB\u5DFE', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:21, name:'NB\u53F7\u7EB8\u5C3F\u88E4', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:22, name:'\u6E7F\u5DFE/\u68C9\u67D4\u5DFE', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:23, name:'\u5A74\u513F\u62A4\u81C0\u818F', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:24, name:'\u5976\u74F6+\u5976\u7C89\uFF08\u5C0F\u7F50\u5907\u7528\uFF09', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:25, name:'\u5A74\u513F\u5E3D/\u5C0F\u889C\u5B50', cat:'\u5B9D\u5B9D\u7528\u54C1', checked:false },
-    { id:26, name:'\u624B\u673A+\u5145\u7535\u5668', cat:'\u5176\u4ED6', checked:false },
-    { id:27, name:'\u4FDD\u6E29\u996D\u76D2/\u9910\u5177', cat:'\u5176\u4ED6', checked:false },
-    { id:28, name:'\u73B0\u91D1/\u94F6\u884C\u5361', cat:'\u5176\u4ED6', checked:false },
-    { id:29, name:'\u5438\u7BA1\uFF08\u4EA7\u540E\u8EBA\u7740\u559D\u6C34\u7528\uFF09', cat:'\u5176\u4ED6', checked:false },
-    { id:30, name:'\u5DE7\u514B\u529B/\u7EA2\u725B\uFF08\u8865\u5145\u4F53\u529B\uFF09', cat:'\u5176\u4ED6', checked:false }
+    { id:1, name:'\u592b\u59bb\u53cc\u65b9\u8eab\u4efd\u8bc1', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:2, name:'\u533b\u4fdd\u5361/\u793e\u4fdd\u5361', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:3, name:'\u4ea7\u68c0\u6863\u6848/\u6bcd\u5b50\u5065\u5eb7\u624b\u518c', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:4, name:'\u7ed3\u5a5a\u8bc1', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:5, name:'\u6237\u53e3\u672c', cat:'\u8bc1\u4ef6\u8d44\u6599', checked:false },
+    { id:6, name:'\u536b\u751f\u5dfe\uff08\u4ea7\u5987\u4e13\u7528\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:7, name:'\u4ea7\u5987\u8ba1\u91cf\u7eb8/\u62a4\u7406\u57ab', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:8, name:'\u4e00\u6b21\u6027\u7eaf\u68c9\u5185\u88e4', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:9, name:'\u54fa\u4e73\u6587\u80f8/\u9632\u6ea2\u4e73\u57ab', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:10, name:'\u4e73\u5934\u4fdd\u62a4\u971c', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:11, name:'\u62bd\u7eb8/\u5377\u7eb8', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:12, name:'\u6708\u5b50\u670d/\u7761\u8863\uff08\u524d\u5f00\u6263\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:13, name:'\u62d6\u978b\uff08\u9632\u6ed1\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:14, name:'\u5438\u7ba1\u676f/\u4fdd\u6e29\u676f', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:15, name:'\u6d17\u6f31\u7528\u54c1\uff08\u7259\u5237\u3001\u6bdb\u5dfe\u7b49\uff09', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:16, name:'\u51fa\u9662\u670d', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:17, name:'\u6536\u8179\u5e26', cat:'\u5988\u5988\u7528\u54c1', checked:false },
+    { id:18, name:'\u5a74\u513f\u5305\u88ab\uff08\u8584\u539a\u5404\u4e00\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:19, name:'\u5a74\u513f\u8fde\u4f53\u8863\uff0852\u7801\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:20, name:'\u5a74\u513f\u53e3\u6c34\u5dfe/\u5c0f\u6bdb\u5dfe', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:21, name:'NB\u53f7\u7eb8\u5c3f\u88e4', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:22, name:'\u6e7f\u5dfe/\u68c9\u67d4\u5dfe', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:23, name:'\u5a74\u513f\u62a4\u81c0\u818f', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:24, name:'\u5976\u74f6+\u5976\u7c89\uff08\u5c0f\u7f50\u5907\u7528\uff09', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:25, name:'\u5a74\u513f\u5e3d/\u5c0f\u889c\u5b50', cat:'\u5b9d\u5b9d\u7528\u54c1', checked:false },
+    { id:26, name:'\u624b\u673a+\u5145\u7535\u5668', cat:'\u5176\u4ed6', checked:false },
+    { id:27, name:'\u4fdd\u6e29\u996d\u76d2/\u9910\u5177', cat:'\u5176\u4ed6', checked:false },
+    { id:28, name:'\u73b0\u91d1/\u94f6\u884c\u5361', cat:'\u5176\u4ed6', checked:false },
+    { id:29, name:'\u5438\u7ba1\uff08\u4ea7\u540e\u8eba\u7740\u559d\u6c34\u7528\uff09', cat:'\u5176\u4ed6', checked:false },
+    { id:30, name:'\u5de7\u514b\u529b/\u7ea2\u725b\uff08\u8865\u5145\u4f53\u529b\uff09', cat:'\u5176\u4ed6', checked:false }
   ];
   saveData();
 }
@@ -317,7 +319,7 @@ function renderBagList() {
   list.innerHTML = html;
 }
 
-/* ====== \u5B55\u671F\u6307\u5357\u5B50\u5BFC\u822A\u5207\u6362 ====== */
+/* ====== \u5b55\u671f\u6307\u5357\u5b50\u5bfc\u822a\u5207\u6362 ====== */
 document.querySelectorAll('.diet-nav-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     document.querySelectorAll('.diet-nav-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -348,7 +350,7 @@ document.getElementById('bag-list').addEventListener('click', function(e){
   var delBtn = e.target.closest ? e.target.closest('.bag-item-delete') : null;
   if (delBtn) {
     var did = parseInt(delBtn.dataset.id);
-    if (confirm('\u5220\u9664\u8FD9\u4E2A\u7269\u54C1\uFF1F')) {
+    if (confirm('\u5220\u9664\u8fd9\u4e2a\u7269\u54c1\uff1f')) {
       appData.bagItems = appData.bagItems.filter(function(i){ return i.id !== did; });
       saveData(); renderBagList();
     }
@@ -357,23 +359,23 @@ document.getElementById('bag-list').addEventListener('click', function(e){
 document.getElementById('add-bag-btn').addEventListener('click', function(){
   var name = document.getElementById('bag-name').value.trim();
   var cat = document.getElementById('bag-category').value;
-  if (!name) { alert('\u8BF7\u586B\u5199\u7269\u54C1\u540D\u79F0'); return; }
+  if (!name) { alert('\u8bf7\u586b\u5199\u7269\u54c1\u540d\u79f0'); return; }
   appData.bagItems.push({ id:newId(appData.bagItems), name:name, cat:cat, checked:false });
   saveData(); renderBagList();
   document.getElementById('bag-name').value = '';
 });
 
-/* ====== \u5B55\u671F\u77E5\u8BC6 ====== */
+/* ====== \u5b55\u671f\u77e5\u8bc6 ====== */
 var KNOWLEDGE_DATA = [
-  { id:1, cat:'\u5B55\u65E9\u671F', icon:'\uD83C\uDFE5', title:'\u7B2C\u4E00\u6B21\u4EA7\u68C0\u653B\u7565', content:'\u5EFA\u6863\u3001NT \u68C0\u67E5\u3001\u5404\u9879\u7B5B\u67E5\u2026\u2026\u7B2C\u4E00\u6B21\u6B63\u5F0F\u4EA7\u68C0\u8BE5\u51C6\u5907\u4EC0\u4E48\uFF1F\n1. \u5E26\u4E0A\u8EAB\u4EFD\u8BC1\u3001\u533B\u4FDD\u5361\u3001\u672B\u6B21\u6708\u7ECF\u65E5\u671F\n2. \u63D0\u524D\u9884\u7EA6\u4EA7\u68C0\u65F6\u95F4\uFF0C\u9886\u53D6\u6BCD\u5B50\u5065\u5EB7\u624B\u518C\n3. \u7A7F\u5BBD\u677E\u8863\u7269\uFF0C\u65B9\u4FBF\u68C0\u67E5\uFF0C\u907F\u514D\u8FDE\u8863\u88D9\n4. \u90E8\u5206\u9879\u76EE\uFF08\u8840\u5E38\u89C4\u3001\u8840\u7CD6\uFF09\u9700\u7A7A\u8179\uFF0C\u8BB0\u5F97\u54A8\u8BE2\u533B\u751F\n5. \u9884\u7559\u5145\u8DB3\u65F6\u95F4\uFF0C\u6BCF\u9879\u68C0\u67E5\u53EF\u80FD\u9700 1-2 \u5C0F\u65F6' },
-  { id:2, cat:'\u5B55\u65E9\u671F', icon:'\uD83D\uDE0A', title:'\u5B55\u671F\u60C5\u7EEA\u7BA1\u7406', content:'\u8377\u5C14\u8499\u53D8\u5316\u5BFC\u81F4\u60C5\u7EEA\u6CE2\u52A8\u5F88\u6B63\u5E38\uFF0C\u5B66\u4F1A\u7BA1\u7406\u5B55\u671F\u60C5\u7EEA\u3002\n1. \u4FDD\u6301\u5145\u8DB3\u7761\u7720\uFF0C\u6BCF\u5929 7-9 \u5C0F\u65F6\n2. \u9002\u5EA6\u8FD0\u52A8\uFF0C\u5982\u6563\u6B65\u3001\u5B55\u5987\u745C\u4F3D\n3. \u4E0E\u5BB6\u4EBA\u3001\u670B\u53CB\u5206\u4EAB\u611F\u53D7\uFF0C\u4E0D\u8981\u72EC\u81EA\u627F\u53D7\n4. \u9605\u8BFB\u6B63\u80FD\u91CF\u5185\u5BB9\uFF0C\u8FDC\u79BB\u8D1F\u9762\u4FE1\u606F\n5. \u9700\u8981\u65F6\u53EF\u54A8\u8BE2\u4E13\u4E1A\u5FC3\u7406\u533B\u751F' },
-  { id:3, cat:'\u5B55\u4E2D\u671F', icon:'\uD83E\uDDB4', title:'\u5B55\u671F\u8170\u80CC\u75DB\u7F13\u89E3\u65B9\u6CD5', content:'\u968F\u7740\u809A\u5B50\u53D8\u5927\uFF0C\u8170\u80CC\u75DB\u662F\u5B55\u671F\u5E38\u89C1\u56F0\u6270\uFF0C\u8BD5\u8BD5\u8FD9\u4E9B\u7F13\u89E3\u6280\u5DE7\u3002\n1. \u4FDD\u6301\u6B63\u786E\u59FF\u52BF\uFF1A\u7AD9\u5750\u65F6\u80CC\u90E8\u633A\u76F4\uFF0C\u907F\u514D\u5F2F\u8170\u9A7C\u80CC\n2. \u4F7F\u7528\u5B55\u5987\u6795\u6216 U \u578B\u6795\u652F\u6491\u8170\u80CC\n3. \u6E29\u70ED\u6577\u7F13\u89E3\u6DF1\u5C42\u808C\u8089\u9178\u75DB\n4. \u907F\u514D\u957F\u65F6\u95F4\u7AD9\u7ACB\u6216\u4E45\u5750\uFF0C\u5B9A\u65F6\u53D8\u6362\u59FF\u52BF\n5. \u505A\u5B55\u5987\u666E\u62C9\u63D0\uFF0C\u589E\u5F3A\u8170\u80CC\u808C\u8089\u529B\u91CF' },
-  { id:4, cat:'\u5B55\u4E2D\u671F', icon:'\uD83D\uDC63', title:'\u611F\u53D7\u80CE\u52A8\u7684\u7F8E\u597D\u65F6\u523B', content:'\u7B2C\u4E00\u6B21\u611F\u53D7\u80CE\u52A8\u662F\u5B55\u671F\u6700\u795E\u5947\u7684\u4F53\u9A8C\u4E4B\u4E00\uFF0C\u4E86\u89E3\u80CE\u52A8\u89C4\u5F8B\u3002\n1. \u9996\u6B21\u80CE\u52A8\u591A\u53D1\u751F\u5728 18-20 \u5468\uFF0C\u4E8C\u80CE\u5988\u5988\u53EF\u80FD\u66F4\u65E9\n2. \u521D\u671F\u80CE\u52A8\u7C7B\u4F3C\u9C7C\u6E38\u6C34\u3001\u8774\u8776\u6247\u7FC5\u3001\u8C46\u5B50\u8DF3\u52A8\n3. \u80CE\u52A8\u6700\u6D3B\u8DC3\u65F6\u95F4\u4E3A\u665A\u4E0A 8-11 \u70B9\n4. \u5B55 28 \u5468\u540E\u5E94\u6BCF\u5929\u6570\u80CE\u52A8\uFF0C\u6B63\u5E38\u6BCF\u5C0F\u65F6 3-5 \u6B21\n5. \u80CE\u52A8\u660E\u663E\u51CF\u5C11\u9700\u53CA\u65F6\u5C31\u533B' },
-  { id:5, cat:'\u5B55\u665A\u671F', icon:'\uD83C\uDF3A', title:'\u4E34\u4EA7\u4FE1\u53F7\u8BC6\u522B', content:'\u63A5\u8FD1\u9884\u4EA7\u671F\uFF0C\u9700\u8981\u4E86\u89E3\u5404\u79CD\u4E34\u4EA7\u4FE1\u53F7\u4EE5\u4FBF\u53CA\u65F6\u5165\u9662\u3002\n1. \u89C4\u5F8B\u5BAB\u7F29\uFF1A\u6BCF 5 \u5206\u949F\u4E00\u6B21\u3001\u6BCF\u6B21\u6301\u7EED 1 \u5206\u949F\u3001\u6301\u7EED 1 \u5C0F\u65F6\n2. \u89C1\u7EA2\uFF1A\u9634\u9053\u6709\u8840\u6027\u5206\u6CCC\u7269\uFF0C\u53EF\u80FD 24-48 \u5C0F\u65F6\u540E\u5206\u5A29\n3. \u7834\u6C34\uFF1A\u7F8A\u6C34\u6D41\u51FA\uFF0C\u9700\u7ACB\u5373\u5E73\u8EBA\u5E76\u8D76\u5F80\u533B\u9662\n4. \u80CE\u5934\u4E0B\u964D\uFF1A\u80CE\u5934\u5165\u76C6\uFF0C\u51FA\u73B0\u4E0B\u5760\u611F\u3001\u5C3F\u9891\u52A0\u91CD\n5. \u51FA\u73B0\u4EE5\u4E0A\u4EFB\u4E00\u4FE1\u53F7\uFF0C\u53CA\u65F6\u8054\u7CFB\u533B\u9662' },
-  { id:6, cat:'\u5B55\u665A\u671F', icon:'\uD83D\uDCDA', title:'\u5B55\u665A\u671F\u7761\u7720\u6539\u5584\u65B9\u6CD5', content:'\u5B55\u665A\u671F\u7761\u7720\u56F0\u96BE\u662F\u5E38\u89C1\u95EE\u9898\uFF0C\u8BD5\u8BD5\u8FD9\u4E9B\u5C0F\u6280\u5DE7\u3002\n1. \u4F7F\u7528\u5B55\u5987\u6795\u652F\u6491\u8170\u80CC\u548C\u8179\u90E8\n2. \u5DE6\u4FA7\u5367\u4F4D\u6700\u4F73\uFF0C\u4FC3\u8FDB\u8840\u6DB2\u5FAA\u73AF\n3. \u7761\u524D\u5C11\u559D\u6C34\uFF0C\u51CF\u5C11\u591C\u8D77\u6B21\u6570\n4. \u7761\u524D\u907F\u514D\u9971\u98DF\u548C\u5496\u5561\u56E0\uFF0C\u53EF\u559D\u6E29\u725B\u5976\n5. \u4FDD\u6301\u5367\u5BA4\u51C9\u723D\u5B89\u9759\uFF0C\u53EF\u7528\u8033\u585E\u773C\u7F69\u8F85\u52A9' },
-  { id:7, cat:'\u5B55\u665A\u671F', icon:'\uD83D\uDCB0', title:'\u5B55\u665A\u671F\u8425\u517B\u91CD\u70B9', content:'\u5B55\u665A\u671F\u662F\u80CE\u513F\u5FEB\u901F\u751F\u957F\u9636\u6BB5\uFF0C\u6CE8\u610F\u8425\u517B\u4F9B\u7ED9\u3002\n1. \u4F18\u8D28\u86CB\u767D\uFF1A\u9C7C\u3001\u867E\u3001\u9E21\u8089\u3001\u9E21\u86CB\u3001\u4E73\u5236\u54C1\n2. \u8865\u9499\uFF1A\u725B\u5976\u3001\u8C46\u8150\u3001\u829D\u9EBB\u9171\u3001\u867E\u76AE\n3. \u8865\u94C1\uFF1A\u7EA2\u8089\u3001\u52A8\u7269\u809D\u810F\u3001\u83E0\u83DC\uFF08\u914D\u7EF4C\u4FC3\u5438\u6536\uFF09\n4. \u8865\u5145 DHA \u5E2E\u52A9\u80CE\u513F\u5927\u8111\u53D1\u80B2\n5. \u63A7\u5236\u7CD6\u5206\u548C\u7CBE\u5236\u78B3\u6C34\uFF0C\u9884\u9632\u598A\u5A20\u671F\u7CD6\u5C3F\u75C5' },
-  { id:8, cat:'\u5206\u5A29', icon:'\uD83C\uDF8A', title:'\u81EA\u7136\u5206\u5A29\u4E0E\u5F85\u4EA7\u51C6\u5907', content:'\u4E86\u89E3\u5206\u5A29\u8FC7\u7A0B\uFF0C\u505A\u597D\u5FC3\u7406\u548C\u7269\u54C1\u51C6\u5907\u3002\n1. \u672C\u4EBA\u53CA\u5BB6\u5C5E\u8981\u4E86\u89E3\u5206\u5A29\u6D41\u7A0B\uFF0C\u505A\u597D\u5FC3\u7406\u51C6\u5907\n2. \u9009\u62E9\u6709\u8D44\u8D28\u3001\u6709\u7ECF\u9A8C\u7684\u533B\u9662\u548C\u4EA7\u79D1\u533B\u751F\n3. \u63D0\u524D\u4E86\u89E3\u4EA7\u623F\u73AF\u5883\uFF0C\u719F\u6089\u5165\u9662\u6D41\u7A0B\n4. \u51C6\u5907\u597D\u5F85\u4EA7\u5305\uFF0C\u4F34\u4EA7\u4EBA\u5168\u7A0B\u966A\u4F34\n5. \u7EC3\u4E60\u62C9\u739B\u6CFD\u547C\u5438\u6CD5\uFF0C\u5E2E\u52A9\u5E94\u5BF9\u5BAB\u7F29\u75BC\u75DB' },
-  { id:9, cat:'\u4EA7\u540E', icon:'\uD83D\uDCAF', title:'\u4EA7\u540E\u6062\u590D\u8981\u70B9', content:'\u4EA7\u540E 42 \u5929\u662F\u91CD\u8981\u7684\u6062\u590D\u671F\uFF0C\u6CE8\u610F\u79D1\u5B66\u8C03\u517B\u3002\n1. \u5145\u8DB3\u4F11\u606F\uFF0C\u907F\u514D\u8FC7\u5EA6\u52B3\u7D2F\n2. \u8425\u517B\u5747\u8861\uFF0C\u591A\u98DF\u9AD8\u86CB\u767D\u3001\u5BCC\u542B\u94C1\u548C\u9499\u7684\u98DF\u7269\n3. \u5173\u6CE8\u6076\u9732\u6392\u51FA\u60C5\u51B5\uFF0C\u53D1\u73B0\u5F02\u5E38\u53CA\u65F6\u5C31\u533B\n4. \u8863\u7740\u5BBD\u677E\u900F\u6C14\uFF0C\u6CE8\u610F\u4E2A\u4EBA\u536B\u751F\n5. \u4FDD\u6301\u5FC3\u60C5\u8212\u7545\uFF0C\u8B66\u60D5\u4EA7\u540E\u6291\u90C1\n6. \u4EA7\u540E 42 \u5929\u590D\u67E5\uFF0C\u8BC4\u4F30\u6062\u590D\u60C5\u51B5' }
+  { id:1, cat:'\u5b55\u65e9\u671f', icon:'\u1f3e5', title:'\u7b2c\u4e00\u6b21\u4ea7\u68c0\u653b\u7565', content:'\u5efa\u6863\u3001NT \u68c0\u67e5\u3001\u5404\u9879\u7b5b\u67e5\u2026\u2026\u7b2c\u4e00\u6b21\u6b63\u5f0f\u4ea7\u68c0\u8be5\u51c6\u5907\u4ec0\u4e48\uff1f\n1. \u5e26\u4e0a\u8eab\u4efd\u8bc1\u3001\u533b\u4fdd\u5361\u3001\u672b\u6b21\u6708\u7ecf\u65e5\u671f\n2. \u63d0\u524d\u9884\u7ea6\u4ea7\u68c0\u65f6\u95f4\uff0c\u9886\u53d6\u6bcd\u5b50\u5065\u5eb7\u624b\u518c\n3. \u7a7f\u5bbd\u677e\u8863\u7269\uff0c\u65b9\u4fbf\u68c0\u67e5\uff0c\u907f\u514d\u8fde\u8863\u88d9\n4. \u90e8\u5206\u9879\u76ee\uff08\u8840\u5e38\u89c4\u3001\u8840\u7cd6\uff09\u9700\u7a7a\u8179\uff0c\u8bb0\u5f97\u54a8\u8be2\u533b\u751f\n5. \u9884\u7559\u5145\u8db3\u65f6\u95f4\uff0c\u6bcf\u9879\u68c0\u67e5\u53ef\u80fd\u9700 1-2 \u5c0f\u65f6' },
+  { id:2, cat:'\u5b55\u65e9\u671f', icon:'\u1f60a', title:'\u5b55\u671f\u60c5\u7eea\u7ba1\u7406', content:'\u8377\u5c14\u8499\u53d8\u5316\u5bfc\u81f4\u60c5\u7eea\u6ce2\u52a8\u5f88\u6b63\u5e38\uff0c\u5b66\u4f1a\u7ba1\u7406\u5b55\u671f\u60c5\u7eea\u3002\n1. \u4fdd\u6301\u5145\u8db3\u7761\u7720\uff0c\u6bcf\u5929 7-9 \u5c0f\u65f6\n2. \u9002\u5ea6\u8fd0\u52a8\uff0c\u5982\u6563\u6b65\u3001\u5b55\u5987\u745c\u4f3d\n3. \u4e0e\u5bb6\u4eba\u3001\u670b\u53cb\u5206\u4eab\u611f\u53d7\uff0c\u4e0d\u8981\u72ec\u81ea\u627f\u53d7\n4. \u9605\u8bfb\u6b63\u80fd\u91cf\u5185\u5bb9\uff0c\u8fdc\u79bb\u8d1f\u9762\u4fe1\u606f\n5. \u9700\u8981\u65f6\u53ef\u54a8\u8be2\u4e13\u4e1a\u5fc3\u7406\u533b\u751f' },
+  { id:3, cat:'\u5b55\u4e2d\u671f', icon:'\u1f9b4', title:'\u5b55\u671f\u8170\u80cc\u75db\u7f13\u89e3\u65b9\u6cd5', content:'\u968f\u7740\u809a\u5b50\u53d8\u5927\uff0c\u8170\u80cc\u75db\u662f\u5b55\u671f\u5e38\u89c1\u56f0\u6270\uff0c\u8bd5\u8bd5\u8fd9\u4e9b\u7f13\u89e3\u6280\u5de7\u3002\n1. \u4fdd\u6301\u6b63\u786e\u59ff\u52bf\uff1a\u7ad9\u5750\u65f6\u80cc\u90e8\u633a\u76f4\uff0c\u907f\u514d\u5f2f\u8170\u9a7c\u80cc\n2. \u4f7f\u7528\u5b55\u5987\u6795\u6216 U \u578b\u6795\u652f\u6491\u8170\u80cc\n3. \u6e29\u70ed\u6577\u7f13\u89e3\u6df1\u5c42\u808c\u8089\u9178\u75db\n4. \u907f\u514d\u957f\u65f6\u95f4\u7ad9\u7acb\u6216\u4e45\u5750\uff0c\u5b9a\u65f6\u53d8\u6362\u59ff\u52bf\n5. \u505a\u5b55\u5987\u666e\u62c9\u63d0\uff0c\u589e\u5f3a\u8170\u80cc\u808c\u8089\u529b\u91cf' },
+  { id:4, cat:'\u5b55\u4e2d\u671f', icon:'\u1f463', title:'\u611f\u53d7\u80ce\u52a8\u7684\u7f8e\u597d\u65f6\u523b', content:'\u7b2c\u4e00\u6b21\u611f\u53d7\u80ce\u52a8\u662f\u5b55\u671f\u6700\u795e\u5947\u7684\u4f53\u9a8c\u4e4b\u4e00\uff0c\u4e86\u89e3\u80ce\u52a8\u89c4\u5f8b\u3002\n1. \u9996\u6b21\u80ce\u52a8\u591a\u53d1\u751f\u5728 18-20 \u5468\uff0c\u4e8c\u80ce\u5988\u5988\u53ef\u80fd\u66f4\u65e9\n2. \u521d\u671f\u80ce\u52a8\u7c7b\u4f3c\u9c7c\u6e38\u6c34\u3001\u8774\u8776\u6247\u7fc5\u3001\u8c46\u5b50\u8df3\u52a8\n3. \u80ce\u52a8\u6700\u6d3b\u8dc3\u65f6\u95f4\u4e3a\u665a\u4e0a 8-11 \u70b9\n4. \u5b55 28 \u5468\u540e\u5e94\u6bcf\u5929\u6570\u80ce\u52a8\uff0c\u6b63\u5e38\u6bcf\u5c0f\u65f6 3-5 \u6b21\n5. \u80ce\u52a8\u660e\u663e\u51cf\u5c11\u9700\u53ca\u65f6\u5c31\u533b' },
+  { id:5, cat:'\u5b55\u665a\u671f', icon:'\u1f33a', title:'\u4e34\u4ea7\u4fe1\u53f7\u8bc6\u522b', content:'\u63a5\u8fd1\u9884\u4ea7\u671f\uff0c\u9700\u8981\u4e86\u89e3\u5404\u79cd\u4e34\u4ea7\u4fe1\u53f7\u4ee5\u4fbf\u53ca\u65f6\u5165\u9662\u3002\n1. \u89c4\u5f8b\u5bab\u7f29\uff1a\u6bcf 5 \u5206\u949f\u4e00\u6b21\u3001\u6bcf\u6b21\u6301\u7eed 1 \u5206\u949f\u3001\u6301\u7eed 1 \u5c0f\u65f6\n2. \u89c1\u7ea2\uff1a\u9634\u9053\u6709\u8840\u6027\u5206\u6ccc\u7269\uff0c\u53ef\u80fd 24-48 \u5c0f\u65f6\u540e\u5206\u5a29\n3. \u7834\u6c34\uff1a\u7f8a\u6c34\u6d41\u51fa\uff0c\u9700\u7acb\u5373\u5e73\u8eba\u5e76\u8d76\u5f80\u533b\u9662\n4. \u80ce\u5934\u4e0b\u964d\uff1a\u80ce\u5934\u5165\u76c6\uff0c\u51fa\u73b0\u4e0b\u5760\u611f\u3001\u5c3f\u9891\u52a0\u91cd\n5. \u51fa\u73b0\u4ee5\u4e0a\u4efb\u4e00\u4fe1\u53f7\uff0c\u53ca\u65f6\u8054\u7cfb\u533b\u9662' },
+  { id:6, cat:'\u5b55\u665a\u671f', icon:'\u1f4da', title:'\u5b55\u665a\u671f\u7761\u7720\u6539\u5584\u65b9\u6cd5', content:'\u5b55\u665a\u671f\u7761\u7720\u56f0\u96be\u662f\u5e38\u89c1\u95ee\u9898\uff0c\u8bd5\u8bd5\u8fd9\u4e9b\u5c0f\u6280\u5de7\u3002\n1. \u4f7f\u7528\u5b55\u5987\u6795\u652f\u6491\u8170\u80cc\u548c\u8179\u90e8\n2. \u5de6\u4fa7\u5367\u4f4d\u6700\u4f73\uff0c\u4fc3\u8fdb\u8840\u6db2\u5faa\u73af\n3. \u7761\u524d\u5c11\u559d\u6c34\uff0c\u51cf\u5c11\u591c\u8d77\u6b21\u6570\n4. \u7761\u524d\u907f\u514d\u9971\u98df\u548c\u5496\u5561\u56e0\uff0c\u53ef\u559d\u6e29\u725b\u5976\n5. \u4fdd\u6301\u5367\u5ba4\u51c9\u723d\u5b89\u9759\uff0c\u53ef\u7528\u8033\u585e\u773c\u7f69\u8f85\u52a9' },
+  { id:7, cat:'\u5b55\u665a\u671f', icon:'\u1f4b0', title:'\u5b55\u665a\u671f\u8425\u517b\u91cd\u70b9', content:'\u5b55\u665a\u671f\u662f\u80ce\u513f\u5feb\u901f\u751f\u957f\u9636\u6bb5\uff0c\u6ce8\u610f\u8425\u517b\u4f9b\u7ed9\u3002\n1. \u4f18\u8d28\u86cb\u767d\uff1a\u9c7c\u3001\u867e\u3001\u9e21\u8089\u3001\u9e21\u86cb\u3001\u4e73\u5236\u54c1\n2. \u8865\u9499\uff1a\u725b\u5976\u3001\u8c46\u8150\u3001\u829d\u9ebb\u9171\u3001\u867e\u76ae\n3. \u8865\u94c1\uff1a\u7ea2\u8089\u3001\u52a8\u7269\u809d\u810f\u3001\u83e0\u83dc\uff08\u914d\u7ef4C\u4fc3\u5438\u6536\uff09\n4. \u8865\u5145 DHA \u5e2e\u52a9\u80ce\u513f\u5927\u8111\u53d1\u80b2\n5. \u63a7\u5236\u7cd6\u5206\u548c\u7cbe\u5236\u78b3\u6c34\uff0c\u9884\u9632\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5' },
+  { id:8, cat:'\u5206\u5a29', icon:'\u1f38a', title:'\u81ea\u7136\u5206\u5a29\u4e0e\u5f85\u4ea7\u51c6\u5907', content:'\u4e86\u89e3\u5206\u5a29\u8fc7\u7a0b\uff0c\u505a\u597d\u5fc3\u7406\u548c\u7269\u54c1\u51c6\u5907\u3002\n1. \u672c\u4eba\u53ca\u5bb6\u5c5e\u8981\u4e86\u89e3\u5206\u5a29\u6d41\u7a0b\uff0c\u505a\u597d\u5fc3\u7406\u51c6\u5907\n2. \u9009\u62e9\u6709\u8d44\u8d28\u3001\u6709\u7ecf\u9a8c\u7684\u533b\u9662\u548c\u4ea7\u79d1\u533b\u751f\n3. \u63d0\u524d\u4e86\u89e3\u4ea7\u623f\u73af\u5883\uff0c\u719f\u6089\u5165\u9662\u6d41\u7a0b\n4. \u51c6\u5907\u597d\u5f85\u4ea7\u5305\uff0c\u4f34\u4ea7\u4eba\u5168\u7a0b\u966a\u4f34\n5. \u7ec3\u4e60\u62c9\u739b\u6cfd\u547c\u5438\u6cd5\uff0c\u5e2e\u52a9\u5e94\u5bf9\u5bab\u7f29\u75bc\u75db' },
+  { id:9, cat:'\u4ea7\u540e', icon:'\u1f4af', title:'\u4ea7\u540e\u6062\u590d\u8981\u70b9', content:'\u4ea7\u540e 42 \u5929\u662f\u91cd\u8981\u7684\u6062\u590d\u671f\uff0c\u6ce8\u610f\u79d1\u5b66\u8c03\u517b\u3002\n1. \u5145\u8db3\u4f11\u606f\uff0c\u907f\u514d\u8fc7\u5ea6\u52b3\u7d2f\n2. \u8425\u517b\u5747\u8861\uff0c\u591a\u98df\u9ad8\u86cb\u767d\u3001\u5bcc\u542b\u94c1\u548c\u9499\u7684\u98df\u7269\n3. \u5173\u6ce8\u6076\u9732\u6392\u51fa\u60c5\u51b5\uff0c\u53d1\u73b0\u5f02\u5e38\u53ca\u65f6\u5c31\u533b\n4. \u8863\u7740\u5bbd\u677e\u900f\u6c14\uff0c\u6ce8\u610f\u4e2a\u4eba\u536b\u751f\n5. \u4fdd\u6301\u5fc3\u60c5\u8212\u7545\uff0c\u8b66\u60d5\u4ea7\u540e\u6291\u90c1\n6. \u4ea7\u540e 42 \u5929\u590d\u67e5\uff0c\u8bc4\u4f30\u6062\u590d\u60c5\u51b5' }
 ];
 
 function renderKnowledgeList() {
@@ -414,7 +416,7 @@ document.getElementById('knowledge-list').addEventListener('click', function(e){
   saveData(); renderKnowledgeList();
 });
 
-/* ====== \u6570\u80CE\u52A8 ====== */
+/* ====== \u6570\u80ce\u52a8 ====== */
 var fetalState = { count:0, startTime:0, timer:null };
 function updateFetalDisplay() {
   document.getElementById('fetal-count').textContent = fetalState.count;
@@ -438,7 +440,7 @@ document.getElementById('fetal-tap').addEventListener('click', function(){
   updateFetalDisplay();
   if (fetalState.count >= 10) {
     stopFetalTimer();
-    if (confirm('\u5DF2\u8FBE\u5230 10 \u6B21\u80CE\u52A8\uFF0C\u662F\u5426\u4FDD\u5B58\u4ECA\u65E5\u8BB0\u5F55\uFF1F')) {
+    if (confirm('\u5df2\u8fbe\u5230 10 \u6b21\u80ce\u52a8\uff0c\u662f\u5426\u4fdd\u5b58\u4eca\u65e5\u8bb0\u5f55\uff1f')) {
       saveFetalRecord();
       fetalReset();
     }
@@ -447,7 +449,7 @@ document.getElementById('fetal-tap').addEventListener('click', function(){
 document.getElementById('fetal-reset').addEventListener('click', fetalReset);
 function fetalReset() {
   if (fetalState.count > 0 && fetalState.startTime) {
-    if (!confirm('\u5F53\u524D\u8BA1\u6570 ' + fetalState.count + ' \u6B21\u8981\u4E22\u5F03\u5417\uFF1F')) return;
+    if (!confirm('\u5f53\u524d\u8ba1\u6570 ' + fetalState.count + ' \u6b21\u8981\u4e22\u5f03\u5417\uff1f')) return;
   }
   fetalState.count = 0;
   fetalState.startTime = 0;
@@ -469,23 +471,23 @@ function saveFetalRecord() {
 function renderFetalHistory() {
   var list = document.getElementById('fetal-history');
   var records = appData.fetalRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).reverse().slice(0, 7);
-  var html = '<h4 style="font-size:14px;color:var(--text);margin:12px 0 8px;">\u6700\u8FD1\u8BB0\u5F55</h4>';
-  if (!records.length) { html += '<div style="text-align:center;color:var(--text-light);font-size:13px;padding:12px;">\u8FD8\u6CA1\u6709\u8BB0\u5F55</div>'; list.innerHTML = html; return; }
+  var html = '<h4 style="font-size:14px;color:var(--text);margin:12px 0 8px;">\u6700\u8fd1\u8bb0\u5f55</h4>';
+  if (!records.length) { html += '<div style="text-align:center;color:var(--text-light);font-size:13px;padding:12px;">\u8fd8\u6ca1\u6709\u8bb0\u5f55</div>'; list.innerHTML = html; return; }
   for (var i = 0; i < records.length; i++) {
     var r = records[i];
-    html += '<div class="fetal-history-item"><span class="fetal-history-date">' + r.date + '</span><span class="fetal-history-count">' + r.count + ' \u6B21 / ' + (r.duration || '--') + ' \u5206\u949F</span></div>';
+    html += '<div class="fetal-history-item"><span class="fetal-history-date">' + r.date + '</span><span class="fetal-history-count">' + r.count + ' \u6b21 / ' + (r.duration || '--') + ' \u5206\u949f</span></div>';
   }
   list.innerHTML = html;
 }
 updateFetalDisplay();
 
-/* ====== \u4F53\u91CD\u8BB0\u5F55 ====== */
+/* ====== \u4f53\u91cd\u8bb0\u5f55 ====== */
 function getWeightUnit() { return appData.weightUnit || 'kg'; }
-function weightUnitLabel(unit) { return unit === 'jin' ? '\u65A4' : '\u516C\u65A4'; }
+function weightUnitLabel(unit) { return unit === 'jin' ? '\u65a4' : '\u516c\u65a4'; }
 function formatWeight(weight, unit) {
   unit = unit || getWeightUnit();
-  if (unit === 'jin') return (weight * 2).toFixed(1) + ' \u65A4';
-  return weight.toFixed(1) + ' \u516C\u65A4';
+  if (unit === 'jin') return (weight * 2).toFixed(1) + ' \u65a4';
+  return weight.toFixed(1) + ' \u516c\u65a4';
 }
 function parseInputWeight(val, unit) {
   unit = unit || getWeightUnit();
@@ -500,7 +502,7 @@ function updateWeightInputPlaceholder() {
   var btn = document.getElementById('weight-unit-toggle');
   if (input) input.placeholder = '0.0';
   if (label) label.textContent = weightUnitLabel(unit);
-  if (btn) btn.textContent = unit === 'jin' ? '\u5207\u6362\u4E3A\u516C\u65A4' : '\u5207\u6362\u4E3A\u65A4';
+  if (btn) btn.textContent = unit === 'jin' ? '\u5207\u6362\u4e3a\u516c\u65a4' : '\u5207\u6362\u4e3a\u65a4';
 }
 document.getElementById('weight-unit-toggle').addEventListener('click', function(){
   var input = document.getElementById('weight-value');
@@ -520,7 +522,7 @@ function resetWeightForm() {
   document.getElementById('weight-week').value = '';
   document.getElementById('weight-note').value = '';
   document.getElementById('weight-edit-id').value = '';
-  document.getElementById('add-weight-btn').textContent = '\u6DFB\u52A0';
+  document.getElementById('add-weight-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-weight-edit').style.display = 'none';
 }
 function renderWeightSection() {
@@ -538,7 +540,7 @@ document.getElementById('add-weight-btn').addEventListener('click', function(){
   var note = document.getElementById('weight-note').value.trim();
   var editId = document.getElementById('weight-edit-id').value;
   var weightKg = parseInputWeight(document.getElementById('weight-value').value);
-  if (!date || isNaN(weightKg)) { alert('\u8BF7\u586B\u5199\u65E5\u671F\u548C\u4F53\u91CD'); return; }
+  if (!date || isNaN(weightKg)) { alert('\u8bf7\u586b\u5199\u65e5\u671f\u548c\u4f53\u91cd'); return; }
   if (editId) {
     var id = parseInt(editId);
     for (var i = 0; i < appData.weightRecords.length; i++) {
@@ -564,9 +566,9 @@ function renderWeightList() {
   for (var i = 0; i < records.length; i++) {
     var r = records[i];
     html += '<div class="record-item">';
-    html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + formatWeight(r.weight, unit) + '</span>' + (r.week ? '<span class="record-tag">\u5B55 ' + r.week + ' \u5468</span>' : '') + '</div>';
+    html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + formatWeight(r.weight, unit) + '</span>' + (r.week ? '<span class="record-tag">\u5b55 ' + r.week + ' \u5468</span>' : '') + '</div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
-    html += '<button class="record-edit" data-id="' + r.id + '" data-type="weight" title="\u7F16\u8F91">\u270E</button>';
+    html += '<button class="record-edit" data-id="' + r.id + '" data-type="weight" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="weight" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
   }
@@ -580,7 +582,7 @@ function editWeightRecord(id) {
   document.getElementById('weight-week').value = r.week || '';
   document.getElementById('weight-note').value = r.note || '';
   document.getElementById('weight-edit-id').value = r.id;
-  document.getElementById('add-weight-btn').textContent = '\u4FDD\u5B58\u4FEE\u6539';
+  document.getElementById('add-weight-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-weight-edit').style.display = 'inline-block';
   window.scrollTo({ top:0, behavior:'smooth' });
 }
@@ -591,7 +593,7 @@ function formatWeightForEdit(weightKg) {
 function renderWeightChart() {
   var chart = document.getElementById('weight-chart');
   var records = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
-  if (records.length < 2) { chart.innerHTML = '<div class="chart-placeholder">\u8BB0\u5F55 2 \u6761\u4EE5\u4E0A\u4F53\u91CD\u540E\u751F\u6210\u66F2\u7EBF</div>'; return; }
+  if (records.length < 2) { chart.innerHTML = '<div class="chart-placeholder">\u8bb0\u5f55 2 \u6761\u4ee5\u4e0a\u4f53\u91cd\u540e\u751f\u6210\u66f2\u7ebf</div>'; return; }
   var W = 600, H = 240, pad = { l:44, r:20, t:20, b:34 };
   var weights = records.map(function(r){ return r.weight; });
   var minW = Math.min.apply(null, weights) - 1, maxW = Math.max.apply(null, weights) + 1;
@@ -621,68 +623,68 @@ function renderWeightChart() {
   chart.innerHTML = svg;
 }
 
-/* ====== \u5B55\u671F\u4F53\u91CD\u589E\u957F\u53C2\u8003\u8868 ====== */
+/* ====== \u5b55\u671f\u4f53\u91cd\u589e\u957f\u53c2\u8003\u8868 ====== */
 var PREGNANCY_WEIGHT_GUIDE = {
   bmi_low: {
-    label: '\u504F\u7626\uFF08BMI < 18.5\uFF09', totalRange: [12.5, 18],
+    label: '\u504f\u7626\uff08BMI < 18.5\uff09', totalRange: [12.5, 18],
     phases: [
-      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '0.5-2 kg', weekly: '0-0.2 kg', note: '\u589E\u957F\u7F13\u6162\uFF0C\u6CE8\u610F\u53F6\u9178\u8865\u5145' },
-      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u8FDB\u5165\u5FEB\u901F\u589E\u957F\u671F\uFF0C\u91CD\u70B9\u8865\u86CB\u767D' },
-      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u7A33\u5B9A\u589E\u957F\uFF0C\u5C11\u98DF\u591A\u9910' }
+      { phase: '\u5b55\u65e9\u671f', weeks: '1-12 \u5468', total: '0.5-2 kg', weekly: '0-0.2 kg', note: '\u589e\u957f\u7f13\u6162\uff0c\u6ce8\u610f\u53f6\u9178\u8865\u5145' },
+      { phase: '\u5b55\u4e2d\u671f', weeks: '13-27 \u5468', total: '\u7d2f\u8ba1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u8fdb\u5165\u5feb\u901f\u589e\u957f\u671f\uff0c\u91cd\u70b9\u8865\u86cb\u767d' },
+      { phase: '\u5b55\u665a\u671f', weeks: '28-40 \u5468', total: '\u7d2f\u8ba1 5-7 kg', weekly: '0.5-0.6 kg', note: '\u7a33\u5b9a\u589e\u957f\uff0c\u5c11\u98df\u591a\u9910' }
     ]
   },
   bmi_standard: {
-    label: '\u6807\u51C6\uFF08BMI 18.5-24.0\uFF09', totalRange: [11.5, 16],
+    label: '\u6807\u51c6\uff08BMI 18.5-24.0\uff09', totalRange: [11.5, 16],
     phases: [
-      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '1-2 kg', weekly: '0-0.2 kg', note: '\u589E\u957F\u7F13\u6162\uFF0C\u6CE8\u610F\u53F6\u9178' },
-      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7A33\u5B9A\u589E\u957F\uFF0C\u8865\u9499\u8865\u94C1' },
-      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7EE7\u7EED\u589E\u957F\uFF0C\u63A7\u7CD6\u63A7\u76D0' }
+      { phase: '\u5b55\u65e9\u671f', weeks: '1-12 \u5468', total: '1-2 kg', weekly: '0-0.2 kg', note: '\u589e\u957f\u7f13\u6162\uff0c\u6ce8\u610f\u53f6\u9178' },
+      { phase: '\u5b55\u4e2d\u671f', weeks: '13-27 \u5468', total: '\u7d2f\u8ba1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7a33\u5b9a\u589e\u957f\uff0c\u8865\u9499\u8865\u94c1' },
+      { phase: '\u5b55\u665a\u671f', weeks: '28-40 \u5468', total: '\u7d2f\u8ba1 4-6 kg', weekly: '0.4-0.5 kg', note: '\u7ee7\u7eed\u589e\u957f\uff0c\u63a7\u7cd6\u63a7\u76d0' }
     ]
   },
   bmi_high: {
-    label: '\u504F\u80D6\uFF08BMI \u2265 24.0\uFF09', totalRange: [7, 11.5],
+    label: '\u504f\u80d6\uff08BMI \u2265 24.0\uff09', totalRange: [7, 11.5],
     phases: [
-      { phase: '\u5B55\u65E9\u671F', weeks: '1-12 \u5468', total: '0.5-1.5 kg', weekly: '0-0.1 kg', note: '\u63A7\u5236\u589E\u957F\uFF0C\u4F4E\u7CD6\u4F4E\u8102' },
-      { phase: '\u5B55\u4E2D\u671F', weeks: '13-27 \u5468', total: '\u7D2F\u8BA1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6CE8\u610F\u996E\u98DF\u7ED3\u6784' },
-      { phase: '\u5B55\u665A\u671F', weeks: '28-40 \u5468', total: '\u7D2F\u8BA1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6301\u7EED\u63A7\u5236\uFF0C\u76D1\u6D4B\u8840\u538B' }
+      { phase: '\u5b55\u65e9\u671f', weeks: '1-12 \u5468', total: '0.5-1.5 kg', weekly: '0-0.1 kg', note: '\u63a7\u5236\u589e\u957f\uff0c\u4f4e\u7cd6\u4f4e\u8102' },
+      { phase: '\u5b55\u4e2d\u671f', weeks: '13-27 \u5468', total: '\u7d2f\u8ba1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6ce8\u610f\u996e\u98df\u7ed3\u6784' },
+      { phase: '\u5b55\u665a\u671f', weeks: '28-40 \u5468', total: '\u7d2f\u8ba1 3-4 kg', weekly: '0.25-0.3 kg', note: '\u6301\u7eed\u63a7\u5236\uff0c\u76d1\u6d4b\u8840\u538b' }
     ]
   }
 };
 var DIET_SUGGESTIONS = {
-  '\u5B55\u65E9\u671F': {
-    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u65E9\u671F\uFF09',
-    food: '\u53F6\u9178\u4E30\u5BCC\uFF1A\u83E0\u83DC\u3001\u82A6\u7B0B\u3001\u52A8\u7269\u809D\u810F\u3001\u8C46\u7C7B\uFF1B\u7F13\u89E3\u5B55\u5410\uFF1A\u9999\u8549\u3001\u71D5\u9EA6\u3001\u575A\u679C\u3001\u82CF\u6253\u997C\u5E72',
-    nutrition: '\u53F6\u9178 400-600 \u03BCg/\u5929\u3001\u7EF4\u751F\u7D20 B6\u3001\u94C1 20mg',
-    tips: '\u5C11\u98DF\u591A\u9910\uFF0C\u907F\u514D\u6CB9\u817B\u548C\u6C14\u5473\u91CD\u7684\u98DF\u7269\uFF1B\u6668\u8D77\u5148\u5403\u51E0\u7247\u997C\u5E72\u7F13\u89E3\u5B55\u5410'
+  '\u5b55\u65e9\u671f': {
+    title: '\u1f957 \u996e\u98df\u5efa\u8bae\uff08\u5b55\u65e9\u671f\uff09',
+    food: '\u53f6\u9178\u4e30\u5bcc\uff1a\u83e0\u83dc\u3001\u82a6\u7b0b\u3001\u52a8\u7269\u809d\u810f\u3001\u8c46\u7c7b\uff1b\u7f13\u89e3\u5b55\u5410\uff1a\u9999\u8549\u3001\u71d5\u9ea6\u3001\u575a\u679c\u3001\u82cf\u6253\u997c\u5e72',
+    nutrition: '\u53f6\u9178 400-600 \u03bcg/\u5929\u3001\u7ef4\u751f\u7d20 B6\u3001\u94c1 20mg',
+    tips: '\u5c11\u98df\u591a\u9910\uff0c\u907f\u514d\u6cb9\u817b\u548c\u6c14\u5473\u91cd\u7684\u98df\u7269\uff1b\u6668\u8d77\u5148\u5403\u51e0\u7247\u997c\u5e72\u7f13\u89e3\u5b55\u5410'
   },
-  '\u5B55\u4E2D\u671F': {
-    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u4E2D\u671F\uFF09',
-    food: '\u4F18\u8D28\u86CB\u767D\uFF1A\u9E21\u86CB\u3001\u725B\u5976\u3001\u9C7C\u3001\u7626\u8089\uFF08\u6BCF\u5929 200g\uFF09\uFF1B\u8865\u9499\uFF1A\u5976\u5236\u54C1\u3001\u8C46\u8150\u3001\u6DF1\u7EFF\u852C\u83DC\uFF1BDHA\uFF1A\u6DF1\u6D77\u9C7C\u6BCF\u5468 2-3 \u6B21\u3001\u6838\u6843',
-    nutrition: '\u86CB\u767D\u8D28 70-80g/\u5929\u3001\u9499 1000mg\u3001\u94C1 28mg\u3001DHA 200-300mg',
-    tips: '\u6BCF\u5929\u52A0\u9910 1-2 \u6B21\uFF08\u9178\u5976+\u575A\u679C/\u6C34\u679C\uFF09\uFF1B\u4E3B\u98DF\u7C97\u7EC6\u642D\u914D\uFF0C\u63A7\u5236\u7CBE\u5236\u7CD6'
+  '\u5b55\u4e2d\u671f': {
+    title: '\u1f957 \u996e\u98df\u5efa\u8bae\uff08\u5b55\u4e2d\u671f\uff09',
+    food: '\u4f18\u8d28\u86cb\u767d\uff1a\u9e21\u86cb\u3001\u725b\u5976\u3001\u9c7c\u3001\u7626\u8089\uff08\u6bcf\u5929 200g\uff09\uff1b\u8865\u9499\uff1a\u5976\u5236\u54c1\u3001\u8c46\u8150\u3001\u6df1\u7eff\u852c\u83dc\uff1bDHA\uff1a\u6df1\u6d77\u9c7c\u6bcf\u5468 2-3 \u6b21\u3001\u6838\u6843',
+    nutrition: '\u86cb\u767d\u8d28 70-80g/\u5929\u3001\u9499 1000mg\u3001\u94c1 28mg\u3001DHA 200-300mg',
+    tips: '\u6bcf\u5929\u52a0\u9910 1-2 \u6b21\uff08\u9178\u5976+\u575a\u679c/\u6c34\u679c\uff09\uff1b\u4e3b\u98df\u7c97\u7ec6\u642d\u914d\uff0c\u63a7\u5236\u7cbe\u5236\u7cd6'
   },
-  '\u5B55\u665A\u671F': {
-    title: '\uD83E\uDD57 \u996E\u98DF\u5EFA\u8BAE\uFF08\u5B55\u665A\u671F\uFF09',
-    food: '\u9AD8\u86CB\u767D\uFF1A\u9C7C\u79BD\u86CB\u7626\u8089\uFF1B\u81B3\u98DF\u7EA4\u7EF4\u9632\u4FBF\u79D8\uFF1A\u5168\u8C37\u7269\u3001\u82B9\u83DC\u3001\u706B\u9F99\u679C\uFF1B\u8865\u94C1\uFF1A\u7EA2\u8089\u3001\u52A8\u7269\u8840',
-    nutrition: '\u86CB\u767D\u8D28 80-100g/\u5929\u3001\u9499 1200mg\u3001\u94C1 28mg\u3001\u81B3\u98DF\u7EA4\u7EF4 25-30g',
-    tips: '\u5C11\u98DF\u591A\u9910\u907F\u514D\u80C3\u53CD\u6D41\uFF1B\u7761\u524D 2 \u5C0F\u65F6\u4E0D\u8FDB\u98DF\uFF1B\u63A7\u5236\u76D0\u5206\u9632\u6C34\u80BF'
+  '\u5b55\u665a\u671f': {
+    title: '\u1f957 \u996e\u98df\u5efa\u8bae\uff08\u5b55\u665a\u671f\uff09',
+    food: '\u9ad8\u86cb\u767d\uff1a\u9c7c\u79bd\u86cb\u7626\u8089\uff1b\u81b3\u98df\u7ea4\u7ef4\u9632\u4fbf\u79d8\uff1a\u5168\u8c37\u7269\u3001\u82b9\u83dc\u3001\u706b\u9f99\u679c\uff1b\u8865\u94c1\uff1a\u7ea2\u8089\u3001\u52a8\u7269\u8840',
+    nutrition: '\u86cb\u767d\u8d28 80-100g/\u5929\u3001\u9499 1200mg\u3001\u94c1 28mg\u3001\u81b3\u98df\u7ea4\u7ef4 25-30g',
+    tips: '\u5c11\u98df\u591a\u9910\u907f\u514d\u80c3\u53cd\u6d41\uff1b\u7761\u524d 2 \u5c0f\u65f6\u4e0d\u8fdb\u98df\uff1b\u63a7\u5236\u76d0\u5206\u9632\u6c34\u80bf'
   }
 };
 var EXERCISE_SUGGESTIONS = {
-  '\u5B55\u65E9\u671F': {
-    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u65E9\u671F\uFF09',
-    content: '\u6563\u6B65 20-30 \u5206\u949F/\u5929\uFF1B\u5B55\u5987\u745C\u4F3D\uFF08\u907F\u514D\u8DF3\u8DC3\u548C\u626D\u8F6C\u52A8\u4F5C\uFF09\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8\u6BCF\u5929 3 \u7EC4\u6BCF\u7EC4 10 \u6B21',
-    tips: '\u907F\u514D\u5267\u70C8\u8FD0\u52A8\u548C\u8179\u90E8\u53D7\u538B\uFF1B\u6709\u51FA\u8840\u6216\u5148\u5146\u6D41\u4EA7\u9700\u5367\u5E8A\u4F11\u606F'
+  '\u5b55\u65e9\u671f': {
+    title: '\u1f3c3 \u8fd0\u52a8\u5efa\u8bae\uff08\u5b55\u65e9\u671f\uff09',
+    content: '\u6563\u6b65 20-30 \u5206\u949f/\u5929\uff1b\u5b55\u5987\u745c\u4f3d\uff08\u907f\u514d\u8df3\u8dc3\u548c\u626d\u8f6c\u52a8\u4f5c\uff09\uff1b\u51ef\u683c\u5c14\u8fd0\u52a8\u6bcf\u5929 3 \u7ec4\u6bcf\u7ec4 10 \u6b21',
+    tips: '\u907f\u514d\u5267\u70c8\u8fd0\u52a8\u548c\u8179\u90e8\u53d7\u538b\uff1b\u6709\u51fa\u8840\u6216\u5148\u5146\u6d41\u4ea7\u9700\u5367\u5e8a\u4f11\u606f'
   },
-  '\u5B55\u4E2D\u671F': {
-    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u4E2D\u671F\uFF09',
-    content: '\u5FEB\u6B65\u8D70 30-45 \u5206\u949F/\u5929\uFF1B\u5B55\u5987\u666E\u62C9\u63D0\uFF08\u5F3A\u5316\u6838\u5FC3\u548C\u76C6\u5E95\u808C\uFF09\uFF1B\u6E38\u6CF3\uFF08\u7F13\u89E3\u8170\u80CC\u75DB\uFF09\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8',
-    tips: '\u6700\u4F73\u8FD0\u52A8\u671F\uFF0C\u53EF\u9002\u5F53\u589E\u52A0\u5F3A\u5EA6\uFF1B\u907F\u514D\u4EF0\u5367\u4F4D\u8FC7\u4E45\uFF08\u9632\u6B62\u538B\u8FEB\u4E0B\u8154\u9759\u8109\uFF09'
+  '\u5b55\u4e2d\u671f': {
+    title: '\u1f3c3 \u8fd0\u52a8\u5efa\u8bae\uff08\u5b55\u4e2d\u671f\uff09',
+    content: '\u5feb\u6b65\u8d70 30-45 \u5206\u949f/\u5929\uff1b\u5b55\u5987\u666e\u62c9\u63d0\uff08\u5f3a\u5316\u6838\u5fc3\u548c\u76c6\u5e95\u808c\uff09\uff1b\u6e38\u6cf3\uff08\u7f13\u89e3\u8170\u80cc\u75db\uff09\uff1b\u51ef\u683c\u5c14\u8fd0\u52a8',
+    tips: '\u6700\u4f73\u8fd0\u52a8\u671f\uff0c\u53ef\u9002\u5f53\u589e\u52a0\u5f3a\u5ea6\uff1b\u907f\u514d\u4ef0\u5367\u4f4d\u8fc7\u4e45\uff08\u9632\u6b62\u538b\u8feb\u4e0b\u8154\u9759\u8109\uff09'
   },
-  '\u5B55\u665A\u671F': {
-    title: '\uD83C\uDFC3 \u8FD0\u52A8\u5EFA\u8BAE\uFF08\u5B55\u665A\u671F\uFF09',
-    content: '\u6162\u8D70 30 \u5206\u949F/\u5929\uFF1B\u76D8\u817F\u5750\u62C9\u4F38\u6253\u5F00\u9AA8\u76C6\uFF1B\u6DF1\u8E72\u7EC3\u4E60\uFF08\u6276\u5899\uFF0C\u4E3A\u5206\u5A29\u505A\u51C6\u5907\uFF09\uFF1B\u4F1A\u9634\u6309\u6469\uFF1B\u51EF\u683C\u5C14\u8FD0\u52A8',
-    tips: '\u907F\u514D\u5267\u70C8\u8FD0\u52A8\u548C\u957F\u65F6\u95F4\u7AD9\u7ACB\uFF1B\u51FA\u73B0\u89C4\u5F8B\u5BAB\u7F29\u3001\u7834\u6C34\u3001\u89C1\u7EA2\u7ACB\u5373\u505C\u6B62\u8FD0\u52A8\u5C31\u533B'
+  '\u5b55\u665a\u671f': {
+    title: '\u1f3c3 \u8fd0\u52a8\u5efa\u8bae\uff08\u5b55\u665a\u671f\uff09',
+    content: '\u6162\u8d70 30 \u5206\u949f/\u5929\uff1b\u76d8\u817f\u5750\u62c9\u4f38\u6253\u5f00\u9aa8\u76c6\uff1b\u6df1\u8e72\u7ec3\u4e60\uff08\u6276\u5899\uff0c\u4e3a\u5206\u5a29\u505a\u51c6\u5907\uff09\uff1b\u4f1a\u9634\u6309\u6469\uff1b\u51ef\u683c\u5c14\u8fd0\u52a8',
+    tips: '\u907f\u514d\u5267\u70c8\u8fd0\u52a8\u548c\u957f\u65f6\u95f4\u7ad9\u7acb\uff1b\u51fa\u73b0\u89c4\u5f8b\u5bab\u7f29\u3001\u7834\u6c34\u3001\u89c1\u7ea2\u7acb\u5373\u505c\u6b62\u8fd0\u52a8\u5c31\u533b'
   }
 };
 function getPreWeight() {
@@ -722,31 +724,31 @@ function renderWeightGuide() {
   var guide = PREGNANCY_WEIGHT_GUIDE[categoryKey];
   var week = getCurrentPregnancyWeek();
   var weekNum = week || 0;
-  var currentPhase = weekNum < 13 ? '\u5B55\u65E9\u671F' : (weekNum < 28 ? '\u5B55\u4E2D\u671F' : '\u5B55\u665A\u671F');
+  var currentPhase = weekNum < 13 ? '\u5b55\u65e9\u671f' : (weekNum < 28 ? '\u5b55\u4e2d\u671f' : '\u5b55\u665a\u671f');
   var summaryHtml = '';
-  summaryHtml += '<div class="wgs-item"><div class="wgs-label">BMI \u5206\u7C7B</div><div class="wgs-value">' + bmi.toFixed(1) + '</div><div class="wgs-sub">' + guide.label + '</div></div>';
-  summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u63A8\u8350\u603B\u589E\u91CD</div><div class="wgs-value">' + guide.totalRange[0] + '-' + guide.totalRange[1] + ' kg</div><div class="wgs-sub">\u6574\u4E2A\u5B55\u671F</div></div>';
+  summaryHtml += '<div class="wgs-item"><div class="wgs-label">BMI \u5206\u7c7b</div><div class="wgs-value">' + bmi.toFixed(1) + '</div><div class="wgs-sub">' + guide.label + '</div></div>';
+  summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u63a8\u8350\u603b\u589e\u91cd</div><div class="wgs-value">' + guide.totalRange[0] + '-' + guide.totalRange[1] + ' kg</div><div class="wgs-sub">\u6574\u4e2a\u5b55\u671f</div></div>';
   if (preWeight) {
     var gainStatus = '', gainClass = '';
-    if (gained > guide.totalRange[1]) { gainStatus = '\u5DF2\u8D85\u6807'; gainClass = 'alarm'; }
-    else if (gained < guide.totalRange[0] * (weekNum / 40)) { gainStatus = '\u504F\u6162'; gainClass = 'warn'; }
-    else { gainStatus = '\u6B63\u5E38'; }
-    summaryHtml += '<div class="wgs-item ' + gainClass + '"><div class="wgs-label">\u5DF2\u589E\u91CD</div><div class="wgs-value">' + gained.toFixed(1) + ' kg</div><div class="wgs-sub">' + gainStatus + '</div></div>';
+    if (gained > guide.totalRange[1]) { gainStatus = '\u5df2\u8d85\u6807'; gainClass = 'alarm'; }
+    else if (gained < guide.totalRange[0] * (weekNum / 40)) { gainStatus = '\u504f\u6162'; gainClass = 'warn'; }
+    else { gainStatus = '\u6b63\u5e38'; }
+    summaryHtml += '<div class="wgs-item ' + gainClass + '"><div class="wgs-label">\u5df2\u589e\u91cd</div><div class="wgs-value">' + gained.toFixed(1) + ' kg</div><div class="wgs-sub">' + gainStatus + '</div></div>';
   } else {
-    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5DF2\u589E\u91CD</div><div class="wgs-value">--</div><div class="wgs-sub">\u8BF7\u5148\u8BB0\u5F55\u4F53\u91CD</div></div>';
+    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5df2\u589e\u91cd</div><div class="wgs-value">--</div><div class="wgs-sub">\u8bf7\u5148\u8bb0\u5f55\u4f53\u91cd</div></div>';
   }
   if (week) {
-    summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u5F53\u524D\u5B55\u5468</div><div class="wgs-value">' + weekNum + ' \u5468</div><div class="wgs-sub">' + currentPhase + '</div></div>';
+    summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u5f53\u524d\u5b55\u5468</div><div class="wgs-value">' + weekNum + ' \u5468</div><div class="wgs-sub">' + currentPhase + '</div></div>';
   } else {
-    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5F53\u524D\u5B55\u5468</div><div class="wgs-value">\u672A\u8BBE\u7F6E</div><div class="wgs-sub">\u8BF7\u8BBE\u7F6E\u672B\u6B21\u6708\u7ECF</div></div>';
+    summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5f53\u524d\u5b55\u5468</div><div class="wgs-value">\u672a\u8bbe\u7f6e</div><div class="wgs-sub">\u8bf7\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf</div></div>';
   }
   summaryEl.innerHTML = summaryHtml;
-  var tableHtml = '<table class="weight-guide-table"><thead><tr><th>\u9636\u6BB5</th><th>\u5B55\u5468</th><th>\u7D2F\u8BA1\u589E\u91CD</th><th>\u6BCF\u5468\u589E\u957F</th><th>\u8BF4\u660E</th></tr></thead><tbody>';
+  var tableHtml = '<table class="weight-guide-table"><thead><tr><th>\u9636\u6bb5</th><th>\u5b55\u5468</th><th>\u7d2f\u8ba1\u589e\u91cd</th><th>\u6bcf\u5468\u589e\u957f</th><th>\u8bf4\u660e</th></tr></thead><tbody>';
   for (var i = 0; i < guide.phases.length; i++) {
     var p = guide.phases[i];
     var isCurrent = p.phase === currentPhase;
     tableHtml += '<tr class="' + (isCurrent ? 'wg-current' : '') + '">';
-    tableHtml += '<td class="wg-phase">' + p.phase + (isCurrent ? '<span class="wg-tag wg-tag-current">\u5F53\u524D</span>' : '') + '</td>';
+    tableHtml += '<td class="wg-phase">' + p.phase + (isCurrent ? '<span class="wg-tag wg-tag-current">\u5f53\u524d</span>' : '') + '</td>';
     tableHtml += '<td>' + p.weeks + '</td>';
     tableHtml += '<td>' + p.total + '</td>';
     tableHtml += '<td>' + p.weekly + '</td>';
@@ -757,14 +759,14 @@ function renderWeightGuide() {
   tableEl.innerHTML = tableHtml;
   var diet = DIET_SUGGESTIONS[currentPhase];
   var exer = EXERCISE_SUGGESTIONS[currentPhase];
-  var suggHtml = '<h5>\uD83D\uDCCB ' + currentPhase + ' \u4E2A\u6027\u5316\u5EFA\u8BAE</h5>';
+  var suggHtml = '<h5>\u1f4cb ' + currentPhase + ' \u4e2a\u6027\u5316\u5efa\u8bae</h5>';
   suggHtml += '<div class="wgs-section"><span class="wgs-section-title">' + diet.title + '</span>';
-  suggHtml += '<strong>\u63A8\u8350\u98DF\u7269\uFF1A</strong>' + diet.food + '<br>';
-  suggHtml += '<strong>\u8425\u517B\u7D20\uFF1A</strong>' + diet.nutrition + '<br>';
-  suggHtml += '<strong>\u5C0F\u8D34\u58EB\uFF1A</strong>' + diet.tips + '</div>';
+  suggHtml += '<strong>\u63a8\u8350\u98df\u7269\uff1a</strong>' + diet.food + '<br>';
+  suggHtml += '<strong>\u8425\u517b\u7d20\uff1a</strong>' + diet.nutrition + '<br>';
+  suggHtml += '<strong>\u5c0f\u8d34\u58eb\uff1a</strong>' + diet.tips + '</div>';
   suggHtml += '<div class="wgs-section"><span class="wgs-section-title">' + exer.title + '</span>';
   suggHtml += exer.content + '<br>';
-  suggHtml += '<strong>\u6CE8\u610F\uFF1A</strong>' + exer.tips + '</div>';
+  suggHtml += '<strong>\u6ce8\u610f\uff1a</strong>' + exer.tips + '</div>';
   suggEl.innerHTML = suggHtml;
 }
 document.getElementById('weight-guide-toggle').addEventListener('click', function(){
@@ -783,7 +785,7 @@ function resetPoopForm() {
   document.getElementById('poop-status').value = '';
   document.getElementById('poop-note').value = '';
   document.getElementById('poop-edit-id').value = '';
-  document.getElementById('add-poop-btn').textContent = '\u6DFB\u52A0';
+  document.getElementById('add-poop-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-poop-edit').style.display = 'none';
 }
 document.getElementById('add-poop-btn').addEventListener('click', function(){
@@ -791,7 +793,7 @@ document.getElementById('add-poop-btn').addEventListener('click', function(){
   var status = document.getElementById('poop-status').value;
   var note = document.getElementById('poop-note').value.trim();
   var editId = document.getElementById('poop-edit-id').value;
-  if (!date || !status) { alert('\u8BF7\u586B\u5199\u65E5\u671F\u548C\u72B6\u6001'); return; }
+  if (!date || !status) { alert('\u8bf7\u586b\u5199\u65e5\u671f\u548c\u72b6\u6001'); return; }
   if (editId) {
     var id = parseInt(editId);
     for (var i = 0; i < appData.poopRecords.length; i++) {
@@ -808,7 +810,7 @@ document.getElementById('add-poop-btn').addEventListener('click', function(){
   saveData(); resetPoopForm(); renderPoopSection();
 });
 document.getElementById('cancel-poop-edit').addEventListener('click', resetPoopForm);
-var POOP_LABELS = { normal:'\u6B63\u5E38', dry:'\u504F\u5E72', diarrhea:'\u504F\u7A00', difficult:'\u56F0\u96BE', none:'\u672A\u6392\u4FBF' };
+var POOP_LABELS = { normal:'\u6b63\u5e38', dry:'\u504f\u5e72', diarrhea:'\u504f\u7a00', difficult:'\u56f0\u96be', none:'\u672a\u6392\u4fbf' };
 function renderPoopList() {
   var list = document.getElementById('poop-list');
   var records = appData.poopRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).reverse();
@@ -818,7 +820,7 @@ function renderPoopList() {
     html += '<div class="record-item">';
     html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + POOP_LABELS[r.status] + '</span></div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
-    html += '<button class="record-edit" data-id="' + r.id + '" data-type="poop" title="\u7F16\u8F91">\u270E</button>';
+    html += '<button class="record-edit" data-id="' + r.id + '" data-type="poop" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="poop" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
   }
@@ -831,50 +833,50 @@ function editPoopRecord(id) {
   document.getElementById('poop-status').value = r.status;
   document.getElementById('poop-note').value = r.note || '';
   document.getElementById('poop-edit-id').value = r.id;
-  document.getElementById('add-poop-btn').textContent = '\u4FDD\u5B58\u4FEE\u6539';
+  document.getElementById('add-poop-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-poop-edit').style.display = 'inline-block';
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* ====== \u5B9D\u5B9D\u6210\u957F\u72B6\u6001 ====== */
+/* ====== \u5b9d\u5b9d\u6210\u957f\u72b6\u6001 ====== */
 var BABY_GROWTH_DATA = {
-  4:  { length:0.4, weight:'--', baby:'\u53D7\u7CBE\u5375\u7740\u5E8A\uFF0C\u5F00\u59CB\u5206\u88C2\u53D1\u80B2\uFF0C\u50CF\u829D\u9EBB\u4E00\u6837\u5C0F\u3002', mom:'\u53EF\u80FD\u8FD8\u6CA1\u4EC0\u4E48\u611F\u89C9\uFF0C\u6FC0\u7D20\u6C34\u5E73\u5F00\u59CB\u53D8\u5316\u3002' },
-  5:  { length:0.6, weight:'--', baby:'\u80DA\u80CE\u50CF\u82F9\u679C\u7C7D\uFF0C\u795E\u7ECF\u7BA1\u5F00\u59CB\u5F62\u6210\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u8F7B\u5FAE\u75B2\u52B3\u3001\u4E73\u623F\u80C0\u75DB\u3002' },
-  6:  { length:0.8, weight:'--', baby:'\u5FC3\u810F\u5F00\u59CB\u8DF3\u52A8\uFF0C\u56DB\u80A2\u82BD\u51FA\u73B0\uFF0C\u50CF\u6241\u8C46\u5927\u5C0F\u3002', mom:'\u65E9\u5B55\u53CD\u5E94\u53EF\u80FD\u51FA\u73B0\uFF0C\u5BB9\u6613\u6076\u5FC3\u3001\u55DC\u7761\u3002' },
-  7:  { length:1.0, weight:'--', baby:'\u5934\u90E8\u53D1\u80B2\u660E\u663E\uFF0C\u773C\u775B\u3001\u9F3B\u5B50\u5F00\u59CB\u6210\u5F62\u3002', mom:'\u5B55\u5410\u53EF\u80FD\u52A0\u91CD\uFF0C\u6CE8\u610F\u5C11\u98DF\u591A\u9910\u3002' },
-  8:  { length:1.6, weight:'1', baby:'\u521D\u5177\u4EBA\u5F62\uFF0C\u624B\u6307\u811A\u8DBE\u5F00\u59CB\u53D1\u80B2\uFF0C\u50CF\u82B8\u8C46\u5927\u5C0F\u3002', mom:'\u5B50\u5BAB\u5728\u6162\u6162\u589E\u5927\uFF0C\u8179\u90E8\u8FD8\u6CA1\u660E\u663E\u53D8\u5316\u3002' },
-  9:  { length:2.2, weight:'2', baby:'\u4E94\u5B98\u66F4\u6E05\u6670\uFF0C\u5FC3\u810F\u5206\u6210\u56DB\u4E2A\u8154\u5BA4\u3002', mom:'\u4E73\u623F\u80C0\u75DB\u6301\u7EED\uFF0C\u60C5\u7EEA\u53EF\u80FD\u6CE2\u52A8\u8F83\u5927\u3002' },
-  10: { length:3.1, weight:'4', baby:'\u6B63\u5F0F\u8FDB\u5165\u80CE\u513F\u671F\uFF0C\u624B\u81C2\u53EF\u5F2F\u66F2\uFF0C\u50CF\u91D1\u6854\u5927\u5C0F\u3002', mom:'\u65E9\u5B55\u53CD\u5E94\u53EF\u80FD\u51CF\u8F7B\uFF0C\u7CBE\u529B\u7565\u6709\u6062\u590D\u3002' },
-  11: { length:4.1, weight:'7', baby:'\u810A\u67F1\u5F00\u59CB\u9AA8\u5316\uFF0C\u4F1A\u505A\u5438\u542E\u548C\u541E\u54BD\u52A8\u4F5C\u3002', mom:'\u8179\u90E8\u8F7B\u5FAE\u9686\u8D77\uFF0C\u88E4\u5B50\u53EF\u80FD\u53D8\u7D27\u3002' },
-  12: { length:5.4, weight:'14', baby:'\u6240\u6709\u5668\u5B98\u57FA\u672C\u5F62\u6210\uFF0CNT\u68C0\u67E5\u7684\u597D\u65F6\u673A\u3002', mom:'\u5B55\u5410\u660E\u663E\u51CF\u8F7B\uFF0C\u98DF\u6B32\u5F00\u59CB\u6062\u590D\u3002' },
-  13: { length:7.4, weight:'23', baby:'\u6307\u7EB9\u5F62\u6210\uFF0C\u80BE\u810F\u5F00\u59CB\u4EA7\u751F\u5C3F\u6DB2\u3002', mom:'\u8179\u90E8\u9686\u8D77\u66F4\u660E\u663E\uFF0C\u6CE8\u610F\u8865\u5145\u8425\u517B\u3002' },
-  14: { length:8.7, weight:'43', baby:'\u9762\u90E8\u7279\u5F81\u66F4\u660E\u663E\uFF0C\u4F1A\u505A\u9B3C\u8138\u3002', mom:'\u7CBE\u529B\u6062\u590D\uFF0C\u80CE\u76D8\u5F00\u59CB\u627F\u62C5\u66F4\u591A\u529F\u80FD\u3002' },
-  15: { length:10.4, weight:'70', baby:'\u56DB\u80A2\u7279\u522B\u6D3B\u8DC3\uFF0C\u52A8\u4F5C\u53D8\u5F97\u9891\u7E41\uFF0C\u4F46\u5988\u5988\u53EF\u80FD\u8FD8\u611F\u53D7\u4E0D\u5230\u3002', mom:'\u9F3B\u5B50\u5BB9\u6613\u5145\u8840\u751A\u81F3\u51FA\u8840\uFF0C\u591A\u559D\u6C34\u591A\u5403\u679C\u852C\u3002' },
-  16: { length:11.6, weight:'100', baby:'\u9AA8\u9ABC\u53D8\u786C\uFF0C\u542C\u89C9\u5F00\u59CB\u53D1\u80B2\u3002', mom:'\u8179\u90E8\u660E\u663E\u9686\u8D77\uFF0C\u53EF\u80FD\u5F00\u59CB\u611F\u53D7\u5230\u8F7B\u5FAE\u80CE\u52A8\u3002' },
-  17: { length:13.0, weight:'140', baby:'\u76AE\u4E0B\u8102\u80AA\u5F00\u59CB\u79EF\u7D2F\uFF0C\u4F1A\u5438\u542E\u62C7\u6307\u3002', mom:'\u98DF\u6B32\u589E\u52A0\uFF0C\u6CE8\u610F\u63A7\u5236\u4F53\u91CD\u589E\u957F\u3002' },
-  18: { length:14.2, weight:'190', baby:'\u80CE\u52A8\u66F4\u660E\u663E\uFF0C\u80FD\u542C\u5230\u5916\u754C\u58F0\u97F3\u3002', mom:'\u8170\u80CC\u90E8\u538B\u529B\u589E\u52A0\uFF0C\u6CE8\u610F\u59FF\u52BF\u3002' },
-  19: { length:15.3, weight:'240', baby:'\u611F\u89C9\u5668\u5B98\u8FC5\u901F\u53D1\u5C55\uFF0C\u5927\u8111\u795E\u7ECF\u8FDE\u63A5\u589E\u52A0\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u76AE\u80A4\u7619\u75D2\uFF0C\u6CE8\u610F\u4FDD\u6E7F\u3002' },
-  20: { length:16.4, weight:'300', baby:'\u56DB\u80A2\u548C\u8EAF\u5E72\u6BD4\u4F8B\u66F4\u534F\u8C03\uFF0C\u5927\u6392\u7578\u68C0\u67E5\u597D\u65F6\u673A\u3002', mom:'\u5B50\u5BAB\u9876\u5230\u809A\u8110\uFF0C\u80CE\u52A8\u50CF\u5C0F\u9C7C\u6E38\u3002' },
-  21: { length:26.7, weight:'360', baby:'\u4F53\u91CD\u5FEB\u901F\u589E\u52A0\uFF0C\u7709\u6BDB\u548C\u776B\u6BDB\u5F00\u59CB\u751F\u957F\u3002', mom:'\u7CBE\u529B\u65FA\u76DB\u671F\uFF0C\u6CE8\u610F\u9002\u5F53\u8FD0\u52A8\u3002' },
-  22: { length:27.8, weight:'430', baby:'\u76AE\u80A4\u5F00\u59CB\u6709\u76B1\u7EB9\uFF0C\u542C\u89C9\u66F4\u654F\u9510\u3002', mom:'\u8179\u90E8\u7EE7\u7EED\u589E\u5927\uFF0C\u53EF\u80FD\u51FA\u73B0\u598A\u5A20\u7EB9\u3002' },
-  23: { length:28.9, weight:'501', baby:'\u80BA\u90E8\u5F00\u59CB\u53D1\u80B2\uFF0C\u4E3A\u51FA\u751F\u540E\u547C\u5438\u505A\u51C6\u5907\u3002', mom:'\u80CE\u52A8\u89C4\u5F8B\uFF0C\u6CE8\u610F\u4F11\u606F\u907F\u514D\u52B3\u7D2F\u3002' },
-  24: { length:30.0, weight:'600', baby:'\u76AE\u80A4\u8584\u800C\u900F\u660E\uFF0C\u80FD\u542C\u5230\u5988\u5988\u5FC3\u8DF3\u548C\u80A0\u80C3\u8815\u52A8\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u8170\u9178\u80CC\u75DB\uFF0C\u9002\u5F53\u6309\u6469\u7F13\u89E3\u3002' },
-  25: { length:34.6, weight:'680', baby:'\u76AE\u4E0B\u8102\u80AA\u589E\u591A\uFF0C\u76AE\u80A4\u5F00\u59CB\u53D8\u5149\u6ED1\u3002', mom:'\u547C\u5438\u56F0\u96BE\u53EF\u80FD\u52A0\u91CD\uFF0C\u907F\u514D\u5E73\u8EBA\u3002' },
-  26: { length:35.6, weight:'760', baby:'\u773C\u775B\u5F00\u59CB\u7741\u5F00\uFF0C\u5BF9\u5916\u754C\u5149\u7EBF\u6709\u53CD\u5E94\u3002', mom:'\u5C3F\u9891\u53EF\u80FD\u518D\u6B21\u51FA\u73B0\uFF0C\u907F\u514D\u618B\u5C3F\u3002' },
-  27: { length:36.6, weight:'875', baby:'\u5927\u8111\u5FEB\u901F\u53D1\u80B2\uFF0C\u7761\u7720\u65F6\u95F4\u89C4\u5F8B\u3002', mom:'\u8EAB\u4F53\u91CD\u5FC3\u524D\u79FB\uFF0C\u6CE8\u610F\u9632\u8DCC\u5012\u3002' },
-  28: { length:37.6, weight:'1000', baby:'\u8FDB\u5165\u5B55\u665A\u671F\uFF0C\u80BA\u90E8\u7EE7\u7EED\u6210\u719F\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u5047\u6027\u5BAB\u7F29\uFF0C\u6CE8\u610F\u4F11\u606F\u3002' },
-  29: { length:38.6, weight:'1150', baby:'\u808C\u8089\u548C\u80BA\u90E8\u7EE7\u7EED\u53D1\u80B2\uFF0C\u5934\u56F4\u589E\u5927\u3002', mom:'\u8179\u90E8\u6C89\u91CD\uFF0C\u6CE8\u610F\u5DE6\u4FA7\u5367\u4F4D\u4F11\u606F\u3002' },
-  30: { length:39.9, weight:'1300', baby:'\u5934\u53D1\u5F00\u59CB\u751F\u957F\uFF0C\u6307\u7532\u53D8\u957F\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u6C34\u80BF\uFF0C\u6CE8\u610F\u63A7\u76D0\u3002' },
-  31: { length:41.1, weight:'1500', baby:'\u76AE\u4E0B\u8102\u80AA\u8FDB\u4E00\u6B65\u589E\u52A0\uFF0C\u4F53\u6E29\u8C03\u8282\u80FD\u529B\u53D1\u5C55\u3002', mom:'\u80CE\u52A8\u6709\u529B\uFF0C\u6CE8\u610F\u6570\u80CE\u52A8\u3002' },
-  32: { length:42.4, weight:'1700', baby:'\u76AE\u80A4\u53D8\u7C89\u7EA2\uFF0C\u624B\u6307\u7532\u548C\u811A\u8DBE\u7532\u957F\u9F50\u3002', mom:'\u5B50\u5BAB\u9876\u5230\u808B\u9AA8\u4E0B\u7F18\uFF0C\u5C11\u98DF\u591A\u9910\u3002' },
-  33: { length:43.7, weight:'1900', baby:'\u80BA\u90E8\u63A5\u8FD1\u6210\u719F\uFF0C\u9AA8\u9ABC\u53D8\u786C\u4F46\u4ECD\u67D4\u8F6F\u3002', mom:'\u53EF\u80FD\u51FA\u73B0\u7761\u7720\u56F0\u96BE\uFF0C\u7528\u6795\u5934\u652F\u6491\u3002' },
-  34: { length:45.0, weight:'2150', baby:'\u514D\u75AB\u7CFB\u7EDF\u5F00\u59CB\u5DE5\u4F5C\uFF0C\u80FD\u8BC6\u522B\u5988\u5988\u58F0\u97F3\u3002', mom:'\u5047\u6027\u5BAB\u7F29\u66F4\u9891\u7E41\uFF0C\u6CE8\u610F\u533A\u5206\u771F\u5047\u4E34\u4EA7\u3002' },
-  35: { length:46.2, weight:'2350', baby:'\u8EAB\u4F53\u5404\u5668\u5B98\u57FA\u672C\u6210\u719F\uFF0C\u6B63\u5728\u589E\u52A0\u4F53\u91CD\u3002', mom:'\u547C\u5438\u56F0\u96BE\u53EF\u80FD\u7F13\u89E3\uFF0C\u80CE\u513F\u4E0B\u964D\u5165\u76C6\u3002' },
-  36: { length:47.5, weight:'2600', baby:'\u76AE\u4E0B\u8102\u80AA\u9971\u6EE1\uFF0C\u50CF\u5C0F\u897F\u74DC\u5927\u5C0F\u3002', mom:'\u5C3F\u9891\u52A0\u91CD\uFF0C\u51C6\u5907\u5F85\u4EA7\u5305\u3002' },
-  37: { length:48.6, weight:'2850', baby:'\u8DB3\u6708\uFF0C\u80BA\u90E8\u548C\u5927\u8111\u5B8C\u5168\u6210\u719F\uFF0C\u968F\u65F6\u53EF\u80FD\u51FA\u751F\u3002', mom:'\u53EF\u80FD\u6709\u4E0B\u5760\u611F\uFF0C\u6CE8\u610F\u4E34\u4EA7\u5F81\u5146\u3002' },
-  38: { length:49.8, weight:'3000', baby:'\u4F53\u91CD\u6301\u7EED\u589E\u52A0\uFF0C\u5934\u53D1\u53D8\u6D53\u5BC6\u3002', mom:'\u8EAB\u4F53\u51C6\u5907\u5206\u5A29\uFF0C\u6CE8\u610F\u4F11\u606F\u4FDD\u5B58\u4F53\u529B\u3002' },
-  39: { length:50.7, weight:'3150', baby:'\u7F8A\u6C34\u91CF\u53EF\u80FD\u51CF\u5C11\uFF0C\u80CE\u52A8\u4ECD\u8981\u5173\u6CE8\u3002', mom:'\u968F\u65F6\u53EF\u80FD\u4E34\u4EA7\uFF0C\u51C6\u5907\u597D\u5165\u9662\u7269\u54C1\u3002' },
-  40: { length:51.2, weight:'3200', baby:'\u9884\u4EA7\u671F\u5230\u4E86\uFF0C\u968F\u65F6\u51C6\u5907\u548C\u5988\u5988\u89C1\u9762\u3002', mom:'\u6CE8\u610F\u89C4\u5F8B\u5BAB\u7F29\u3001\u7834\u6C34\u3001\u89C1\u7EA2\u7B49\u4E34\u4EA7\u4FE1\u53F7\u3002' }
+  4:  { length:0.4, weight:'--', baby:'\u53d7\u7cbe\u5375\u7740\u5e8a\uff0c\u5f00\u59cb\u5206\u88c2\u53d1\u80b2\uff0c\u50cf\u829d\u9ebb\u4e00\u6837\u5c0f\u3002', mom:'\u53ef\u80fd\u8fd8\u6ca1\u4ec0\u4e48\u611f\u89c9\uff0c\u6fc0\u7d20\u6c34\u5e73\u5f00\u59cb\u53d8\u5316\u3002' },
+  5:  { length:0.6, weight:'--', baby:'\u80da\u80ce\u50cf\u82f9\u679c\u7c7d\uff0c\u795e\u7ecf\u7ba1\u5f00\u59cb\u5f62\u6210\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u8f7b\u5fae\u75b2\u52b3\u3001\u4e73\u623f\u80c0\u75db\u3002' },
+  6:  { length:0.8, weight:'--', baby:'\u5fc3\u810f\u5f00\u59cb\u8df3\u52a8\uff0c\u56db\u80a2\u82bd\u51fa\u73b0\uff0c\u50cf\u6241\u8c46\u5927\u5c0f\u3002', mom:'\u65e9\u5b55\u53cd\u5e94\u53ef\u80fd\u51fa\u73b0\uff0c\u5bb9\u6613\u6076\u5fc3\u3001\u55dc\u7761\u3002' },
+  7:  { length:1.0, weight:'--', baby:'\u5934\u90e8\u53d1\u80b2\u660e\u663e\uff0c\u773c\u775b\u3001\u9f3b\u5b50\u5f00\u59cb\u6210\u5f62\u3002', mom:'\u5b55\u5410\u53ef\u80fd\u52a0\u91cd\uff0c\u6ce8\u610f\u5c11\u98df\u591a\u9910\u3002' },
+  8:  { length:1.6, weight:'1', baby:'\u521d\u5177\u4eba\u5f62\uff0c\u624b\u6307\u811a\u8dbe\u5f00\u59cb\u53d1\u80b2\uff0c\u50cf\u82b8\u8c46\u5927\u5c0f\u3002', mom:'\u5b50\u5bab\u5728\u6162\u6162\u589e\u5927\uff0c\u8179\u90e8\u8fd8\u6ca1\u660e\u663e\u53d8\u5316\u3002' },
+  9:  { length:2.2, weight:'2', baby:'\u4e94\u5b98\u66f4\u6e05\u6670\uff0c\u5fc3\u810f\u5206\u6210\u56db\u4e2a\u8154\u5ba4\u3002', mom:'\u4e73\u623f\u80c0\u75db\u6301\u7eed\uff0c\u60c5\u7eea\u53ef\u80fd\u6ce2\u52a8\u8f83\u5927\u3002' },
+  10: { length:3.1, weight:'4', baby:'\u6b63\u5f0f\u8fdb\u5165\u80ce\u513f\u671f\uff0c\u624b\u81c2\u53ef\u5f2f\u66f2\uff0c\u50cf\u91d1\u6854\u5927\u5c0f\u3002', mom:'\u65e9\u5b55\u53cd\u5e94\u53ef\u80fd\u51cf\u8f7b\uff0c\u7cbe\u529b\u7565\u6709\u6062\u590d\u3002' },
+  11: { length:4.1, weight:'7', baby:'\u810a\u67f1\u5f00\u59cb\u9aa8\u5316\uff0c\u4f1a\u505a\u5438\u542e\u548c\u541e\u54bd\u52a8\u4f5c\u3002', mom:'\u8179\u90e8\u8f7b\u5fae\u9686\u8d77\uff0c\u88e4\u5b50\u53ef\u80fd\u53d8\u7d27\u3002' },
+  12: { length:5.4, weight:'14', baby:'\u6240\u6709\u5668\u5b98\u57fa\u672c\u5f62\u6210\uff0cNT\u68c0\u67e5\u7684\u597d\u65f6\u673a\u3002', mom:'\u5b55\u5410\u660e\u663e\u51cf\u8f7b\uff0c\u98df\u6b32\u5f00\u59cb\u6062\u590d\u3002' },
+  13: { length:7.4, weight:'23', baby:'\u6307\u7eb9\u5f62\u6210\uff0c\u80be\u810f\u5f00\u59cb\u4ea7\u751f\u5c3f\u6db2\u3002', mom:'\u8179\u90e8\u9686\u8d77\u66f4\u660e\u663e\uff0c\u6ce8\u610f\u8865\u5145\u8425\u517b\u3002' },
+  14: { length:8.7, weight:'43', baby:'\u9762\u90e8\u7279\u5f81\u66f4\u660e\u663e\uff0c\u4f1a\u505a\u9b3c\u8138\u3002', mom:'\u7cbe\u529b\u6062\u590d\uff0c\u80ce\u76d8\u5f00\u59cb\u627f\u62c5\u66f4\u591a\u529f\u80fd\u3002' },
+  15: { length:10.4, weight:'70', baby:'\u56db\u80a2\u7279\u522b\u6d3b\u8dc3\uff0c\u52a8\u4f5c\u53d8\u5f97\u9891\u7e41\uff0c\u4f46\u5988\u5988\u53ef\u80fd\u8fd8\u611f\u53d7\u4e0d\u5230\u3002', mom:'\u9f3b\u5b50\u5bb9\u6613\u5145\u8840\u751a\u81f3\u51fa\u8840\uff0c\u591a\u559d\u6c34\u591a\u5403\u679c\u852c\u3002' },
+  16: { length:11.6, weight:'100', baby:'\u9aa8\u9abc\u53d8\u786c\uff0c\u542c\u89c9\u5f00\u59cb\u53d1\u80b2\u3002', mom:'\u8179\u90e8\u660e\u663e\u9686\u8d77\uff0c\u53ef\u80fd\u5f00\u59cb\u611f\u53d7\u5230\u8f7b\u5fae\u80ce\u52a8\u3002' },
+  17: { length:13.0, weight:'140', baby:'\u76ae\u4e0b\u8102\u80aa\u5f00\u59cb\u79ef\u7d2f\uff0c\u4f1a\u5438\u542e\u62c7\u6307\u3002', mom:'\u98df\u6b32\u589e\u52a0\uff0c\u6ce8\u610f\u63a7\u5236\u4f53\u91cd\u589e\u957f\u3002' },
+  18: { length:14.2, weight:'190', baby:'\u80ce\u52a8\u66f4\u660e\u663e\uff0c\u80fd\u542c\u5230\u5916\u754c\u58f0\u97f3\u3002', mom:'\u8170\u80cc\u90e8\u538b\u529b\u589e\u52a0\uff0c\u6ce8\u610f\u59ff\u52bf\u3002' },
+  19: { length:15.3, weight:'240', baby:'\u611f\u89c9\u5668\u5b98\u8fc5\u901f\u53d1\u5c55\uff0c\u5927\u8111\u795e\u7ecf\u8fde\u63a5\u589e\u52a0\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u76ae\u80a4\u7619\u75d2\uff0c\u6ce8\u610f\u4fdd\u6e7f\u3002' },
+  20: { length:16.4, weight:'300', baby:'\u56db\u80a2\u548c\u8eaf\u5e72\u6bd4\u4f8b\u66f4\u534f\u8c03\uff0c\u5927\u6392\u7578\u68c0\u67e5\u597d\u65f6\u673a\u3002', mom:'\u5b50\u5bab\u9876\u5230\u809a\u8110\uff0c\u80ce\u52a8\u50cf\u5c0f\u9c7c\u6e38\u3002' },
+  21: { length:26.7, weight:'360', baby:'\u4f53\u91cd\u5feb\u901f\u589e\u52a0\uff0c\u7709\u6bdb\u548c\u776b\u6bdb\u5f00\u59cb\u751f\u957f\u3002', mom:'\u7cbe\u529b\u65fa\u76db\u671f\uff0c\u6ce8\u610f\u9002\u5f53\u8fd0\u52a8\u3002' },
+  22: { length:27.8, weight:'430', baby:'\u76ae\u80a4\u5f00\u59cb\u6709\u76b1\u7eb9\uff0c\u542c\u89c9\u66f4\u654f\u9510\u3002', mom:'\u8179\u90e8\u7ee7\u7eed\u589e\u5927\uff0c\u53ef\u80fd\u51fa\u73b0\u598a\u5a20\u7eb9\u3002' },
+  23: { length:28.9, weight:'501', baby:'\u80ba\u90e8\u5f00\u59cb\u53d1\u80b2\uff0c\u4e3a\u51fa\u751f\u540e\u547c\u5438\u505a\u51c6\u5907\u3002', mom:'\u80ce\u52a8\u89c4\u5f8b\uff0c\u6ce8\u610f\u4f11\u606f\u907f\u514d\u52b3\u7d2f\u3002' },
+  24: { length:30.0, weight:'600', baby:'\u76ae\u80a4\u8584\u800c\u900f\u660e\uff0c\u80fd\u542c\u5230\u5988\u5988\u5fc3\u8df3\u548c\u80a0\u80c3\u8815\u52a8\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u8170\u9178\u80cc\u75db\uff0c\u9002\u5f53\u6309\u6469\u7f13\u89e3\u3002' },
+  25: { length:34.6, weight:'680', baby:'\u76ae\u4e0b\u8102\u80aa\u589e\u591a\uff0c\u76ae\u80a4\u5f00\u59cb\u53d8\u5149\u6ed1\u3002', mom:'\u547c\u5438\u56f0\u96be\u53ef\u80fd\u52a0\u91cd\uff0c\u907f\u514d\u5e73\u8eba\u3002' },
+  26: { length:35.6, weight:'760', baby:'\u773c\u775b\u5f00\u59cb\u7741\u5f00\uff0c\u5bf9\u5916\u754c\u5149\u7ebf\u6709\u53cd\u5e94\u3002', mom:'\u5c3f\u9891\u53ef\u80fd\u518d\u6b21\u51fa\u73b0\uff0c\u907f\u514d\u618b\u5c3f\u3002' },
+  27: { length:36.6, weight:'875', baby:'\u5927\u8111\u5feb\u901f\u53d1\u80b2\uff0c\u7761\u7720\u65f6\u95f4\u89c4\u5f8b\u3002', mom:'\u8eab\u4f53\u91cd\u5fc3\u524d\u79fb\uff0c\u6ce8\u610f\u9632\u8dcc\u5012\u3002' },
+  28: { length:37.6, weight:'1000', baby:'\u8fdb\u5165\u5b55\u665a\u671f\uff0c\u80ba\u90e8\u7ee7\u7eed\u6210\u719f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u5047\u6027\u5bab\u7f29\uff0c\u6ce8\u610f\u4f11\u606f\u3002' },
+  29: { length:38.6, weight:'1150', baby:'\u808c\u8089\u548c\u80ba\u90e8\u7ee7\u7eed\u53d1\u80b2\uff0c\u5934\u56f4\u589e\u5927\u3002', mom:'\u8179\u90e8\u6c89\u91cd\uff0c\u6ce8\u610f\u5de6\u4fa7\u5367\u4f4d\u4f11\u606f\u3002' },
+  30: { length:39.9, weight:'1300', baby:'\u5934\u53d1\u5f00\u59cb\u751f\u957f\uff0c\u6307\u7532\u53d8\u957f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u6c34\u80bf\uff0c\u6ce8\u610f\u63a7\u76d0\u3002' },
+  31: { length:41.1, weight:'1500', baby:'\u76ae\u4e0b\u8102\u80aa\u8fdb\u4e00\u6b65\u589e\u52a0\uff0c\u4f53\u6e29\u8c03\u8282\u80fd\u529b\u53d1\u5c55\u3002', mom:'\u80ce\u52a8\u6709\u529b\uff0c\u6ce8\u610f\u6570\u80ce\u52a8\u3002' },
+  32: { length:42.4, weight:'1700', baby:'\u76ae\u80a4\u53d8\u7c89\u7ea2\uff0c\u624b\u6307\u7532\u548c\u811a\u8dbe\u7532\u957f\u9f50\u3002', mom:'\u5b50\u5bab\u9876\u5230\u808b\u9aa8\u4e0b\u7f18\uff0c\u5c11\u98df\u591a\u9910\u3002' },
+  33: { length:43.7, weight:'1900', baby:'\u80ba\u90e8\u63a5\u8fd1\u6210\u719f\uff0c\u9aa8\u9abc\u53d8\u786c\u4f46\u4ecd\u67d4\u8f6f\u3002', mom:'\u53ef\u80fd\u51fa\u73b0\u7761\u7720\u56f0\u96be\uff0c\u7528\u6795\u5934\u652f\u6491\u3002' },
+  34: { length:45.0, weight:'2150', baby:'\u514d\u75ab\u7cfb\u7edf\u5f00\u59cb\u5de5\u4f5c\uff0c\u80fd\u8bc6\u522b\u5988\u5988\u58f0\u97f3\u3002', mom:'\u5047\u6027\u5bab\u7f29\u66f4\u9891\u7e41\uff0c\u6ce8\u610f\u533a\u5206\u771f\u5047\u4e34\u4ea7\u3002' },
+  35: { length:46.2, weight:'2350', baby:'\u8eab\u4f53\u5404\u5668\u5b98\u57fa\u672c\u6210\u719f\uff0c\u6b63\u5728\u589e\u52a0\u4f53\u91cd\u3002', mom:'\u547c\u5438\u56f0\u96be\u53ef\u80fd\u7f13\u89e3\uff0c\u80ce\u513f\u4e0b\u964d\u5165\u76c6\u3002' },
+  36: { length:47.5, weight:'2600', baby:'\u76ae\u4e0b\u8102\u80aa\u9971\u6ee1\uff0c\u50cf\u5c0f\u897f\u74dc\u5927\u5c0f\u3002', mom:'\u5c3f\u9891\u52a0\u91cd\uff0c\u51c6\u5907\u5f85\u4ea7\u5305\u3002' },
+  37: { length:48.6, weight:'2850', baby:'\u8db3\u6708\uff0c\u80ba\u90e8\u548c\u5927\u8111\u5b8c\u5168\u6210\u719f\uff0c\u968f\u65f6\u53ef\u80fd\u51fa\u751f\u3002', mom:'\u53ef\u80fd\u6709\u4e0b\u5760\u611f\uff0c\u6ce8\u610f\u4e34\u4ea7\u5f81\u5146\u3002' },
+  38: { length:49.8, weight:'3000', baby:'\u4f53\u91cd\u6301\u7eed\u589e\u52a0\uff0c\u5934\u53d1\u53d8\u6d53\u5bc6\u3002', mom:'\u8eab\u4f53\u51c6\u5907\u5206\u5a29\uff0c\u6ce8\u610f\u4f11\u606f\u4fdd\u5b58\u4f53\u529b\u3002' },
+  39: { length:50.7, weight:'3150', baby:'\u7f8a\u6c34\u91cf\u53ef\u80fd\u51cf\u5c11\uff0c\u80ce\u52a8\u4ecd\u8981\u5173\u6ce8\u3002', mom:'\u968f\u65f6\u53ef\u80fd\u4e34\u4ea7\uff0c\u51c6\u5907\u597d\u5165\u9662\u7269\u54c1\u3002' },
+  40: { length:51.2, weight:'3200', baby:'\u9884\u4ea7\u671f\u5230\u4e86\uff0c\u968f\u65f6\u51c6\u5907\u548c\u5988\u5988\u89c1\u9762\u3002', mom:'\u6ce8\u610f\u89c4\u5f8b\u5bab\u7f29\u3001\u7834\u6c34\u3001\u89c1\u7ea2\u7b49\u4e34\u4ea7\u4fe1\u53f7\u3002' }
 };
 
 function parseWeek(weekStr) {
@@ -904,7 +906,7 @@ function parseISO(s) {
 
 function formatDate(d) {
   if (typeof d === 'string') d = new Date(d);
-  return (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65E5';
+  return (d.getMonth()+1) + '\u6708' + d.getDate() + '\u65e5';
 }
 
 function daysBetween(start, end) {
@@ -923,7 +925,7 @@ function getBabyGrowth(weekObj) {
   return {
     length: data.length,
     weight: data.weight,
-    lengthLabel: isEarly ? '\u9876\u81C0\u957F' : '\u8EAB\u957F',
+    lengthLabel: isEarly ? '\u9876\u81c0\u957f' : '\u8eab\u957f',
     baby: data.baby,
     mom: data.mom
   };
@@ -960,20 +962,20 @@ function renderBabyStatus() {
     if (last && last.totalDays) currentWeekObj = { week:last.week, day:last.day, totalDays:last.totalDays };
   }
   if (!currentWeekObj || currentWeekObj.week < 1) {
-    card.innerHTML = '<div class="baby-status-week">\u8BF7\u8BBE\u7F6E\u672B\u6B21\u6708\u7ECF\u65E5\u671F</div><div class="baby-status-due">\u6216\u624B\u52A8\u6DFB\u52A0\u6210\u957F\u8BB0\u5F55</div>';
+    card.innerHTML = '<div class="baby-status-week">\u8bf7\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf\u65e5\u671f</div><div class="baby-status-due">\u6216\u624b\u52a8\u6dfb\u52a0\u6210\u957f\u8bb0\u5f55</div>';
     tips.style.display = 'none';
     return;
   }
   var growth = getBabyGrowth(currentWeekObj);
   var html = '';
-  html += '<div class="baby-status-week">\u5B55 ' + formatWeek(currentWeekObj) + '</div>';
+  html += '<div class="baby-status-week">\u5b55 ' + formatWeek(currentWeekObj) + '</div>';
   if (dueDate && daysToDue !== null) {
-    html += '<div class="baby-status-due">\u9884\u4EA7\u671F ' + formatDate(dueDate) + ' \u00B7 \u8DDD\u79BB\u9884\u4EA7\u671F ' + daysToDue + ' \u5929</div>';
+    html += '<div class="baby-status-due">\u9884\u4ea7\u671f ' + formatDate(dueDate) + ' \u00b7 \u8ddd\u79bb\u9884\u4ea7\u671f ' + daysToDue + ' \u5929</div>';
   }
   if (growth) {
     html += '<div class="baby-status-size">';
     html += '<div class="baby-size-item"><div class="num">' + growth.length + '</div><div class="label">' + growth.lengthLabel + ' cm</div></div>';
-    html += '<div class="baby-size-item"><div class="num">' + growth.weight + '</div><div class="label">\u4F53\u91CD g</div></div>';
+    html += '<div class="baby-size-item"><div class="num">' + growth.weight + '</div><div class="label">\u4f53\u91cd g</div></div>';
     html += '</div>';
   }
   card.innerHTML = html;
@@ -988,7 +990,7 @@ function renderBabyStatus() {
 
 document.getElementById('save-lmp-btn').addEventListener('click', function(){
   var lmp = document.getElementById('baby-lmp').value;
-  if (!lmp) { alert('\u8BF7\u9009\u62E9\u672B\u6B21\u6708\u7ECF\u65E5\u671F'); return; }
+  if (!lmp) { alert('\u8bf7\u9009\u62e9\u672b\u6b21\u6708\u7ecf\u65e5\u671f'); return; }
   appData.lmpDate = lmp;
   saveData();
   renderBabySection();
@@ -1001,7 +1003,7 @@ document.getElementById('add-baby-btn').addEventListener('click', function(){
   var note = document.getElementById('baby-note').value.trim();
   var editId = document.getElementById('baby-edit-id').value;
   var parsed = parseWeek(weekStr);
-  if (!parsed || !parsed.week) { alert('\u8BF7\u586B\u5199\u5B55\u5468\uFF0C\u5982 15+1'); return; }
+  if (!parsed || !parsed.week) { alert('\u8bf7\u586b\u5199\u5b55\u5468\uff0c\u5982 15+1'); return; }
   var growth = getBabyGrowth(parsed);
   if (!length && growth) length = growth.length;
   if (!weight && growth) weight = parseInt(growth.weight) || '';
@@ -1029,7 +1031,7 @@ function resetBabyForm() {
   document.getElementById('baby-weight').value = '';
   document.getElementById('baby-note').value = '';
   document.getElementById('baby-edit-id').value = '';
-  document.getElementById('add-baby-btn').textContent = '\u6DFB\u52A0';
+  document.getElementById('add-baby-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-baby-edit').style.display = 'none';
 }
 document.getElementById('cancel-baby-edit').addEventListener('click', resetBabyForm);
@@ -1041,9 +1043,9 @@ function renderBabyList() {
     var r = records[i];
     var weekText = r.day ? r.week + '+' + r.day : String(r.week);
     html += '<div class="record-item">';
-    html += '<div class="record-main"><span class="record-value">\u5B55 ' + weekText + ' \u5468</span>' + (r.length ? '<span class="record-tag">' + (r.week <= 12 ? '\u9876\u81C0\u957F' : '\u8EAB\u957F') + ' ' + r.length + ' cm</span>' : '') + (r.weight ? '<span class="record-tag">\u4F53\u91CD ' + r.weight + ' g</span>' : '') + '</div>';
+    html += '<div class="record-main"><span class="record-value">\u5b55 ' + weekText + ' \u5468</span>' + (r.length ? '<span class="record-tag">' + (r.week <= 12 ? '\u9876\u81c0\u957f' : '\u8eab\u957f') + ' ' + r.length + ' cm</span>' : '') + (r.weight ? '<span class="record-tag">\u4f53\u91cd ' + r.weight + ' g</span>' : '') + '</div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
-    html += '<button class="record-edit" data-id="' + r.id + '" data-type="baby" title="\u7F16\u8F91">\u270E</button>';
+    html += '<button class="record-edit" data-id="' + r.id + '" data-type="baby" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="baby" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
   }
@@ -1058,12 +1060,12 @@ function editBabyRecord(id) {
   document.getElementById('baby-weight').value = r.weight || '';
   document.getElementById('baby-note').value = r.note || '';
   document.getElementById('baby-edit-id').value = r.id;
-  document.getElementById('add-baby-btn').textContent = '\u4FDD\u5B58\u4FEE\u6539';
+  document.getElementById('add-baby-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-baby-edit').style.display = 'inline-block';
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-/* ====== \u5B55\u68C0\u8BB0\u5F55 ====== */
+/* ====== \u5b55\u68c0\u8bb0\u5f55 ====== */
 function renderCheckupSection() { document.getElementById('checkup-date').value = todayISO(); renderCheckupList(); }
 function resetCheckupForm() {
   document.getElementById('checkup-date').value = todayISO();
@@ -1071,7 +1073,7 @@ function resetCheckupForm() {
   document.getElementById('checkup-result').value = '';
   document.getElementById('checkup-next').value = '';
   document.getElementById('checkup-edit-id').value = '';
-  document.getElementById('add-checkup-btn').textContent = '\u6DFB\u52A0';
+  document.getElementById('add-checkup-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-checkup-edit').style.display = 'none';
 }
 document.getElementById('add-checkup-btn').addEventListener('click', function(){
@@ -1080,7 +1082,7 @@ document.getElementById('add-checkup-btn').addEventListener('click', function(){
   var result = document.getElementById('checkup-result').value.trim();
   var nextDate = document.getElementById('checkup-next').value;
   var editId = document.getElementById('checkup-edit-id').value;
-  if (!date || !item) { alert('\u8BF7\u586B\u5199\u65E5\u671F\u548C\u9879\u76EE'); return; }
+  if (!date || !item) { alert('\u8bf7\u586b\u5199\u65e5\u671f\u548c\u9879\u76ee'); return; }
   if (editId) {
     var id = parseInt(editId);
     for (var i = 0; i < appData.checkupRecords.length; i++) {
@@ -1106,9 +1108,9 @@ function renderCheckupList() {
     var r = records[i];
     html += '<div class="record-item">';
     html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + escapeHtml(r.item) + '</span></div>';
-    if (r.result) html += '<div class="record-note">\u7ED3\u679C\uFF1A' + escapeHtml(r.result) + '</div>';
-    if (r.nextDate) html += '<div class="record-note">\u4E0B\u6B21\u4EA7\u68C0\uFF1A' + r.nextDate + '</div>';
-    html += '<button class="record-edit" data-id="' + r.id + '" data-type="checkup" title="\u7F16\u8F91">\u270E</button>';
+    if (r.result) html += '<div class="record-note">\u7ed3\u679c\uff1a' + escapeHtml(r.result) + '</div>';
+    if (r.nextDate) html += '<div class="record-note">\u4e0b\u6b21\u4ea7\u68c0\uff1a' + r.nextDate + '</div>';
+    html += '<button class="record-edit" data-id="' + r.id + '" data-type="checkup" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="checkup" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
   }
@@ -1122,7 +1124,7 @@ function editCheckupRecord(id) {
   document.getElementById('checkup-result').value = r.result || '';
   document.getElementById('checkup-next').value = r.nextDate || '';
   document.getElementById('checkup-edit-id').value = r.id;
-  document.getElementById('add-checkup-btn').textContent = '\u4FDD\u5B58\u4FEE\u6539';
+  document.getElementById('add-checkup-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-checkup-edit').style.display = 'inline-block';
   window.scrollTo({ top:0, behavior:'smooth' });
 }
@@ -1141,7 +1143,7 @@ document.getElementById('diet').addEventListener('click', function(e){
   var id = btn.dataset.id, type = btn.dataset.type;
   var arr = type + 'Records';
   if (!appData[arr]) return;
-  if (confirm('\u5220\u9664\u8FD9\u6761\u8BB0\u5F55\uFF1F')) {
+  if (confirm('\u5220\u9664\u8fd9\u6761\u8bb0\u5f55\uff1f')) {
     appData[arr] = appData[arr].filter(function(r){ return r.id != id; });
     saveData();
     if (type === 'weight') renderWeightSection();
@@ -1151,7 +1153,7 @@ document.getElementById('diet').addEventListener('click', function(e){
   }
 });
 
-/* ====== \u5174\u8DA3\u6536\u85CF ====== */
+/* ====== \u5174\u8da3\u6536\u85cf ====== */
 var currentFavCat = 'all';
 var currentFavQuery = '';
 document.querySelectorAll('.favorite-tab').forEach(function(tab){
@@ -1178,26 +1180,26 @@ function getFavoriteItems() {
 function renderFavorites() {
   var list = document.getElementById('favorite-list');
   var items = getFavoriteItems();
-  var TYPE_ICONS = { video:'\uD83C\uDFAC', article:'\uD83D\uDCC4', recipe:'\uD83E\uDD57', other:'\uD83D\uDCCC' };
-  var TYPE_LABELS = { video:'\u89C6\u9891', article:'\u6587\u7AE0', recipe:'\u83DC\u8C31', other:'\u5176\u4ED6' };
+  var TYPE_ICONS = { video:'\u1f3ac', article:'\u1f4c4', recipe:'\u1f957', other:'\u1f4cc' };
+  var TYPE_LABELS = { video:'\u89c6\u9891', article:'\u6587\u7ae0', recipe:'\u83dc\u8c31', other:'\u5176\u4ed6' };
   var html = '';
   if (!items.length) {
-    list.innerHTML = '<div class="empty-state"><div class="empty-icon">\u2B50</div><p>' + (currentFavQuery ? '\u6CA1\u6709\u627E\u5230\u5339\u914D\u7684\u6536\u85CF' : '\u8FD8\u6CA1\u6709\u6536\u85CF\u5185\u5BB9') + '</p></div>';
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">\u2b50</div><p>' + (currentFavQuery ? '\u6ca1\u6709\u627e\u5230\u5339\u914d\u7684\u6536\u85cf' : '\u8fd8\u6ca1\u6709\u6536\u85cf\u5185\u5bb9') + '</p></div>';
     return;
   }
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
     html += '<div class="favorite-item">';
-    html += '<div class="fav-icon">' + (TYPE_ICONS[it.type] || '\uD83D\uDCCC') + '</div>';
+    html += '<div class="fav-icon">' + (TYPE_ICONS[it.type] || '\u1f4cc') + '</div>';
     html += '<div class="fav-body">';
     html += '<div class="fav-title">' + escapeHtml(it.title) + '</div>';
-    html += '<div class="fav-tags">' + (TYPE_LABELS[it.type] || '\u5176\u4ED6') + (it.ingredients ? ' \u00B7 ' + escapeHtml(it.ingredients) : '') + '</div>';
+    html += '<div class="fav-tags">' + (TYPE_LABELS[it.type] || '\u5176\u4ed6') + (it.ingredients ? ' \u00b7 ' + escapeHtml(it.ingredients) : '') + '</div>';
     if (it.link) html += '<a href="' + escapeHtml(it.link) + '" target="_blank" class="fav-link">' + escapeHtml(it.link) + '</a>';
-    if (it.note) html += '<div class="fav-note collapsed" data-collapsed="1">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle" data-action="toggle-note">\u5C55\u5F00 \u25BE</button>';
+    if (it.note) html += '<div class="fav-note collapsed" data-collapsed="1">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle" data-action="toggle-note">\u5c55\u5f00 \u25be</button>';
     html += '<div class="fav-meta">' + it.date + '</div>';
     html += '</div>';
     html += '<div class="fav-actions">';
-    html += '<button class="fav-edit" data-id="' + it.id + '" title="\u7F16\u8F91">\u270E</button>';
+    html += '<button class="fav-edit" data-id="' + it.id + '" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="fav-delete" data-id="' + it.id + '" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
     html += '</div>';
@@ -1214,7 +1216,7 @@ function resetFavForm() {
   document.getElementById('fav-ingredients').value = '';
   document.getElementById('fav-note').value = '';
   document.getElementById('fav-type').value = 'video';
-  document.getElementById('save-favorite-btn').textContent = '\u4FDD\u5B58\u6536\u85CF';
+  document.getElementById('save-favorite-btn').textContent = '\u4fdd\u5b58\u6536\u85cf';
   document.getElementById('save-favorite-btn').dataset.editingId = '';
 }
 document.getElementById('save-favorite-btn').addEventListener('click', function(){
@@ -1224,7 +1226,7 @@ document.getElementById('save-favorite-btn').addEventListener('click', function(
   var type = document.getElementById('fav-type').value;
   var ingredients = document.getElementById('fav-ingredients').value.trim();
   var note = document.getElementById('fav-note').value.trim();
-  if (!title) { alert('\u8BF7\u586B\u5199\u6807\u9898'); return; }
+  if (!title) { alert('\u8bf7\u586b\u5199\u6807\u9898'); return; }
   var editingId = btn.dataset.editingId;
   if (editingId) {
     var id = parseInt(editingId);
@@ -1255,14 +1257,14 @@ document.getElementById('favorite-list').addEventListener('click', function(e){
     var card = noteBtn.previousElementSibling;
     if (card && card.classList.contains('fav-note')) {
       var isCollapsed = card.classList.toggle('collapsed');
-      noteBtn.textContent = isCollapsed ? '\u5C55\u5F00 \u25BE' : '\u6536\u8D77 \u25B4';
+      noteBtn.textContent = isCollapsed ? '\u5c55\u5f00 \u25be' : '\u6536\u8d77 \u25b4';
     }
     return;
   }
   var delBtn = e.target.closest ? e.target.closest('.fav-delete') : null;
   if (delBtn) {
     var id = parseInt(delBtn.dataset.id);
-    if (confirm('\u5220\u9664\u8FD9\u4E2A\u6536\u85CF\uFF1F')) { appData.interests = appData.interests.filter(function(i){ return i.id !== id; }); saveData(); renderFavorites(); }
+    if (confirm('\u5220\u9664\u8fd9\u4e2a\u6536\u85cf\uff1f')) { appData.interests = appData.interests.filter(function(i){ return i.id !== id; }); saveData(); renderFavorites(); }
     return;
   }
   var editBtn = e.target.closest ? e.target.closest('.fav-edit') : null;
@@ -1276,7 +1278,7 @@ document.getElementById('favorite-list').addEventListener('click', function(e){
     document.getElementById('fav-ingredients').value = item.ingredients || '';
     document.getElementById('fav-note').value = item.note || '';
     var saveBtn = document.getElementById('save-favorite-btn');
-    saveBtn.textContent = '\u66F4\u65B0\u6536\u85CF';
+    saveBtn.textContent = '\u66f4\u65b0\u6536\u85cf';
     saveBtn.dataset.editingId = String(eid);
     window.scrollTo({ top:document.getElementById('save-favorite-btn').getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth' });
   }
@@ -1290,20 +1292,20 @@ function renderFavoriteResults(containerId, query) {
            (i.ingredients && i.ingredients.toLowerCase().indexOf(q) !== -1) ||
            (i.note && i.note.toLowerCase().indexOf(q) !== -1);
   }).slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
-  var TYPE_ICONS = { video:'\uD83C\uDFAC', article:'\uD83D\uDCC4', recipe:'\uD83E\uDD57', other:'\uD83D\uDCCC' };
-  var html = '<div class="weekly-fav-header">\u6211\u7684\u6536\u85CF\u4E2D\u542B\u300C' + escapeHtml(query) + '\u300D\u7684\u8BB0\u5F55</div>';
+  var TYPE_ICONS = { video:'\u1f3ac', article:'\u1f4c4', recipe:'\u1f957', other:'\u1f4cc' };
+  var html = '<div class="weekly-fav-header">\u6211\u7684\u6536\u85cf\u4e2d\u542b\u300c' + escapeHtml(query) + '\u300d\u7684\u8bb0\u5f55</div>';
   if (!items.length) {
-    html += '<div class="weekly-fav-empty">\u6682\u65E0\u5339\u914D\u8BB0\u5F55</div>';
+    html += '<div class="weekly-fav-empty">\u6682\u65e0\u5339\u914d\u8bb0\u5f55</div>';
   } else {
     html += '<div class="weekly-fav-list">';
     for (var i = 0; i < items.length; i++) {
       var it = items[i];
       html += '<div class="weekly-fav-item">';
-      html += '<span class="weekly-fav-icon">' + (TYPE_ICONS[it.type] || '\uD83D\uDCCC') + '</span>';
+      html += '<span class="weekly-fav-icon">' + (TYPE_ICONS[it.type] || '\u1f4cc') + '</span>';
       html += '<div class="weekly-fav-body">';
       html += '<div class="weekly-fav-title">' + escapeHtml(it.title) + '</div>';
       if (it.ingredients) html += '<div class="weekly-fav-tags">' + escapeHtml(it.ingredients) + '</div>';
-      if (it.note) html += '<div class="weekly-fav-note collapsed">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle">\u5C55\u5F00 \u25BE</button>';
+      if (it.note) html += '<div class="weekly-fav-note collapsed">' + escapeHtml(it.note) + '</div><button class="fav-note-toggle">\u5c55\u5f00 \u25be</button>';
       if (it.link) html += '<a href="' + escapeHtml(it.link) + '" target="_blank">' + escapeHtml(it.link) + '</a>';
       html += '</div>';
       html += '</div>';
@@ -1314,7 +1316,7 @@ function renderFavoriteResults(containerId, query) {
 }
 document.getElementById('search-my-favorites').addEventListener('click', function(){
   var q = document.getElementById('recipe-search').value.trim();
-  if (!q) { alert('\u8BF7\u5148\u8F93\u5165\u98DF\u6750'); return; }
+  if (!q) { alert('\u8bf7\u5148\u8f93\u5165\u98df\u6750'); return; }
   renderFavoriteResults('weekly-fav-results', q);
 });
 document.getElementById('weekly-fav-results').addEventListener('click', function(e){
@@ -1323,12 +1325,12 @@ document.getElementById('weekly-fav-results').addEventListener('click', function
     var card = noteBtn.previousElementSibling;
     if (card && card.classList.contains('weekly-fav-note')) {
       var isCollapsed = card.classList.toggle('collapsed');
-      noteBtn.textContent = isCollapsed ? '\u5C55\u5F00 \u25BE' : '\u6536\u8D77 \u25B4';
+      noteBtn.textContent = isCollapsed ? '\u5c55\u5f00 \u25be' : '\u6536\u8d77 \u25b4';
     }
   }
 });
 
-/* ====== \u4E00\u5468\u996E\u98DF\u8BA1\u5212 ====== */
+/* ====== \u4e00\u5468\u996e\u98df\u8ba1\u5212 ====== */
 var currentWeekOffset = 0;
 var currentExpandedCell = null;
 
@@ -1349,10 +1351,10 @@ function renderWeeklyPlan() {
   html += '<div class="weekly-header">';
   html += '<button class="week-nav-btn" id="week-prev">\u2039</button>';
   html += '<span class="week-range">' + weekDates[0].short + ' - ' + weekDates[6].short + '</span>';
-  html += '<button class="week-nav-btn" id="week-next">\u203A</button>';
-  html += '<button class="week-today-btn" id="week-today">\u4ECA\u5929</button>';
+  html += '<button class="week-nav-btn" id="week-next">\u203a</button>';
+  html += '<button class="week-today-btn" id="week-today">\u4eca\u5929</button>';
   html += '</div>';
-  html += '<div class="weekly-table-wrap"><table class="weekly-table"><thead><tr><th>\u65E5\u671F</th>';
+  html += '<div class="weekly-table-wrap"><table class="weekly-table"><thead><tr><th>\u65e5\u671f</th>';
   for (var i = 0; i < MEAL_KEYS.length; i++) html += '<th>' + MEAL_LABELS[MEAL_KEYS[i]] + '</th>';
   html += '</tr></thead><tbody>';
   for (var d = 0; d < WEEKDAYS.length; d++) {
@@ -1365,9 +1367,9 @@ function renderWeeklyPlan() {
       var data = getWeeklyPlan(iso, meal);
       html += '<td class="meal-cell">';
       html += '<div class="meal-cell-header">';
-      html += '<button class="meal-detail-toggle" data-iso="' + iso + '" data-meal="' + meal + '">\u22EF</button>';
+      html += '<button class="meal-detail-toggle" data-iso="' + iso + '" data-meal="' + meal + '">\u22ef</button>';
       html += '</div>';
-      html += '<textarea data-iso="' + iso + '" data-meal="' + meal + '" data-field="content" placeholder="\u8BA1\u5212\u5403\u4EC0\u4E48...">' + escapeHtml(data.content || '') + '</textarea>';
+      html += '<textarea data-iso="' + iso + '" data-meal="' + meal + '" data-field="content" placeholder="\u8ba1\u5212\u5403\u4ec0\u4e48...">' + escapeHtml(data.content || '') + '</textarea>';
       html += '<div class="meal-tags-preview">' + (data.tags && data.tags.length ? data.tags.map(function(t){ return '<span class="mtp-tag">' + escapeHtml(t) + '</span>'; }).join('') : '') + '</div>';
       html += '</td>';
     }
@@ -1375,8 +1377,8 @@ function renderWeeklyPlan() {
   }
   html += '</tbody></table></div>';
   html += '<div class="diet-analysis-section">';
-  html += '<h3>\uD83E\uDD57 \u4ECA\u65E5\u996E\u98DF\u5206\u6790</h3>';
-  html += '<button id="analyze-diet-btn" class="analyze-btn">\u5206\u6790\u4ECA\u65E5\u996E\u98DF</button>';
+  html += '<h3>\u1f957 \u4eca\u65e5\u996e\u98df\u5206\u6790</h3>';
+  html += '<button id="analyze-diet-btn" class="analyze-btn">\u5206\u6790\u4eca\u65e5\u996e\u98df</button>';
   html += '<div id="diet-analysis-result" class="diet-analysis-result"></div>';
   html += '</div>';
   plan.innerHTML = html;
@@ -1409,26 +1411,26 @@ document.getElementById('weekly-plan').addEventListener('input', function(e){
     data[field] = e.target.value;
     saveData();
   }
-// \u8F93\u5165\u65F6\u5B9E\u65F6\u66F4\u65B0\u6807\u7B7E\uFF08\u9AD8\u5EA6\u56FA\u5B9A\uFF0C\u4E0D\u9700\u8981\u81EA\u9002\u5E94\uFF09
+// \u8f93\u5165\u65f6\u5b9e\u65f6\u66f4\u65b0\u6807\u7b7e\uff08\u9ad8\u5ea6\u56fa\u5b9a\uff0c\u4e0d\u9700\u8981\u81ea\u9002\u5e94\uff09
 });
 
-/* ====== \u98DF\u6750\u63A8\u8350\u4E0E\u81EA\u52A8\u6807\u7B7E ====== */
+/* ====== \u98df\u6750\u63a8\u8350\u4e0e\u81ea\u52a8\u6807\u7b7e ====== */
 var FOOD_SUGGESTIONS = {
-  meat: ['\u9E21\u86CB','\u9E21\u80F8\u8089','\u725B\u8089','\u732A\u8089','\u867E\u4EC1','\u4E09\u6587\u9C7C','\u732A\u809D','\u732A\u8840','\u9E2D\u8840','\u7F8A\u8089','\u9E21\u817F','\u9C88\u9C7C'],
-  veg: ['\u83E0\u83DC','\u897F\u5170\u82B1','\u756A\u8304','\u80E1\u841D\u535C','\u9EC4\u74DC','\u82B9\u83DC','\u6CB9\u9EA6\u83DC','\u83B4\u7B0B','\u5357\u74DC','\u8611\u83C7','\u6D77\u5E26'],
-  staple: ['\u6742\u7CAE\u996D','\u7EA2\u85AF','\u5168\u9EA6\u9762\u5305','\u71D5\u9EA6','\u7389\u7C73','\u7D2B\u85AF','\u7CD9\u7C73','\u835E\u9EA6\u9762','\u5357\u74DC'],
-  fruit: ['\u84DD\u8393','\u82F9\u679C','\u7315\u7334\u6843','\u6A59\u5B50','\u897F\u67DA','\u8349\u8393','\u756A\u8304','\u897F\u6885','\u68A8','\u6843\u5B50'],
-  others: ['\u725B\u5976','\u9178\u5976','\u575A\u679C','\u6838\u6843','\u829D\u9EBB','\u8C46\u8150','\u8C46\u6D46','\u71D5\u7A9D']
+  meat: ['\u9e21\u86cb','\u9e21\u80f8\u8089','\u725b\u8089','\u732a\u8089','\u867e\u4ec1','\u4e09\u6587\u9c7c','\u732a\u809d','\u732a\u8840','\u9e2d\u8840','\u7f8a\u8089','\u9e21\u817f','\u9c88\u9c7c'],
+  veg: ['\u83e0\u83dc','\u897f\u5170\u82b1','\u756a\u8304','\u80e1\u841d\u535c','\u9ec4\u74dc','\u82b9\u83dc','\u6cb9\u9ea6\u83dc','\u83b4\u7b0b','\u5357\u74dc','\u8611\u83c7','\u6d77\u5e26'],
+  staple: ['\u6742\u7cae\u996d','\u7ea2\u85af','\u5168\u9ea6\u9762\u5305','\u71d5\u9ea6','\u7389\u7c73','\u7d2b\u85af','\u7cd9\u7c73','\u835e\u9ea6\u9762','\u5357\u74dc'],
+  fruit: ['\u84dd\u8393','\u82f9\u679c','\u7315\u7334\u6843','\u6a59\u5b50','\u897f\u67da','\u8349\u8393','\u756a\u8304','\u897f\u6885','\u68a8','\u6843\u5b50'],
+  others: ['\u725b\u5976','\u9178\u5976','\u575a\u679c','\u6838\u6843','\u829d\u9ebb','\u8c46\u8150','\u8c46\u6d46','\u71d5\u7a9d']
 };
 var FOOD_TAG_RULES = {
-  '\u8865\u94C1': ['\u732A\u809D','\u732A\u8840','\u9E2D\u8840','\u725B\u8089','\u7F8A\u8089','\u7626\u8089','\u83E0\u83DC','\u6D77\u5E26','\u9ED1\u6728\u8033','\u7EA2\u67A3'],
-  '\u8865\u9499': ['\u725B\u5976','\u9178\u5976','\u8C46\u8150','\u829D\u9EBB','\u867E\u76AE','\u5976\u916A','\u6DF1\u7EFF\u53F6\u83DC','\u6D77\u5E26','\u8C46\u6D46'],
-  '\u8865\u53F6\u9178': ['\u83E0\u83DC','\u82A6\u7B0B','\u897F\u5170\u82B1','\u751F\u83DC','\u725B\u6CB9\u679C','\u6A59\u5B50','\u8349\u8393','\u8C46\u7C7B',' liver','\u809D'],
-  '\u8865DHA': ['\u4E09\u6587\u9C7C','\u9CD5\u9C7C','\u9C88\u9C7C','\u867E','\u6D77\u9C7C','\u6DF1\u6D77\u9C7C','\u6838\u6843','\u85FB\u6CB9','\u4E9A\u9EBB\u7C7D'],
-  '\u8865\u86CB\u767D\u8D28': ['\u9E21\u86CB','\u9E21\u80F8\u8089','\u725B\u8089','\u732A\u8089','\u9C7C','\u867E','\u8C46\u8150','\u725B\u5976','\u9178\u5976','\u575A\u679C'],
-  '\u8865\u7EF4\u751F\u7D20': ['\u6A59\u5B50','\u7315\u7334\u6843','\u8349\u8393','\u84DD\u8393','\u756A\u8304','\u80E1\u841D\u535C','\u897F\u5170\u82B1','\u83E0\u83DC','\u5F69\u6912'],
-  '\u8865\u81B3\u98DF\u7EA4\u7EF4': ['\u71D5\u9EA6','\u7EA2\u85AF','\u7389\u7C73','\u7CD9\u7C73','\u5168\u9EA6','\u82B9\u83DC','\u83E0\u83DC','\u82F9\u679C','\u68A8','\u6728\u8033'],
-  '\u8865\u950C': ['\u725B\u8089','\u732A\u8089','\u7F8A\u8089','\u7261\u86CE','\u867E','\u5357\u74DC\u5B50','\u829D\u9EBB','\u6838\u6843','\u86CB\u9EC4']
+  '\u8865\u94c1': ['\u732a\u809d','\u732a\u8840','\u9e2d\u8840','\u725b\u8089','\u7f8a\u8089','\u7626\u8089','\u83e0\u83dc','\u6d77\u5e26','\u9ed1\u6728\u8033','\u7ea2\u67a3'],
+  '\u8865\u9499': ['\u725b\u5976','\u9178\u5976','\u8c46\u8150','\u829d\u9ebb','\u867e\u76ae','\u5976\u916a','\u6df1\u7eff\u53f6\u83dc','\u6d77\u5e26','\u8c46\u6d46'],
+  '\u8865\u53f6\u9178': ['\u83e0\u83dc','\u82a6\u7b0b','\u897f\u5170\u82b1','\u751f\u83dc','\u725b\u6cb9\u679c','\u6a59\u5b50','\u8349\u8393','\u8c46\u7c7b',' liver','\u809d'],
+  '\u8865DHA': ['\u4e09\u6587\u9c7c','\u9cd5\u9c7c','\u9c88\u9c7c','\u867e','\u6d77\u9c7c','\u6df1\u6d77\u9c7c','\u6838\u6843','\u85fb\u6cb9','\u4e9a\u9ebb\u7c7d'],
+  '\u8865\u86cb\u767d\u8d28': ['\u9e21\u86cb','\u9e21\u80f8\u8089','\u725b\u8089','\u732a\u8089','\u9c7c','\u867e','\u8c46\u8150','\u725b\u5976','\u9178\u5976','\u575a\u679c'],
+  '\u8865\u7ef4\u751f\u7d20': ['\u6a59\u5b50','\u7315\u7334\u6843','\u8349\u8393','\u84dd\u8393','\u756a\u8304','\u80e1\u841d\u535c','\u897f\u5170\u82b1','\u83e0\u83dc','\u5f69\u6912'],
+  '\u8865\u81b3\u98df\u7ea4\u7ef4': ['\u71d5\u9ea6','\u7ea2\u85af','\u7389\u7c73','\u7cd9\u7c73','\u5168\u9ea6','\u82b9\u83dc','\u83e0\u83dc','\u82f9\u679c','\u68a8','\u6728\u8033'],
+  '\u8865\u950c': ['\u725b\u8089','\u732a\u8089','\u7f8a\u8089','\u7261\u86ce','\u867e','\u5357\u74dc\u5b50','\u829d\u9ebb','\u6838\u6843','\u86cb\u9ec4']
 };
 
 function autoDetectTags(text) {
@@ -1464,7 +1466,7 @@ function bindFoodSuggestions(panel, data) {
       var food = chip.dataset.food;
       var sep = val ? '\u3001' : '';
       if (val.indexOf(food) < 0) input.value = val + sep + food;
-      // \u66F4\u65B0\u81EA\u52A8\u6807\u7B7E
+      // \u66f4\u65b0\u81ea\u52a8\u6807\u7b7e
       updateAutoTags(panel, data);
     });
   });
@@ -1495,13 +1497,13 @@ function openMealDetail(iso, meal) {
   var dateObj = parseISO(iso);
   var month = dateObj.getMonth() + 1, day = dateObj.getDate();
   var dayLabel = month + '.' + day;
-  var weekdayNames = ['\u5468\u65E5','\u5468\u4E00','\u5468\u4E8C','\u5468\u4E09','\u5468\u56DB','\u5468\u4E94','\u5468\u516D'];
+  var weekdayNames = ['\u5468\u65e5','\u5468\u4e00','\u5468\u4e8c','\u5468\u4e09','\u5468\u56db','\u5468\u4e94','\u5468\u516d'];
   var weekdayLabel = weekdayNames[dateObj.getDay()];
   var panel = document.createElement('div');
   panel.className = 'meal-detail-panel-overlay';
   panel.id = 'meal-detail-panel';
-  var tags = ['\u8865\u94C1','\u8865\u9499','\u8865\u53F6\u9178','\u8865DHA','\u8865\u86CB\u767D\u8D28','\u8865\u7EF4\u751F\u7D20','\u8865\u81B3\u98DF\u7EA4\u7EF4','\u8865\u950C'];
-  // \u5148\u6839\u636E\u5DF2\u6709\u5185\u5BB9\u81EA\u52A8\u68C0\u6D4B\u6807\u7B7E
+  var tags = ['\u8865\u94c1','\u8865\u9499','\u8865\u53f6\u9178','\u8865DHA','\u8865\u86cb\u767d\u8d28','\u8865\u7ef4\u751f\u7d20','\u8865\u81b3\u98df\u7ea4\u7ef4','\u8865\u950c'];
+  // \u5148\u6839\u636e\u5df2\u6709\u5185\u5bb9\u81ea\u52a8\u68c0\u6d4b\u6807\u7b7e
   var allContent = [data.content, data.meat, data.veg, data.staple, data.fruit, data.others].join(' ');
   var detectedTags = autoDetectTags(allContent);
   var mergedTags = data.tags ? data.tags.slice() : [];
@@ -1510,28 +1512,28 @@ function openMealDetail(iso, meal) {
   var html = '';
   html += '<div class="meal-detail-panel">';
   html += '<div class="meal-detail-header">';
-  html += '<h4>' + dayLabel + ' ' + weekdayLabel + ' \u00B7 ' + mealName + '</h4>';
+  html += '<h4>' + dayLabel + ' ' + weekdayLabel + ' \u00b7 ' + mealName + '</h4>';
   html += '<button class="meal-detail-close">\u2715</button>';
   html += '</div>';
   html += '<div class="meal-detail-body">';
-  html += '<div class="meal-detail-row"><label>\u4E3B\u8981\u9910\u98DF</label><textarea data-field="content" placeholder="\u5982\uFF1A\u71D5\u9EA6\u9E21\u86CB\u7897\u3001\u4E94\u9ED1\u996E">' + escapeHtml(data.content || '') + '</textarea></div>';
-  html += '<div class="meal-detail-row"><label>\u8089\u7C7B/\u86CB\u7C7B</label><input type="text" data-field="meat" placeholder="\u5982\uFF1A\u9E21\u86CB\u3001\u9E21\u80F8\u8089\u3001\u725B\u8089" value="' + escapeHtml(data.meat || '') + '">' + renderFoodSuggestions(panel, 'meat') + '</div>';
-  html += '<div class="meal-detail-row"><label>\u852C\u83DC</label><input type="text" data-field="veg" placeholder="\u5982\uFF1A\u83E0\u83DC\u3001\u897F\u5170\u82B1\u3001\u756A\u8304" value="' + escapeHtml(data.veg || '') + '">' + renderFoodSuggestions(panel, 'veg') + '</div>';
-  html += '<div class="meal-detail-row"><label>\u4E3B\u98DF/\u8C37\u7269</label><input type="text" data-field="staple" placeholder="\u5982\uFF1A\u6742\u7CAE\u996D\u3001\u7EA2\u85AF\u3001\u5168\u9EA6\u9762\u5305" value="' + escapeHtml(data.staple || '') + '">' + renderFoodSuggestions(panel, 'staple') + '</div>';
-  html += '<div class="meal-detail-row"><label>\u6C34\u679C</label><input type="text" data-field="fruit" placeholder="\u5982\uFF1A\u84DD\u8393\u3001\u82F9\u679C\u3001\u7315\u7334\u6843" value="' + escapeHtml(data.fruit || '') + '">' + renderFoodSuggestions(panel, 'fruit') + '</div>';
-  html += '<div class="meal-detail-row"><label>\u5176\u4ED6</label><input type="text" data-field="others" placeholder="\u5982\uFF1A\u725B\u5976\u3001\u575A\u679C\u3001\u9178\u5976" value="' + escapeHtml(data.others || '') + '">' + renderFoodSuggestions(panel, 'others') + '</div>';
-  html += '<div class="meal-detail-row"><label>\u8425\u517B\u6807\u7B7E <small>\uFF08\u4F1A\u6839\u636E\u98DF\u6750\u81EA\u52A8\u52FE\u9009\uFF09</small></label><div class="tag-options">';
+  html += '<div class="meal-detail-row"><label>\u4e3b\u8981\u9910\u98df</label><textarea data-field="content" placeholder="\u5982\uff1a\u71d5\u9ea6\u9e21\u86cb\u7897\u3001\u4e94\u9ed1\u996e">' + escapeHtml(data.content || '') + '</textarea></div>';
+  html += '<div class="meal-detail-row"><label>\u8089\u7c7b/\u86cb\u7c7b</label><input type="text" data-field="meat" placeholder="\u5982\uff1a\u9e21\u86cb\u3001\u9e21\u80f8\u8089\u3001\u725b\u8089" value="' + escapeHtml(data.meat || '') + '">' + renderFoodSuggestions(panel, 'meat') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u852c\u83dc</label><input type="text" data-field="veg" placeholder="\u5982\uff1a\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304" value="' + escapeHtml(data.veg || '') + '">' + renderFoodSuggestions(panel, 'veg') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u4e3b\u98df/\u8c37\u7269</label><input type="text" data-field="staple" placeholder="\u5982\uff1a\u6742\u7cae\u996d\u3001\u7ea2\u85af\u3001\u5168\u9ea6\u9762\u5305" value="' + escapeHtml(data.staple || '') + '">' + renderFoodSuggestions(panel, 'staple') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u6c34\u679c</label><input type="text" data-field="fruit" placeholder="\u5982\uff1a\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843" value="' + escapeHtml(data.fruit || '') + '">' + renderFoodSuggestions(panel, 'fruit') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u5176\u4ed6</label><input type="text" data-field="others" placeholder="\u5982\uff1a\u725b\u5976\u3001\u575a\u679c\u3001\u9178\u5976" value="' + escapeHtml(data.others || '') + '">' + renderFoodSuggestions(panel, 'others') + '</div>';
+  html += '<div class="meal-detail-row"><label>\u8425\u517b\u6807\u7b7e <small>\uff08\u4f1a\u6839\u636e\u98df\u6750\u81ea\u52a8\u52fe\u9009\uff09</small></label><div class="tag-options">';
   for (var i = 0; i < tags.length; i++) {
     var checked = (data.tags || []).indexOf(tags[i]) >= 0 ? 'checked' : '';
     html += '<label class="tag-option ' + checked + '"><input type="checkbox" value="' + tags[i] + '" ' + checked + '> ' + tags[i] + '</label>';
   }
   html += '</div></div>';
   html += '</div>';
-  html += '<div class="meal-detail-footer"><button class="save-meal-detail">\u4FDD\u5B58</button></div>';
+  html += '<div class="meal-detail-footer"><button class="save-meal-detail">\u4fdd\u5b58</button></div>';
   html += '</div>';
   panel.innerHTML = html;
   document.body.appendChild(panel);
-  // \u521D\u59CB\u5316 textarea \u9AD8\u5EA6
+  // \u521d\u59cb\u5316 textarea \u9ad8\u5ea6
   panel.querySelectorAll('textarea[data-field]').forEach(function(el){
     el.style.height = 'auto';
     el.style.height = Math.max(60, el.scrollHeight) + 'px';
@@ -1539,7 +1541,7 @@ function openMealDetail(iso, meal) {
   panel.querySelector('.meal-detail-close').addEventListener('click', closeMealDetail);
   panel.addEventListener('click', function(e){ if (e.target === panel) closeMealDetail(); });
   bindFoodSuggestions(panel, data);
-  // \u8F93\u5165\u65F6\u5B9E\u65F6\u66F4\u65B0\u6807\u7B7E + textarea \u81EA\u52A8\u8C03\u6574\u9AD8\u5EA6
+  // \u8f93\u5165\u65f6\u5b9e\u65f6\u66f4\u65b0\u6807\u7b7e + textarea \u81ea\u52a8\u8c03\u6574\u9ad8\u5ea6
   panel.querySelectorAll('input[data-field], textarea[data-field]').forEach(function(el){
     el.addEventListener('input', function(){
       updateAutoTags(panel, data);
@@ -1549,7 +1551,7 @@ function openMealDetail(iso, meal) {
       }
     });
   });
-  // \u6807\u7B7E\u70B9\u51FB\u5207\u6362\u6837\u5F0F
+  // \u6807\u7b7e\u70b9\u51fb\u5207\u6362\u6837\u5f0f
   panel.querySelectorAll('.tag-options input').forEach(function(cb){
     cb.addEventListener('change', function(){
       var label = cb.closest('.tag-option');
@@ -1587,10 +1589,10 @@ function analyzeTodayDiet() {
     }
   });
   var result = document.getElementById('diet-analysis-result');
-  if (!meals.length) { result.innerHTML = '<div class="analysis-empty">\u4ECA\u5929\u8FD8\u6CA1\u6709\u8BB0\u5F55\u996E\u98DF\uFF0C\u5148\u586B\u5199\u4ECA\u65E5\u9910\u98DF\u5427\uFF5E</div>'; return; }
+  if (!meals.length) { result.innerHTML = '<div class="analysis-empty">\u4eca\u5929\u8fd8\u6ca1\u6709\u8bb0\u5f55\u996e\u98df\uff0c\u5148\u586b\u5199\u4eca\u65e5\u9910\u98df\u5427\uff5e</div>'; return; }
   var summary = [], allMeat = [], allVeg = [], allStaple = [], allFruit = [], allOthers = [], allTags = [];
   meals.forEach(function(m){
-    if (m.data.content) summary.push('<b>' + m.name + '</b>\uFF1A' + escapeHtml(m.data.content));
+    if (m.data.content) summary.push('<b>' + m.name + '</b>\uff1a' + escapeHtml(m.data.content));
     if (m.data.meat) allMeat.push(m.data.meat);
     if (m.data.veg) allVeg.push(m.data.veg);
     if (m.data.staple) allStaple.push(m.data.staple);
@@ -1599,33 +1601,33 @@ function analyzeTodayDiet() {
     if (m.data.tags) allTags = allTags.concat(m.data.tags);
   });
   var html = '';
-  html += '<div class="analysis-block"><h5>\uD83D\uDCCB \u4ECA\u65E5\u9910\u98DF\u8BB0\u5F55</h5><p>' + summary.join('<br>') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83E\uDD69 \u8089\u7C7B/\u86CB\u7C7B</h5><p>' + (allMeat.length ? escapeHtml(allMeat.join('\u3001')) : '\u672A\u8BB0\u5F55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83E\uDD6C \u852C\u83DC</h5><p>' + (allVeg.length ? escapeHtml(allVeg.join('\u3001')) : '\u672A\u8BB0\u5F55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83C\uDF5A \u4E3B\u98DF/\u8C37\u7269</h5><p>' + (allStaple.length ? escapeHtml(allStaple.join('\u3001')) : '\u672A\u8BB0\u5F55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83C\uDF4E \u6C34\u679C</h5><p>' + (allFruit.length ? escapeHtml(allFruit.join('\u3001')) : '\u672A\u8BB0\u5F55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83E\uDD5B \u5176\u4ED6</h5><p>' + (allOthers.length ? escapeHtml(allOthers.join('\u3001')) : '\u672A\u8BB0\u5F55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\uD83C\uDFF7\uFE0F \u8425\u517B\u6807\u7B7E</h5><p>' + (allTags.length ? allTags.map(function(t){ return '<span class="analysis-tag">' + escapeHtml(t) + '</span>'; }).join(' ') : '\u672A\u52FE\u9009') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f4cb \u4eca\u65e5\u9910\u98df\u8bb0\u5f55</h5><p>' + summary.join('<br>') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f969 \u8089\u7c7b/\u86cb\u7c7b</h5><p>' + (allMeat.length ? escapeHtml(allMeat.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f96c \u852c\u83dc</h5><p>' + (allVeg.length ? escapeHtml(allVeg.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f35a \u4e3b\u98df/\u8c37\u7269</h5><p>' + (allStaple.length ? escapeHtml(allStaple.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f34e \u6c34\u679c</h5><p>' + (allFruit.length ? escapeHtml(allFruit.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f95b \u5176\u4ed6</h5><p>' + (allOthers.length ? escapeHtml(allOthers.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u1f3f7\ufe0f \u8425\u517b\u6807\u7b7e</h5><p>' + (allTags.length ? allTags.map(function(t){ return '<span class="analysis-tag">' + escapeHtml(t) + '</span>'; }).join(' ') : '\u672a\u52fe\u9009') + '</p></div>';
 
-  // \u6539\u5584\u5EFA\u8BAE
+  // \u6539\u5584\u5efa\u8bae
   var suggestions = [];
-  if (!allMeat.length || !/(\u732A|\u725B|\u7F8A|\u9E21|\u9C7C|\u867E|\u86CB|\u8089)/.test(allMeat.join(''))) suggestions.push('\u4ECA\u65E5\u86CB\u767D\u8D28\u6444\u5165\u4E0D\u8DB3\uFF0C\u5EFA\u8BAE\u665A\u9910\u8865\u5145\u7626\u8089\u3001\u9E21\u86CB\u6216\u9C7C\u867E\u3002');
-  if (!allVeg.length) suggestions.push('\u852C\u83DC\u6444\u5165\u504F\u5C11\uFF0C\u5EFA\u8BAE\u4E0B\u4E00\u9910\u589E\u52A0\u6DF1\u8272\u852C\u83DC\uFF0C\u5982\u83E0\u83DC\u3001\u897F\u5170\u82B1\u3001\u756A\u8304\u3002');
-  if (!allFruit.length) suggestions.push('\u4ECA\u5929\u8FD8\u6CA1\u5403\u6C34\u679C\uFF0C\u53EF\u9002\u91CF\u8865\u5145\u4F4E\u7CD6\u6C34\u679C\u5982\u84DD\u8393\u3001\u82F9\u679C\u3001\u7315\u7334\u6843\u3002');
-  if (allTags.indexOf('\u8865\u94C1') < 0 && !/(\u732A|\u725B|\u7F8A|\u52A8\u7269|\u8840|\u809D)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('\u5B55\u671F\u5BB9\u6613\u7F3A\u94C1\uFF0C\u53EF\u9002\u5F53\u6444\u5165\u7EA2\u8089\u3001\u52A8\u7269\u809D\u810F\u6216\u8840\u5236\u54C1\u3002');
-  if (allTags.indexOf('\u8865\u9499') < 0 && !/(\u5976|\u8C46\u8150|\u829D\u9EBB|\u867E|\u6DF1\u7EFF)/.test((allOthers.join('') + allVeg.join('')))) suggestions.push('\u6CE8\u610F\u8865\u9499\uFF0C\u53EF\u559D\u725B\u5976\u3001\u5403\u8C46\u8150\u6216\u829D\u9EBB\u9171\u3002');
-  if (allTags.indexOf('\u8865\u53F6\u9178') < 0 && !/(\u83E0|\u82A6|\u83DC|\u809D|\u8C46)/.test((allVeg.join('') + allOthers.join('')))) suggestions.push('\u53F6\u9178\u5BF9\u5B55\u671F\u5F88\u91CD\u8981\uFF0C\u591A\u5403\u6DF1\u7EFF\u8272\u852C\u83DC\u548C\u8C46\u7C7B\u3002');
-  if (allTags.indexOf('\u8865DHA') < 0 && !/(\u9C7C|\u867E|\u6D77|\u85FB|\u6838\u6843)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('DHA \u6709\u52A9\u4E8E\u80CE\u513F\u5927\u8111\u53D1\u80B2\uFF0C\u53EF\u6BCF\u5468\u5403 2-3 \u6B21\u6DF1\u6D77\u9C7C\u6216\u6838\u6843\u3002');
-  if (!suggestions.length) suggestions.push('\u4ECA\u65E5\u996E\u98DF\u7ED3\u6784\u8F83\u5747\u8861\uFF0C\u7EE7\u7EED\u4FDD\u6301\uFF01\u6CE8\u610F\u591A\u559D\u6C34\u3001\u9002\u91CF\u8FD0\u52A8\u3002');
+  if (!allMeat.length || !/(\u732a|\u725b|\u7f8a|\u9e21|\u9c7c|\u867e|\u86cb|\u8089)/.test(allMeat.join(''))) suggestions.push('\u4eca\u65e5\u86cb\u767d\u8d28\u6444\u5165\u4e0d\u8db3\uff0c\u5efa\u8bae\u665a\u9910\u8865\u5145\u7626\u8089\u3001\u9e21\u86cb\u6216\u9c7c\u867e\u3002');
+  if (!allVeg.length) suggestions.push('\u852c\u83dc\u6444\u5165\u504f\u5c11\uff0c\u5efa\u8bae\u4e0b\u4e00\u9910\u589e\u52a0\u6df1\u8272\u852c\u83dc\uff0c\u5982\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u756a\u8304\u3002');
+  if (!allFruit.length) suggestions.push('\u4eca\u5929\u8fd8\u6ca1\u5403\u6c34\u679c\uff0c\u53ef\u9002\u91cf\u8865\u5145\u4f4e\u7cd6\u6c34\u679c\u5982\u84dd\u8393\u3001\u82f9\u679c\u3001\u7315\u7334\u6843\u3002');
+  if (allTags.indexOf('\u8865\u94c1') < 0 && !/(\u732a|\u725b|\u7f8a|\u52a8\u7269|\u8840|\u809d)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('\u5b55\u671f\u5bb9\u6613\u7f3a\u94c1\uff0c\u53ef\u9002\u5f53\u6444\u5165\u7ea2\u8089\u3001\u52a8\u7269\u809d\u810f\u6216\u8840\u5236\u54c1\u3002');
+  if (allTags.indexOf('\u8865\u9499') < 0 && !/(\u5976|\u8c46\u8150|\u829d\u9ebb|\u867e|\u6df1\u7eff)/.test((allOthers.join('') + allVeg.join('')))) suggestions.push('\u6ce8\u610f\u8865\u9499\uff0c\u53ef\u559d\u725b\u5976\u3001\u5403\u8c46\u8150\u6216\u829d\u9ebb\u9171\u3002');
+  if (allTags.indexOf('\u8865\u53f6\u9178') < 0 && !/(\u83e0|\u82a6|\u83dc|\u809d|\u8c46)/.test((allVeg.join('') + allOthers.join('')))) suggestions.push('\u53f6\u9178\u5bf9\u5b55\u671f\u5f88\u91cd\u8981\uff0c\u591a\u5403\u6df1\u7eff\u8272\u852c\u83dc\u548c\u8c46\u7c7b\u3002');
+  if (allTags.indexOf('\u8865DHA') < 0 && !/(\u9c7c|\u867e|\u6d77|\u85fb|\u6838\u6843)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('DHA \u6709\u52a9\u4e8e\u80ce\u513f\u5927\u8111\u53d1\u80b2\uff0c\u53ef\u6bcf\u5468\u5403 2-3 \u6b21\u6df1\u6d77\u9c7c\u6216\u6838\u6843\u3002');
+  if (!suggestions.length) suggestions.push('\u4eca\u65e5\u996e\u98df\u7ed3\u6784\u8f83\u5747\u8861\uff0c\u7ee7\u7eed\u4fdd\u6301\uff01\u6ce8\u610f\u591a\u559d\u6c34\u3001\u9002\u91cf\u8fd0\u52a8\u3002');
 
-  html += '<div class="analysis-block suggestions"><h5>\uD83D\uDCA1 \u6539\u5584\u5EFA\u8BAE</h5><ul>';
+  html += '<div class="analysis-block suggestions"><h5>\u1f4a1 \u6539\u5584\u5efa\u8bae</h5><ul>';
   suggestions.forEach(function(s){ html += '<li>' + s + '</li>'; });
   html += '</ul></div>';
   result.innerHTML = html;
 }
 
 function openRecipeSearch(platform) {
-  var q = document.getElementById('recipe-search').value.trim() || '\u51CF\u8102\u9910';
+  var q = document.getElementById('recipe-search').value.trim() || '\u51cf\u8102\u9910';
   var urls = {
     bilibili:'https://m.bilibili.com/search?keyword=' + encodeURIComponent(q),
     douyin:'https://www.douyin.com/search/' + encodeURIComponent(q),
@@ -1637,7 +1639,7 @@ document.getElementById('search-bilibili').addEventListener('click', function(){
 document.getElementById('search-douyin').addEventListener('click', function(){ openRecipeSearch('douyin'); });
 document.getElementById('search-xhs').addEventListener('click', function(){ openRecipeSearch('xhs'); });
 
-/* ====== \u6BCF\u65E5\u89C6\u9891\u63A8\u9001 ====== */
+/* ====== \u6bcf\u65e5\u89c6\u9891\u63a8\u9001 ====== */
 function renderDailyVideos(containerId, category) {
   var container = document.getElementById(containerId);
   var videos = pickDailyVideos(category);
@@ -1647,7 +1649,7 @@ function renderDailyVideos(containerId, category) {
     html += '<div class="daily-video-card">';
     html += '<div class="dv-num">' + (i+1) + '</div>';
     html += '<div class="dv-body"><h4>' + escapeHtml(v.title) + '</h4><a href="' + escapeHtml(v.link) + '" target="_blank">' + escapeHtml(v.link) + '</a></div>';
-    html += '<button class="dv-fav" data-title="' + escapeHtml(v.title) + '" data-link="' + escapeHtml(v.link) + '">\u2B50</button>';
+    html += '<button class="dv-fav" data-title="' + escapeHtml(v.title) + '" data-link="' + escapeHtml(v.link) + '">\u2b50</button>';
     html += '</div>';
   }
   html += '</div>';
@@ -1657,12 +1659,12 @@ document.querySelectorAll('.daily-videos').forEach(function(el){
   el.addEventListener('click', function(e){
     var btn = e.target.closest ? e.target.closest('.dv-fav') : null;
     if (!btn) return;
-    appData.interests.unshift({ id:newId(appData.interests), title:btn.dataset.title, link:btn.dataset.link, type:'video', note:'\u6765\u81EA\u6BCF\u65E5\u63A8\u9001', date:nowStr() });
-    saveData(); alert('\u5DF2\u6536\u85CF\u5230\u300C\u5174\u8DA3\u6536\u85CF\u300D');
+    appData.interests.unshift({ id:newId(appData.interests), title:btn.dataset.title, link:btn.dataset.link, type:'video', note:'\u6765\u81ea\u6bcf\u65e5\u63a8\u9001', date:nowStr() });
+    saveData(); alert('\u5df2\u6536\u85cf\u5230\u300c\u5174\u8da3\u6536\u85cf\u300d');
   });
 });
 
-/* ====== \u5907\u5FD8\u5F55 ====== */
+/* ====== \u5907\u5fd8\u5f55 ====== */
 var memoType = 'text';
 document.querySelectorAll('.memo-tab').forEach(function(tab){
   tab.addEventListener('click', function(){
@@ -1686,7 +1688,7 @@ var recordStatus = document.getElementById('record-status');
 function updateRecordTimer() {
   if (!mediaRecorder) return;
   var sec = Math.floor((Date.now() - recordStartTime) / 1000);
-  recordStatus.textContent = '\u5F55\u97F3\u4E2D... ' + sec + 's \u677E\u624B\u7ED3\u675F';
+  recordStatus.textContent = '\u5f55\u97f3\u4e2d... ' + sec + 's \u677e\u624b\u7ed3\u675f';
   recordTimer = requestAnimationFrame(updateRecordTimer);
 }
 function startRecording() {
@@ -1705,15 +1707,15 @@ function startRecording() {
       });
       mediaRecorder = null; recordedChunks = [];
       recordBtn.classList.remove('recording');
-      recordStatus.textContent = '\u5F55\u97F3\u5DF2\u4FDD\u5B58';
+      recordStatus.textContent = '\u5f55\u97f3\u5df2\u4fdd\u5b58';
       stream.getTracks().forEach(function(t){ t.stop(); });
     };
     recordStartTime = Date.now();
     mediaRecorder.start();
     recordBtn.classList.add('recording');
-    recordStatus.textContent = '\u5F55\u97F3\u4E2D... \u677E\u624B\u7ED3\u675F';
+    recordStatus.textContent = '\u5f55\u97f3\u4e2d... \u677e\u624b\u7ed3\u675f';
     updateRecordTimer();
-  }).catch(function(err){ alert('\u65E0\u6CD5\u5F55\u97F3\uFF1A' + err.message); });
+  }).catch(function(err){ alert('\u65e0\u6cd5\u5f55\u97f3\uff1a' + err.message); });
 }
 function stopRecording() {
   if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
@@ -1726,146 +1728,211 @@ recordBtn.addEventListener('pointerup', stopRecording);
 recordBtn.addEventListener('pointerleave', stopRecording);
 recordBtn.addEventListener('touchstart', function(e){ e.preventDefault(); startRecording(); });
 recordBtn.addEventListener('touchend', function(e){ e.preventDefault(); stopRecording(); });
-/* ====== \u5927\u5B9D\uFF08\u5E7C\u513F\u56ED\uFF09 & \u5C0F\u5B9D\uFF080-1\u5C81\uFF09 ====== */
+/* ====== \u5927\u5b9d\uff08\u5e7c\u513f\u56ed\uff09 & \u5c0f\u5b9d\uff080-1\u5c81\uff09 ====== */
 var KINDERGARTEN_SUPPLIES = [
-  { cat:'\u8863\u7269\u7C7B\uFF08\u5FC5\u5907\uFF09', items:[
-    { name:'\u6362\u6D17\u8863\u7269\u5957\u88C5\uFF08\u5185\u8863+\u88E4\u5B50+\u889C\u5B50\uFF09', qty:'2\u5957', note:'\u51FA\u6C57\u3001\u5C3F\u6E7F\u5907\u7528\uFF0C\u6240\u6709\u7269\u54C1\u5FC5\u987B\u7EE3/\u8D34\u59D3\u540D\u6807\u8BC6' },
-    { name:'\u8584\u6B3E\u9632\u98CE\u5916\u5957/\u9A6C\u7532', qty:'1\u4EF6', note:'\u5E94\u5BF9\u65E9\u665A\u6E29\u5DEE\uFF0C\u4F18\u5148\u9009\u62E9\u65B9\u4FBF\u7A7F\u8131\u7684\u6B3E\u5F0F' },
-    { name:'\u5907\u7528\u5185\u88E4', qty:'2\u6761', note:'\u4E2D\u73ED\u5C0F\u670B\u53CB\u5076\u5C14\u4F1A\u618B\u5C3F\u3001\u73A9\u6C34\u5F04\u6E7F\uFF0C\u989D\u5916\u5907\u7528' },
-    { name:'\u5BA4\u5185\u8F6F\u5E95\u978B', qty:'1\u53CC', note:'\u5305\u8DDF\u9632\u6ED1\u5E06\u5E03\u978B/\u8FD0\u52A8\u978B\uFF0C\u4E25\u7981\u7A7F\u6D1E\u6D1E\u978B\u3001\u62D6\u978B' },
-    { name:'\u5BA4\u5916\u8FD0\u52A8\u978B', qty:'1\u53CC', note:'\u65B9\u4FBF\u6237\u5916\u6D3B\u52A8\uFF0C\u8D34\u5408\u811A\u578B\u4E0D\u6613\u8131\u843D' }
+  { cat:'\u8863\u7269\u7c7b\uff08\u5fc5\u5907\uff09', items:[
+    { name:'\u6362\u6d17\u8863\u7269\u5957\u88c5\uff08\u5185\u8863+\u88e4\u5b50+\u889c\u5b50\uff09', qty:'2\u5957', note:'\u51fa\u6c57\u3001\u5c3f\u6e7f\u5907\u7528\uff0c\u6240\u6709\u7269\u54c1\u5fc5\u987b\u7ee3/\u8d34\u59d3\u540d\u6807\u8bc6' },
+    { name:'\u8584\u6b3e\u9632\u98ce\u5916\u5957/\u9a6c\u7532', qty:'1\u4ef6', note:'\u5e94\u5bf9\u65e9\u665a\u6e29\u5dee\uff0c\u4f18\u5148\u9009\u62e9\u65b9\u4fbf\u7a7f\u8131\u7684\u6b3e\u5f0f' },
+    { name:'\u5907\u7528\u5185\u88e4', qty:'2\u6761', note:'\u4e2d\u73ed\u5c0f\u670b\u53cb\u5076\u5c14\u4f1a\u618b\u5c3f\u3001\u73a9\u6c34\u5f04\u6e7f\uff0c\u989d\u5916\u5907\u7528' },
+    { name:'\u5ba4\u5185\u8f6f\u5e95\u978b', qty:'1\u53cc', note:'\u5305\u8ddf\u9632\u6ed1\u5e06\u5e03\u978b/\u8fd0\u52a8\u978b\uff0c\u4e25\u7981\u7a7f\u6d1e\u6d1e\u978b\u3001\u62d6\u978b' },
+    { name:'\u5ba4\u5916\u8fd0\u52a8\u978b', qty:'1\u53cc', note:'\u65b9\u4fbf\u6237\u5916\u6d3b\u52a8\uff0c\u8d34\u5408\u811a\u578b\u4e0d\u6613\u8131\u843d' }
   ]},
-  { cat:'\u5BDD\u5177\u7C7B\uFF08\u5348\u4F11\u7528\u54C1\uFF09', items:[
-    { name:'\u5348\u7761\u5C0F\u88AB\u5B50/\u8584\u590F\u88AB', qty:'1\u5957', note:'\u6839\u636E\u5B63\u8282\u66F4\u6362\uFF0C\u9075\u5FAA\u5E7C\u513F\u56ED\u5C3A\u5BF8\u8981\u6C42' },
-    { name:'\u6795\u5934+\u6795\u5957', qty:'1\u5957', note:'\u4F18\u5148\u9009\u62E9\u5C0F\u670B\u53CB\u719F\u6089\u7684\u6795\u5934\uFF0C\u63D0\u5347\u5348\u4F11\u9002\u5E94\u5EA6' },
-    { name:'\u5E8A\u57AB/\u57AB\u88AB\u5957', qty:'1\u5957', note:'\u90E8\u5206\u5E7C\u513F\u56ED\u7EDF\u4E00\u914D\u5907\uFF0C\u63D0\u524D\u786E\u8BA4\u56ED\u6240\u8981\u6C42' }
+  { cat:'\u5bdd\u5177\u7c7b\uff08\u5348\u4f11\u7528\u54c1\uff09', items:[
+    { name:'\u5348\u7761\u5c0f\u88ab\u5b50/\u8584\u590f\u88ab', qty:'1\u5957', note:'\u6839\u636e\u5b63\u8282\u66f4\u6362\uff0c\u9075\u5faa\u5e7c\u513f\u56ed\u5c3a\u5bf8\u8981\u6c42' },
+    { name:'\u6795\u5934+\u6795\u5957', qty:'1\u5957', note:'\u4f18\u5148\u9009\u62e9\u5c0f\u670b\u53cb\u719f\u6089\u7684\u6795\u5934\uff0c\u63d0\u5347\u5348\u4f11\u9002\u5e94\u5ea6' },
+    { name:'\u5e8a\u57ab/\u57ab\u88ab\u5957', qty:'1\u5957', note:'\u90e8\u5206\u5e7c\u513f\u56ed\u7edf\u4e00\u914d\u5907\uff0c\u63d0\u524d\u786e\u8ba4\u56ed\u6240\u8981\u6c42' }
   ]},
-  { cat:'\u4E2A\u4EBA\u536B\u751F\u7528\u54C1', items:[
-    { name:'\u7EAF\u68C9\u6BDB\u5DFE', qty:'1-2\u6761', note:'\u64E6\u624B\u64E6\u6C57\uFF0C\u5FC5\u987B\u6807\u8BB0\u59D3\u540D' },
-    { name:'\u76F4\u996E\u4FDD\u6E29\u676F/\u6C34\u676F', qty:'1\u4E2A', note:'\u9075\u5FAA\u56ED\u6240\u8981\u6C42\uFF0C\u4F18\u5148\u76F4\u996E\u6B3E\uFF0C\u4E0D\u5EFA\u8BAE\u5438\u7BA1\u676F' },
-    { name:'\u62BD\u7EB8/\u968F\u8EAB\u5C0F\u5305\u7EB8\u5DFE', qty:'1\u5305', note:'\u65E5\u5E38\u6E05\u6D01\u4F7F\u7528' },
-    { name:'\u65E0\u9152\u7CBE\u5A74\u513F\u6E7F\u5DFE', qty:'1\u5305', note:'\u6E05\u6D01\u624B\u90E8\u3001\u9910\u5177\u3001\u684C\u9762\u4F7F\u7528' },
-    { name:'\u7259\u5237\u7259\u818F', qty:'1\u5957', note:'\u90E8\u5206\u4E2D\u73ED\u5F00\u8BBE\u5348\u95F4\u5237\u7259\uFF0C\u6309\u73ED\u7EA7\u901A\u77E5\u51C6\u5907' }
+  { cat:'\u4e2a\u4eba\u536b\u751f\u7528\u54c1', items:[
+    { name:'\u7eaf\u68c9\u6bdb\u5dfe', qty:'1-2\u6761', note:'\u64e6\u624b\u64e6\u6c57\uff0c\u5fc5\u987b\u6807\u8bb0\u59d3\u540d' },
+    { name:'\u76f4\u996e\u4fdd\u6e29\u676f/\u6c34\u676f', qty:'1\u4e2a', note:'\u9075\u5faa\u56ed\u6240\u8981\u6c42\uff0c\u4f18\u5148\u76f4\u996e\u6b3e\uff0c\u4e0d\u5efa\u8bae\u5438\u7ba1\u676f' },
+    { name:'\u62bd\u7eb8/\u968f\u8eab\u5c0f\u5305\u7eb8\u5dfe', qty:'1\u5305', note:'\u65e5\u5e38\u6e05\u6d01\u4f7f\u7528' },
+    { name:'\u65e0\u9152\u7cbe\u5a74\u513f\u6e7f\u5dfe', qty:'1\u5305', note:'\u6e05\u6d01\u624b\u90e8\u3001\u9910\u5177\u3001\u684c\u9762\u4f7f\u7528' },
+    { name:'\u7259\u5237\u7259\u818f', qty:'1\u5957', note:'\u90e8\u5206\u4e2d\u73ed\u5f00\u8bbe\u5348\u95f4\u5237\u7259\uff0c\u6309\u73ed\u7ea7\u901a\u77e5\u51c6\u5907' }
   ]},
-  { cat:'\u5B66\u4E60&\u6D3B\u52A8\u7528\u54C1', items:[
-    { name:'\u7F8E\u672F\u56F4\u88D9/\u53CD\u7A7F\u8863', qty:'1\u4EF6', note:'\u753B\u753B\u3001\u624B\u5DE5\u8BFE\u9632\u810F\uFF0C\u4F18\u5148\u9009\u62E9\u9632\u6C34\u6B3E' },
-    { name:'\u810F\u8863\u6536\u7EB3\u888B', qty:'1\u4E2A', note:'\u88C5\u6E7F\u8863\u670D\u3001\u810F\u6BDB\u5DFE\uFF0C\u907F\u514D\u6C61\u67D3\u5176\u4ED6\u7269\u54C1' },
-    { name:'\u9632\u6C34\u59D3\u540D\u8D34', qty:'1\u5957', note:'\u5927\u91CF\u5907\u7528\uFF0C\u8D34\u5728\u6240\u6709\u7269\u54C1\u4E0A\u9632\u6B62\u6DF7\u6DC6' }
+  { cat:'\u5b66\u4e60&\u6d3b\u52a8\u7528\u54c1', items:[
+    { name:'\u7f8e\u672f\u56f4\u88d9/\u53cd\u7a7f\u8863', qty:'1\u4ef6', note:'\u753b\u753b\u3001\u624b\u5de5\u8bfe\u9632\u810f\uff0c\u4f18\u5148\u9009\u62e9\u9632\u6c34\u6b3e' },
+    { name:'\u810f\u8863\u6536\u7eb3\u888b', qty:'1\u4e2a', note:'\u88c5\u6e7f\u8863\u670d\u3001\u810f\u6bdb\u5dfe\uff0c\u907f\u514d\u6c61\u67d3\u5176\u4ed6\u7269\u54c1' },
+    { name:'\u9632\u6c34\u59d3\u540d\u8d34', qty:'1\u5957', note:'\u5927\u91cf\u5907\u7528\uff0c\u8d34\u5728\u6240\u6709\u7269\u54c1\u4e0a\u9632\u6b62\u6df7\u6dc6' }
   ]},
-  { cat:'\u7279\u6B8A&\u836F\u54C1\u7528\u54C1', items:[
-    { name:'\u8FC7\u654F/\u5E38\u5907\u836F\u7269', qty:'\u6309\u9700', note:'\u5FC5\u987B\u586B\u5199\u670D\u836F\u59D4\u6258\u4E66\u4EA4\u7ED9\u8001\u5E08\uFF0C\u4E25\u7981\u81EA\u884C\u653E\u4E66\u5305' },
-    { name:'\u8FC7\u654F\u5E94\u6025\u8BF4\u660E', qty:'1\u4EFD', note:'\u8FC7\u654F\u5C0F\u670B\u53CB\u9700\u63D0\u524D\u51C6\u5907\uFF0C\u660E\u786E\u8FC7\u654F\u539F\u548C\u5E94\u6025\u65B9\u6848' }
+  { cat:'\u7279\u6b8a&\u836f\u54c1\u7528\u54c1', items:[
+    { name:'\u8fc7\u654f/\u5e38\u5907\u836f\u7269', qty:'\u6309\u9700', note:'\u5fc5\u987b\u586b\u5199\u670d\u836f\u59d4\u6258\u4e66\u4ea4\u7ed9\u8001\u5e08\uff0c\u4e25\u7981\u81ea\u884c\u653e\u4e66\u5305' },
+    { name:'\u8fc7\u654f\u5e94\u6025\u8bf4\u660e', qty:'1\u4efd', note:'\u8fc7\u654f\u5c0f\u670b\u53cb\u9700\u63d0\u524d\u51c6\u5907\uff0c\u660e\u786e\u8fc7\u654f\u539f\u548c\u5e94\u6025\u65b9\u6848' }
   ]},
-  { cat:'\u7981\u6B62\u643A\u5E26\u7269\u54C1', items:[
-    { name:'\u96F6\u98DF\u3001\u7CD6\u679C\u3001\u996E\u6599', qty:'\u4E25\u7981', note:'\u907F\u514D\u5C0F\u670B\u53CB\u95F4\u5206\u4EAB\u5F15\u53D1\u8FC7\u654F\u3001\u545B\u54B3\u98CE\u9669' },
-    { name:'\u786C\u5E01\u3001\u5C0F\u73E0\u5B50\u3001\u5C16\u9510\u73A9\u5177', qty:'\u4E25\u7981', note:'\u9632\u6B62\u8BEF\u98DF\u3001\u5212\u4F24\u3001\u7A92\u606F\u7B49\u5B89\u5168\u4E8B\u6545' },
-    { name:'\u8D35\u91CD\u9996\u9970\u3001\u7535\u5B50\u4EA7\u54C1', qty:'\u4E25\u7981', note:'\u907F\u514D\u4E22\u5931\u3001\u635F\u574F\uFF0C\u5206\u6563\u5C0F\u670B\u53CB\u6CE8\u610F\u529B' }
+  { cat:'\u7981\u6b62\u643a\u5e26\u7269\u54c1', items:[
+    { name:'\u96f6\u98df\u3001\u7cd6\u679c\u3001\u996e\u6599', qty:'\u4e25\u7981', note:'\u907f\u514d\u5c0f\u670b\u53cb\u95f4\u5206\u4eab\u5f15\u53d1\u8fc7\u654f\u3001\u545b\u54b3\u98ce\u9669' },
+    { name:'\u786c\u5e01\u3001\u5c0f\u73e0\u5b50\u3001\u5c16\u9510\u73a9\u5177', qty:'\u4e25\u7981', note:'\u9632\u6b62\u8bef\u98df\u3001\u5212\u4f24\u3001\u7a92\u606f\u7b49\u5b89\u5168\u4e8b\u6545' },
+    { name:'\u8d35\u91cd\u9996\u9970\u3001\u7535\u5b50\u4ea7\u54c1', qty:'\u4e25\u7981', note:'\u907f\u514d\u4e22\u5931\u3001\u635f\u574f\uff0c\u5206\u6563\u5c0f\u670b\u53cb\u6ce8\u610f\u529b' }
   ]}
 ];
 
 var BABY_GROWTH_GUIDE = [
-  { stage:'0-1\u6708', label:'\u65B0\u751F\u513F\u671F', growth:'\u4F53\u91CD\u8F83\u51FA\u751F\u589E\u957F1-1.5kg\uFF0C\u8EAB\u9AD8\u589E\u957F3-5cm\uFF0C\u5934\u56F4\u589E\u957F2-3cm\uFF1B\u4FEF\u5367\u65F6\u80FD\u62AC\u59341-2\u79D2\uFF1B\u5C0F\u624B\u63E1\u62F3\u6709\u6293\u63E1\u53CD\u5C04\uFF1B\u80FD\u53D1\u51FA\u7EC6\u5C0F\u5589\u97F3\uFF1B\u80FD\u6CE8\u89C6\u4EBA\u8138\u5BF9\u5B89\u629A\u6709\u53CD\u5E94',
-    feeding:'\u4F18\u5148\u7EAF\u6BCD\u4E73\u5582\u517B\uFF0C\u6309\u9700\u5582\u517B\u6BCF\u65E58-12\u6B21\u6BCF\u6B2115-30\u5206\u949F\uFF1B\u914D\u65B9\u5976\u6BCF\u65E5600-800ml\u6BCF3-4\u5C0F\u65F6\u4E00\u6B21\uFF1B\u51FA\u751F15\u5929\u8D77\u8865\u5145\u7EF4D3\u6BCF\u65E5400IU\u6301\u7EED\u81F31\u5C81\uFF1B\u65E0\u9700\u989D\u5916\u5582\u6C34',
-    care:'\u8110\u90E8\u62A4\u7406\u6BCF\u65E5\u7898\u4F0F\u6D88\u6BD2\u4FDD\u6301\u5E72\u71E5\uFF1B\u6BCF\u65E5\u7761\u772016-20\u5C0F\u65F6\u4EF0\u5367\u4F4D\uFF1B\u6BCF\u65E5\u6E29\u6C34\u6D17\u6FA1\u8936\u76B1\u5904\u91CD\u70B9\u6E05\u6D01\uFF1B\u591A\u5BF9\u89C6\u8BF4\u8BDD\u7528\u9ED1\u767D\u5361\u8FFD\u89C6\u8BAD\u7EC3',
-    caution:'\u8B66\u60D5\u65B0\u751F\u513F\u9EC4\u75B82-3\u5929\u51FA\u73B07-10\u5929\u6D88\u9000\u6301\u7EED\u4E0D\u9000\u9700\u5C31\u533B\uFF1B\u907F\u514D\u6447\u6643\u5B9D\u5B9D\u5934\u90E8\uFF1B\u4E0D\u8981\u7ED1\u817F\u88F9\u8721\u70DB\u5305\uFF1B42\u5929\u505A\u7B2C\u4E00\u6B21\u4F53\u68C0' },
-  { stage:'2-3\u6708', label:'\u5A74\u513F\u65E9\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.8-1.2kg\u8EAB\u9AD8\u6BCF\u67082-3cm\u5934\u56F4\u6BCF\u67081.5-2cm\uFF1B\u4FEF\u5367\u62AC\u593445-90\u5EA6\u80FD\u8F6C\u5934\u8FFD\u89C6180\u5EA6\uFF1B\u5C0F\u624B\u5F20\u5F00\u6293\u63E1\u73A9\u5177\u80FD\u6447\u6643\u62E8\u6D6A\u9F13\uFF1B\u53D1\u51FAa/o/e\u5143\u97F3\u4F1A\u7B11\u51FA\u58F0\uFF1B\u8BA4\u51FA\u5988\u5988\u4F1A\u5FAE\u7B11',
-    feeding:'\u7EAF\u6BCD\u4E73\u6309\u9700\u6BCF\u65E56-8\u6B21\uFF1B\u914D\u65B9\u5976\u6BCF\u65E5800-1000ml\u6BCF4\u5C0F\u65F6\u4E00\u6B21\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u7EC3\u4E60\u7528\u52FA\u5B50\u559D\u6C34\u4E3A\u8F85\u98DF\u505A\u51C6\u5907',
-    care:'\u6BCF\u65E5\u7761\u772014-16\u5C0F\u65F6\u767D\u59292-3\u6B21\u5C0F\u7761\uFF1B\u591A\u4E92\u52A8\u8BF4\u8BDD\u7528\u5F69\u8272\u73A9\u5177\u8FFD\u89C6\u8BAD\u7EC3\u7EC3\u4E60\u4FEF\u5367\u62AC\u5934\uFF1B\u591A\u505A\u629A\u89E6\u6309\u6469\u589E\u5F3A\u5B89\u5168\u611F\uFF1B\u5582\u5976\u540E\u5582\u5C11\u91CF\u6E29\u6C34\u6E05\u6D01\u53E3\u8154',
-    caution:'\u907F\u514D\u542B\u7740\u4E73\u5934/\u5976\u74F6\u5165\u7761\u9632\u9F8B\u9F7F\u7A92\u606F\uFF1B\u4E0D\u8981\u8FC7\u65E9\u7AD6\u62B1\u9700\u6258\u4F4F\u5934\u9888\uFF1B\u73A9\u5177\u9700\u5B9A\u671F\u6D88\u6BD2\uFF1B3\u4E2A\u6708\u505A\u7B2C\u4E8C\u6B21\u4F53\u68C0' },
-  { stage:'4-6\u6708', label:'\u5A74\u513F\u4E2D\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.6-0.8kg\u8EAB\u9AD8\u6BCF\u67082-2.5cm\u5934\u56F4\u6BCF\u67081-1.5cm\uFF1B\u80FD\u719F\u7EC3\u7FFB\u8EAB\u4FEF\u5367\u7528\u624B\u652F\u6491\u4E0A\u534A\u8EAB\u72EC\u5750\u7247\u523B\uFF1B\u4F38\u624B\u6293\u63E1\u73A9\u5177\u4E24\u624B\u4F20\u9012\u80FD\u6495\u7EB8\uFF1B\u53D1\u51FA\u8FDE\u7EED\u5143\u97F3\u6A21\u4EFF\u53D1\u97F3\uFF1B\u533A\u5206\u719F\u4EBA\u751F\u4EBA\u7528\u7B11\u58F0\u54ED\u58F0\u8868\u8FBE\u60C5\u7EEA',
-    feeding:'4-6\u6708\u662F\u8F85\u98DF\u6DFB\u52A0\u7A97\u53E3\u671F\u4F18\u5148\u9AD8\u94C1\u7C73\u7C89\u4ECE1\u52FA\u5F00\u59CB\u9010\u6E10\u52A0\u91CF\uFF1B\u7531\u5C11\u5230\u591A\u7531\u7A00\u5230\u7A20\u7531\u7EC6\u5230\u7C97\u9010\u6837\u6DFB\u52A0\u89C2\u5BDF3-5\u5929\u65E0\u8FC7\u654F\u518D\u52A0\u4E0B\u4E00\u79CD\uFF1B\u5976\u91CF\u4ECD\u9700\u6BCF\u65E5800-1000ml\u8F85\u98DF\u4E3A\u8865\u5145\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u6DFB\u52A0\u83DC\u6CE5\u679C\u6CE5\u8089\u6CE56\u6708\u8BD5\u86CB\u9EC4',
-    care:'\u6BCF\u65E5\u7761\u772013-15\u5C0F\u65F6\u767D\u59292\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED6-8\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u72EC\u5750\u7FFB\u8EAB\u7528\u73A9\u5177\u5F15\u5BFC\u722C\u884C\u591A\u8BF4\u8BDD\u8BFB\u7ED8\u672C\uFF1B\u7528\u6307\u5957\u7259\u5237\u6E05\u6D01\u7259\u9F88\u840C\u7259\u540E\u5F00\u59CB\u5237\u7259\uFF1B\u7528\u7845\u80F6\u9910\u5177\u9F13\u52B1\u81EA\u4E3B\u8FDB\u98DF\u5F04\u810F\u4E0D\u8981\u6279\u8BC4',
-    caution:'\u8F85\u98DF\u6DFB\u52A0\u8FC7\u65E9(<4\u6708)\u6216\u8FC7\u665A(>6\u6708)\u5F71\u54CD\u53D1\u80B2\uFF1B1\u5C81\u5185\u8F85\u98DF\u4E0D\u80FD\u52A0\u76D0\u7CD6\u8702\u871C\uFF1B\u4E0D\u7ED9\u6574\u9897\u575A\u679C\u8461\u8404\u679C\u51BB\u7B49\u6613\u7A92\u606F\u98DF\u7269\uFF1B\u5B9A\u671F\u4F53\u68C0\u76D1\u6D4B\u8EAB\u9AD8\u4F53\u91CD\u5934\u56F4' },
-  { stage:'7-9\u6708', label:'\u5A74\u513F\u665A\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.5-0.6kg\u8EAB\u9AD8\u6BCF\u67081.5-2cm\u5934\u56F4\u6BCF\u67080.8-1cm\uFF1B\u719F\u7EC3\u72EC\u5750\u4F1A\u530D\u5310\u722C\u884C\u6276\u7269\u7AD9\u7ACB\uFF1B\u7528\u62C7\u6307\u98DF\u6307\u634F\u5C0F\u7269\u4F53\u4F1A\u62CD\u624B\u6325\u624B\u80FD\u5F00\u62BD\u5C49\uFF1B\u53D1\u51FAba/ma/da\u8F85\u97F3\u6A21\u4EFF\u52A8\u4F5C\u58F0\u97F3\uFF1B\u4F1A\u8BA4\u751F\u542C\u61C2\u81EA\u5DF1\u540D\u5B57\u7528\u52A8\u4F5C\u8868\u8FBE\u9700\u6C42',
-    feeding:'\u5976\u91CF\u6BCF\u65E5600-800ml\u8F85\u98DF\u6BCF\u65E52\u6B21\uFF1B\u8D28\u5730\u4ECE\u6CE5\u7CCA\u8FC7\u6E21\u5230\u672B\u72B6\u5C0F\u9897\u7C92\u953B\u70BC\u5480\u56BC\uFF1B\u53EF\u6DFB\u52A0\u788E\u83DC\u8089\u672B\u70C2\u7CA5\u70C2\u9762\u6761\u5C1D\u8BD5\u624B\u6307\u98DF\u7269\uFF08\u84B8\u7CD5\u80E1\u841D\u535C\u6761\uFF09\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\uFF1B\u53EF\u8BD5\u9178\u5976\u5976\u916A\u8865\u9499\u548C\u86CB\u767D\u8D28',
-    care:'\u6BCF\u65E5\u7761\u772012-14\u5C0F\u65F6\u767D\u59291-2\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED8-10\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u722C\u884C\u6276\u7AD9\u7528\u79EF\u6728\u953B\u70BC\u624B\u773C\u534F\u8C03\u591A\u4E92\u52A8\u6E38\u620F\uFF1B\u505A\u597D\u5B89\u5168\u9632\u62A4\u63D2\u5EA7\u76D6\u9632\u62A4\u5C16\u9510\u7269\u54C1\u6536\u8D77\uFF1B\u7528\u8F6F\u6BDB\u7259\u5237\u5237\u7259\u65E9\u665A\u5404\u4E00\u6B21\u996D\u540E\u6F31\u53E3',
-    caution:'\u4F1A\u722C\u540E\u5FC5\u987B\u5168\u7A0B\u4E13\u4EBA\u770B\u62A4\u907F\u514D\u5760\u5E8A\u8BEF\u98DF\u5F02\u7269\uFF1B\u4E0D\u7528\u5B66\u6B65\u8F66\u5F71\u54CD\u817F\u90E8\u53D1\u80B2\u548C\u5E73\u8861\u611F\uFF1B\u907F\u514D\u957F\u65F6\u95F4\u770B\u7535\u89C6\u624B\u673A\u5F71\u54CD\u89C6\u529B\uFF1B9\u6708\u4F53\u68C0\u8BC4\u4F30\u53D1\u80B2\u5FC5\u8981\u65F6\u67E5\u8840\u5E38\u89C4\u770B\u662F\u5426\u8D2B\u8840' },
-  { stage:'10-12\u6708', label:'\u5E7C\u513F\u524D\u671F', growth:'\u4F53\u91CD\u6BCF\u6708\u589E\u957F0.3-0.5kg\u8EAB\u9AD8\u6BCF\u67081-1.5cm\u5934\u56F4\u6BCF\u67080.5cm\uFF1B\u6276\u7269\u8D70\u72EC\u7AD9\u7247\u523B12\u6708\u5DE6\u53F3\u80FD\u72EC\u8D70\u51E0\u6B65\u4F1A\u8E72\u7AD9\uFF1B\u80FD\u6D82\u9E26\u7FFB\u4E66\u628A\u79EF\u6728\u653E\u8FDB\u76D2\u5B50\u4F1A\u7528\u52FA\u5B50\u5403\u996D\uFF1B\u80FD\u8BF41-2\u4E2A\u6709\u610F\u4E49\u7684\u8BCD\uFF08\u7238\u7238/\u5988\u5988\uFF09\u542C\u61C2\u7B80\u5355\u6307\u4EE4\uFF1B\u548C\u5C0F\u670B\u53CB\u4E92\u52A8\u5206\u4EAB\u73A9\u5177\u8868\u8FBE\u559C\u6012\u54C0\u4E50',
-    feeding:'\u5976\u91CF\u6BCF\u65E5500-600ml\u8F85\u98DF\u6BCF\u65E53\u6B21\u9010\u6E10\u5411\u6210\u4EBA\u996E\u98DF\u8FC7\u6E21\uFF1B\u8D28\u5730\u8FC7\u6E21\u5230\u5C0F\u4E01\u72B6\u5757\u72B6\u953B\u70BC\u5480\u56BC\u541E\u54BD\uFF1B\u53EF\u6DFB\u52A0\u8F6F\u996D\u9762\u6761\u5207\u788E\u83DC\u8089\u8BD5\u5168\u86CB\u9C7C\u867E\uFF1B\u7EE7\u7EED\u7EF4D3\u6BCF\u65E5400IU\u53EF\u8865\u9499\u5242\uFF1B\u9F13\u52B1\u81EA\u4E3B\u8FDB\u98DF\u7EC3\u4E60\u7528\u52FA\u5B50\u676F\u5B50\u559D\u6C34',
-    care:'\u6BCF\u65E5\u7761\u772011-13\u5C0F\u65F6\u767D\u59291\u6B21\u5C0F\u7761\u591C\u95F4\u8FDE\u7EED10-12\u5C0F\u65F6\uFF1B\u7EC3\u4E60\u8D70\u8DEF\u8E72\u7AD9\u7528\u7ED8\u672C\u79EF\u6728\u953B\u70BC\u8BA4\u77E5\u624B\u773C\u534F\u8C03\u591A\u8BF4\u8BDD\uFF1B\u505A\u597D\u5B89\u5168\u9632\u62A4\u907F\u514D\u63A5\u89E6\u70ED\u6C34\u7535\u6E90\u5C16\u9510\u7269\u54C1\uFF1B\u5EFA\u7ACB\u7B80\u5355\u89C4\u5219\u5F15\u5BFC\u7528\u8BED\u8A00\u8868\u8FBE\u9700\u6C42\u4E0D\u8981\u7528\u54ED\u95F9\u89E3\u51B3\u95EE\u9898',
-    caution:'1\u5C81\u5185\u5976\u91CF\u4E0D\u80FD\u4F4E\u4E8E500ml\u907F\u514D\u8F85\u98DF\u8FC7\u591A\u5F71\u54CD\u5976\u91CF\uFF1B\u4E0D\u7ED9\u6CB9\u70B8\u814C\u5236\u8F9B\u8FA3\u98DF\u7269\u996E\u98DF\u6E05\u6DE1\uFF1B\u9F13\u52B1\u591A\u722C\u884C\u8D70\u8DEF\u953B\u70BC\u5927\u8FD0\u52A8\uFF1B1\u5C81\u5FC5\u987B\u4F53\u68C0\u8BC4\u4F30\u751F\u957F\u53D1\u80B2\u63A5\u79CD\u75AB\u82D7' }
+  { stage:'0-1\u6708', label:'\u65b0\u751f\u513f\u671f', growth:'\u4f53\u91cd\u8f83\u51fa\u751f\u589e\u957f1-1.5kg\uff0c\u8eab\u9ad8\u589e\u957f3-5cm\uff0c\u5934\u56f4\u589e\u957f2-3cm\uff1b\u4fef\u5367\u65f6\u80fd\u62ac\u59341-2\u79d2\uff1b\u5c0f\u624b\u63e1\u62f3\u6709\u6293\u63e1\u53cd\u5c04\uff1b\u80fd\u53d1\u51fa\u7ec6\u5c0f\u5589\u97f3\uff1b\u80fd\u6ce8\u89c6\u4eba\u8138\u5bf9\u5b89\u629a\u6709\u53cd\u5e94',
+    feeding:'\u4f18\u5148\u7eaf\u6bcd\u4e73\u5582\u517b\uff0c\u6309\u9700\u5582\u517b\u6bcf\u65e58-12\u6b21\u6bcf\u6b2115-30\u5206\u949f\uff1b\u914d\u65b9\u5976\u6bcf\u65e5600-800ml\u6bcf3-4\u5c0f\u65f6\u4e00\u6b21\uff1b\u51fa\u751f15\u5929\u8d77\u8865\u5145\u7ef4D3\u6bcf\u65e5400IU\u6301\u7eed\u81f31\u5c81\uff1b\u65e0\u9700\u989d\u5916\u5582\u6c34',
+    care:'\u8110\u90e8\u62a4\u7406\u6bcf\u65e5\u7898\u4f0f\u6d88\u6bd2\u4fdd\u6301\u5e72\u71e5\uff1b\u6bcf\u65e5\u7761\u772016-20\u5c0f\u65f6\u4ef0\u5367\u4f4d\uff1b\u6bcf\u65e5\u6e29\u6c34\u6d17\u6fa1\u8936\u76b1\u5904\u91cd\u70b9\u6e05\u6d01\uff1b\u591a\u5bf9\u89c6\u8bf4\u8bdd\u7528\u9ed1\u767d\u5361\u8ffd\u89c6\u8bad\u7ec3',
+    caution:'\u8b66\u60d5\u65b0\u751f\u513f\u9ec4\u75b82-3\u5929\u51fa\u73b07-10\u5929\u6d88\u9000\u6301\u7eed\u4e0d\u9000\u9700\u5c31\u533b\uff1b\u907f\u514d\u6447\u6643\u5b9d\u5b9d\u5934\u90e8\uff1b\u4e0d\u8981\u7ed1\u817f\u88f9\u8721\u70db\u5305\uff1b42\u5929\u505a\u7b2c\u4e00\u6b21\u4f53\u68c0' },
+  { stage:'2-3\u6708', label:'\u5a74\u513f\u65e9\u671f', growth:'\u4f53\u91cd\u6bcf\u6708\u589e\u957f0.8-1.2kg\u8eab\u9ad8\u6bcf\u67082-3cm\u5934\u56f4\u6bcf\u67081.5-2cm\uff1b\u4fef\u5367\u62ac\u593445-90\u5ea6\u80fd\u8f6c\u5934\u8ffd\u89c6180\u5ea6\uff1b\u5c0f\u624b\u5f20\u5f00\u6293\u63e1\u73a9\u5177\u80fd\u6447\u6643\u62e8\u6d6a\u9f13\uff1b\u53d1\u51faa/o/e\u5143\u97f3\u4f1a\u7b11\u51fa\u58f0\uff1b\u8ba4\u51fa\u5988\u5988\u4f1a\u5fae\u7b11',
+    feeding:'\u7eaf\u6bcd\u4e73\u6309\u9700\u6bcf\u65e56-8\u6b21\uff1b\u914d\u65b9\u5976\u6bcf\u65e5800-1000ml\u6bcf4\u5c0f\u65f6\u4e00\u6b21\uff1b\u7ee7\u7eed\u7ef4D3\u6bcf\u65e5400IU\uff1b\u53ef\u7ec3\u4e60\u7528\u52fa\u5b50\u559d\u6c34\u4e3a\u8f85\u98df\u505a\u51c6\u5907',
+    care:'\u6bcf\u65e5\u7761\u772014-16\u5c0f\u65f6\u767d\u59292-3\u6b21\u5c0f\u7761\uff1b\u591a\u4e92\u52a8\u8bf4\u8bdd\u7528\u5f69\u8272\u73a9\u5177\u8ffd\u89c6\u8bad\u7ec3\u7ec3\u4e60\u4fef\u5367\u62ac\u5934\uff1b\u591a\u505a\u629a\u89e6\u6309\u6469\u589e\u5f3a\u5b89\u5168\u611f\uff1b\u5582\u5976\u540e\u5582\u5c11\u91cf\u6e29\u6c34\u6e05\u6d01\u53e3\u8154',
+    caution:'\u907f\u514d\u542b\u7740\u4e73\u5934/\u5976\u74f6\u5165\u7761\u9632\u9f8b\u9f7f\u7a92\u606f\uff1b\u4e0d\u8981\u8fc7\u65e9\u7ad6\u62b1\u9700\u6258\u4f4f\u5934\u9888\uff1b\u73a9\u5177\u9700\u5b9a\u671f\u6d88\u6bd2\uff1b3\u4e2a\u6708\u505a\u7b2c\u4e8c\u6b21\u4f53\u68c0' },
+  { stage:'4-6\u6708', label:'\u5a74\u513f\u4e2d\u671f', growth:'\u4f53\u91cd\u6bcf\u6708\u589e\u957f0.6-0.8kg\u8eab\u9ad8\u6bcf\u67082-2.5cm\u5934\u56f4\u6bcf\u67081-1.5cm\uff1b\u80fd\u719f\u7ec3\u7ffb\u8eab\u4fef\u5367\u7528\u624b\u652f\u6491\u4e0a\u534a\u8eab\u72ec\u5750\u7247\u523b\uff1b\u4f38\u624b\u6293\u63e1\u73a9\u5177\u4e24\u624b\u4f20\u9012\u80fd\u6495\u7eb8\uff1b\u53d1\u51fa\u8fde\u7eed\u5143\u97f3\u6a21\u4eff\u53d1\u97f3\uff1b\u533a\u5206\u719f\u4eba\u751f\u4eba\u7528\u7b11\u58f0\u54ed\u58f0\u8868\u8fbe\u60c5\u7eea',
+    feeding:'4-6\u6708\u662f\u8f85\u98df\u6dfb\u52a0\u7a97\u53e3\u671f\u4f18\u5148\u9ad8\u94c1\u7c73\u7c89\u4ece1\u52fa\u5f00\u59cb\u9010\u6e10\u52a0\u91cf\uff1b\u7531\u5c11\u5230\u591a\u7531\u7a00\u5230\u7a20\u7531\u7ec6\u5230\u7c97\u9010\u6837\u6dfb\u52a0\u89c2\u5bdf3-5\u5929\u65e0\u8fc7\u654f\u518d\u52a0\u4e0b\u4e00\u79cd\uff1b\u5976\u91cf\u4ecd\u9700\u6bcf\u65e5800-1000ml\u8f85\u98df\u4e3a\u8865\u5145\uff1b\u7ee7\u7eed\u7ef4D3\u6bcf\u65e5400IU\uff1b\u53ef\u6dfb\u52a0\u83dc\u6ce5\u679c\u6ce5\u8089\u6ce56\u6708\u8bd5\u86cb\u9ec4',
+    care:'\u6bcf\u65e5\u7761\u772013-15\u5c0f\u65f6\u767d\u59292\u6b21\u5c0f\u7761\u591c\u95f4\u8fde\u7eed6-8\u5c0f\u65f6\uff1b\u7ec3\u4e60\u72ec\u5750\u7ffb\u8eab\u7528\u73a9\u5177\u5f15\u5bfc\u722c\u884c\u591a\u8bf4\u8bdd\u8bfb\u7ed8\u672c\uff1b\u7528\u6307\u5957\u7259\u5237\u6e05\u6d01\u7259\u9f88\u840c\u7259\u540e\u5f00\u59cb\u5237\u7259\uff1b\u7528\u7845\u80f6\u9910\u5177\u9f13\u52b1\u81ea\u4e3b\u8fdb\u98df\u5f04\u810f\u4e0d\u8981\u6279\u8bc4',
+    caution:'\u8f85\u98df\u6dfb\u52a0\u8fc7\u65e9(<4\u6708)\u6216\u8fc7\u665a(>6\u6708)\u5f71\u54cd\u53d1\u80b2\uff1b1\u5c81\u5185\u8f85\u98df\u4e0d\u80fd\u52a0\u76d0\u7cd6\u8702\u871c\uff1b\u4e0d\u7ed9\u6574\u9897\u575a\u679c\u8461\u8404\u679c\u51bb\u7b49\u6613\u7a92\u606f\u98df\u7269\uff1b\u5b9a\u671f\u4f53\u68c0\u76d1\u6d4b\u8eab\u9ad8\u4f53\u91cd\u5934\u56f4' },
+  { stage:'7-9\u6708', label:'\u5a74\u513f\u665a\u671f', growth:'\u4f53\u91cd\u6bcf\u6708\u589e\u957f0.5-0.6kg\u8eab\u9ad8\u6bcf\u67081.5-2cm\u5934\u56f4\u6bcf\u67080.8-1cm\uff1b\u719f\u7ec3\u72ec\u5750\u4f1a\u530d\u5310\u722c\u884c\u6276\u7269\u7ad9\u7acb\uff1b\u7528\u62c7\u6307\u98df\u6307\u634f\u5c0f\u7269\u4f53\u4f1a\u62cd\u624b\u6325\u624b\u80fd\u5f00\u62bd\u5c49\uff1b\u53d1\u51faba/ma/da\u8f85\u97f3\u6a21\u4eff\u52a8\u4f5c\u58f0\u97f3\uff1b\u4f1a\u8ba4\u751f\u542c\u61c2\u81ea\u5df1\u540d\u5b57\u7528\u52a8\u4f5c\u8868\u8fbe\u9700\u6c42',
+    feeding:'\u5976\u91cf\u6bcf\u65e5600-800ml\u8f85\u98df\u6bcf\u65e52\u6b21\uff1b\u8d28\u5730\u4ece\u6ce5\u7cca\u8fc7\u6e21\u5230\u672b\u72b6\u5c0f\u9897\u7c92\u953b\u70bc\u5480\u56bc\uff1b\u53ef\u6dfb\u52a0\u788e\u83dc\u8089\u672b\u70c2\u7ca5\u70c2\u9762\u6761\u5c1d\u8bd5\u624b\u6307\u98df\u7269\uff08\u84b8\u7cd5\u80e1\u841d\u535c\u6761\uff09\uff1b\u7ee7\u7eed\u7ef4D3\u6bcf\u65e5400IU\uff1b\u53ef\u8bd5\u9178\u5976\u5976\u916a\u8865\u9499\u548c\u86cb\u767d\u8d28',
+    care:'\u6bcf\u65e5\u7761\u772012-14\u5c0f\u65f6\u767d\u59291-2\u6b21\u5c0f\u7761\u591c\u95f4\u8fde\u7eed8-10\u5c0f\u65f6\uff1b\u7ec3\u4e60\u722c\u884c\u6276\u7ad9\u7528\u79ef\u6728\u953b\u70bc\u624b\u773c\u534f\u8c03\u591a\u4e92\u52a8\u6e38\u620f\uff1b\u505a\u597d\u5b89\u5168\u9632\u62a4\u63d2\u5ea7\u76d6\u9632\u62a4\u5c16\u9510\u7269\u54c1\u6536\u8d77\uff1b\u7528\u8f6f\u6bdb\u7259\u5237\u5237\u7259\u65e9\u665a\u5404\u4e00\u6b21\u996d\u540e\u6f31\u53e3',
+    caution:'\u4f1a\u722c\u540e\u5fc5\u987b\u5168\u7a0b\u4e13\u4eba\u770b\u62a4\u907f\u514d\u5760\u5e8a\u8bef\u98df\u5f02\u7269\uff1b\u4e0d\u7528\u5b66\u6b65\u8f66\u5f71\u54cd\u817f\u90e8\u53d1\u80b2\u548c\u5e73\u8861\u611f\uff1b\u907f\u514d\u957f\u65f6\u95f4\u770b\u7535\u89c6\u624b\u673a\u5f71\u54cd\u89c6\u529b\uff1b9\u6708\u4f53\u68c0\u8bc4\u4f30\u53d1\u80b2\u5fc5\u8981\u65f6\u67e5\u8840\u5e38\u89c4\u770b\u662f\u5426\u8d2b\u8840' },
+  { stage:'10-12\u6708', label:'\u5e7c\u513f\u524d\u671f', growth:'\u4f53\u91cd\u6bcf\u6708\u589e\u957f0.3-0.5kg\u8eab\u9ad8\u6bcf\u67081-1.5cm\u5934\u56f4\u6bcf\u67080.5cm\uff1b\u6276\u7269\u8d70\u72ec\u7ad9\u7247\u523b12\u6708\u5de6\u53f3\u80fd\u72ec\u8d70\u51e0\u6b65\u4f1a\u8e72\u7ad9\uff1b\u80fd\u6d82\u9e26\u7ffb\u4e66\u628a\u79ef\u6728\u653e\u8fdb\u76d2\u5b50\u4f1a\u7528\u52fa\u5b50\u5403\u996d\uff1b\u80fd\u8bf41-2\u4e2a\u6709\u610f\u4e49\u7684\u8bcd\uff08\u7238\u7238/\u5988\u5988\uff09\u542c\u61c2\u7b80\u5355\u6307\u4ee4\uff1b\u548c\u5c0f\u670b\u53cb\u4e92\u52a8\u5206\u4eab\u73a9\u5177\u8868\u8fbe\u559c\u6012\u54c0\u4e50',
+    feeding:'\u5976\u91cf\u6bcf\u65e5500-600ml\u8f85\u98df\u6bcf\u65e53\u6b21\u9010\u6e10\u5411\u6210\u4eba\u996e\u98df\u8fc7\u6e21\uff1b\u8d28\u5730\u8fc7\u6e21\u5230\u5c0f\u4e01\u72b6\u5757\u72b6\u953b\u70bc\u5480\u56bc\u541e\u54bd\uff1b\u53ef\u6dfb\u52a0\u8f6f\u996d\u9762\u6761\u5207\u788e\u83dc\u8089\u8bd5\u5168\u86cb\u9c7c\u867e\uff1b\u7ee7\u7eed\u7ef4D3\u6bcf\u65e5400IU\u53ef\u8865\u9499\u5242\uff1b\u9f13\u52b1\u81ea\u4e3b\u8fdb\u98df\u7ec3\u4e60\u7528\u52fa\u5b50\u676f\u5b50\u559d\u6c34',
+    care:'\u6bcf\u65e5\u7761\u772011-13\u5c0f\u65f6\u767d\u59291\u6b21\u5c0f\u7761\u591c\u95f4\u8fde\u7eed10-12\u5c0f\u65f6\uff1b\u7ec3\u4e60\u8d70\u8def\u8e72\u7ad9\u7528\u7ed8\u672c\u79ef\u6728\u953b\u70bc\u8ba4\u77e5\u624b\u773c\u534f\u8c03\u591a\u8bf4\u8bdd\uff1b\u505a\u597d\u5b89\u5168\u9632\u62a4\u907f\u514d\u63a5\u89e6\u70ed\u6c34\u7535\u6e90\u5c16\u9510\u7269\u54c1\uff1b\u5efa\u7acb\u7b80\u5355\u89c4\u5219\u5f15\u5bfc\u7528\u8bed\u8a00\u8868\u8fbe\u9700\u6c42\u4e0d\u8981\u7528\u54ed\u95f9\u89e3\u51b3\u95ee\u9898',
+    caution:'1\u5c81\u5185\u5976\u91cf\u4e0d\u80fd\u4f4e\u4e8e500ml\u907f\u514d\u8f85\u98df\u8fc7\u591a\u5f71\u54cd\u5976\u91cf\uff1b\u4e0d\u7ed9\u6cb9\u70b8\u814c\u5236\u8f9b\u8fa3\u98df\u7269\u996e\u98df\u6e05\u6de1\uff1b\u9f13\u52b1\u591a\u722c\u884c\u8d70\u8def\u953b\u70bc\u5927\u8fd0\u52a8\uff1b1\u5c81\u5fc5\u987b\u4f53\u68c0\u8bc4\u4f30\u751f\u957f\u53d1\u80b2\u63a5\u79cd\u75ab\u82d7' }
 ];
 
 var EARLY_EDU_CARDS = [
-  { icon:'\uD83D\uDC40', title:'\u9ED1\u767D\u5361\u8FFD\u89C6', desc:'0-3\u6708\uFF1A\u5728\u5B9D\u5B9D\u773C\u524D20-30cm\u79FB\u52A8\u9ED1\u767D\u5361\uFF0C\u8BAD\u7EC3\u89C6\u89C9\u8FFD\u8E2A', age:'0-3\u6708' },
-  { icon:'\uD83E\uDD32', title:'\u6293\u63E1\u7EC3\u4E60', desc:'2-4\u6708\uFF1A\u628A\u6447\u94C3/\u5C0F\u73A9\u5177\u653E\u8FDB\u5B9D\u5B9D\u624B\u5FC3\uFF0C\u7EC3\u4E60\u6293\u63E1\u548C\u677E\u5F00', age:'2-4\u6708' },
-  { icon:'\uD83D\uDDE3\uFE0F', title:'\u9762\u5BF9\u9762\u8BF4\u8BDD', desc:'0-6\u6708\uFF1A\u591A\u548C\u5B9D\u5B9D\u8BF4\u8BDD\u3001\u6A21\u4EFF\u4ED6\u7684\u58F0\u97F3\uFF0C\u4FC3\u8FDB\u8BED\u8A00\u53D1\u80B2', age:'0-6\u6708' },
-  { icon:'\uD83E\uDD31', title:'\u629A\u89E6\u6309\u6469', desc:'0-6\u6708\uFF1A\u6BCF\u5929\u629A\u89E610-15\u5206\u949F\uFF0C\u589E\u5F3A\u5B89\u5168\u611F\u548C\u4EB2\u5B50\u8054\u7ED3', age:'0-6\u6708' },
-  { icon:'\uD83C\uDFCB\uFE0F', title:'\u4FEF\u5367\u62AC\u5934', desc:'1-4\u6708\uFF1A\u6BCF\u5929\u8BA9\u5B9D\u5B9D\u8DB4\u77402-3\u6B21\uFF0C\u6BCF\u6B211-5\u5206\u949F\uFF0C\u953B\u70BC\u9888\u90E8\u80CC\u90E8', age:'1-4\u6708' },
-  { icon:'\uD83C\uDFB5', title:'\u542C\u89C9\u523A\u6FC0', desc:'0-12\u6708\uFF1A\u6447\u94C3\u3001\u97F3\u4E50\u76D2\u3001\u81EA\u7136\u58F0\u97F3\uFF0C\u8BAD\u7EC3\u542C\u89C9\u8FA8\u522B', age:'0-12\u6708' },
-  { icon:'\uD83D\uDCD6', title:'\u7ED8\u672C\u9605\u8BFB', desc:'4-12\u6708\uFF1A\u6BCF\u5929\u8BFB\u7ED8\u672C10\u5206\u949F\uFF0C\u57F9\u517B\u9605\u8BFB\u5174\u8DA3\u548C\u8BED\u8A00\u80FD\u529B', age:'4-12\u6708' },
-  { icon:'\uD83E\uDE80', title:'\u7FFB\u8EAB\u7EC3\u4E60', desc:'4-7\u6708\uFF1A\u7528\u73A9\u5177\u5F15\u5BFC\u5B9D\u5B9D\u7FFB\u8EAB\uFF0C\u4ECE\u4EF0\u5367\u5230\u4FEF\u5367', age:'4-7\u6708' },
-  { icon:'\uD83E\uDDF8', title:'\u4F20\u9012\u73A9\u5177', desc:'5-8\u6708\uFF1A\u5F15\u5BFC\u5B9D\u5B9D\u4E24\u624B\u95F4\u4F20\u9012\u73A9\u5177\uFF0C\u7EC3\u4E60\u53CC\u624B\u534F\u8C03', age:'5-8\u6708' },
-  { icon:'\uD83D\uDC45', title:'\u5C1D\u5473\u6E38\u620F', desc:'6-12\u6708\uFF1A\u8F85\u98DF\u65F6\u8BA9\u5B9D\u5B9D\u95FB\u3001\u6478\u3001\u5C1D\u4E0D\u540C\u98DF\u6750\u5473\u9053', age:'6-12\u6708' },
-  { icon:'\uD83E\uDEF3', title:'\u634F\u53D6\u7EC3\u4E60', desc:'8-12\u6708\uFF1A\u8BA9\u5B9D\u5B9D\u7528\u62C7\u6307\u98DF\u6307\u634F\u5C0F\u6EB6\u8C46/\u9992\u5934\u4E01\uFF0C\u7EC3\u4E60\u7CBE\u7EC6\u52A8\u4F5C', age:'8-12\u6708' },
-  { icon:'\uD83E\uDDE9', title:'\u5BB9\u5668\u6E38\u620F', desc:'9-12\u6708\uFF1A\u628A\u73A9\u5177\u653E\u8FDB\u62FF\u51FA\u5BB9\u5668\uFF0C\u7406\u89E3"\u91CC\u5916"\u6982\u5FF5', age:'9-12\u6708' },
-  { icon:'\uD83D\uDC4B', title:'\u6325\u624B\u518D\u89C1', desc:'9-12\u6708\uFF1A\u6559\u5B9D\u5B9D\u6325\u624B\u3001\u62CD\u624B\uFF0C\u5EFA\u7ACB\u624B\u52BF\u6C9F\u901A', age:'9-12\u6708' },
-  { icon:'\uD83D\uDEB6', title:'\u6276\u8D70\u7EC3\u4E60', desc:'10-12\u6708\uFF1A\u6276\u7740\u5B9D\u5B9D\u814B\u4E0B\u6216\u624B\uFF0C\u7EC3\u4E60\u7AD9\u7ACB\u548C\u8FC8\u6B65', age:'10-12\u6708' }
+  { icon:'\u1f440', title:'\u9ed1\u767d\u5361\u8ffd\u89c6', desc:'0-3\u6708\uff1a\u5728\u5b9d\u5b9d\u773c\u524d20-30cm\u79fb\u52a8\u9ed1\u767d\u5361\uff0c\u8bad\u7ec3\u89c6\u89c9\u8ffd\u8e2a', age:'0-3\u6708' },
+  { icon:'\u1f932', title:'\u6293\u63e1\u7ec3\u4e60', desc:'2-4\u6708\uff1a\u628a\u6447\u94c3/\u5c0f\u73a9\u5177\u653e\u8fdb\u5b9d\u5b9d\u624b\u5fc3\uff0c\u7ec3\u4e60\u6293\u63e1\u548c\u677e\u5f00', age:'2-4\u6708' },
+  { icon:'\u1f5e3\ufe0f', title:'\u9762\u5bf9\u9762\u8bf4\u8bdd', desc:'0-6\u6708\uff1a\u591a\u548c\u5b9d\u5b9d\u8bf4\u8bdd\u3001\u6a21\u4eff\u4ed6\u7684\u58f0\u97f3\uff0c\u4fc3\u8fdb\u8bed\u8a00\u53d1\u80b2', age:'0-6\u6708' },
+  { icon:'\u1f931', title:'\u629a\u89e6\u6309\u6469', desc:'0-6\u6708\uff1a\u6bcf\u5929\u629a\u89e610-15\u5206\u949f\uff0c\u589e\u5f3a\u5b89\u5168\u611f\u548c\u4eb2\u5b50\u8054\u7ed3', age:'0-6\u6708' },
+  { icon:'\u1f3cb\ufe0f', title:'\u4fef\u5367\u62ac\u5934', desc:'1-4\u6708\uff1a\u6bcf\u5929\u8ba9\u5b9d\u5b9d\u8db4\u77402-3\u6b21\uff0c\u6bcf\u6b211-5\u5206\u949f\uff0c\u953b\u70bc\u9888\u90e8\u80cc\u90e8', age:'1-4\u6708' },
+  { icon:'\u1f3b5', title:'\u542c\u89c9\u523a\u6fc0', desc:'0-12\u6708\uff1a\u6447\u94c3\u3001\u97f3\u4e50\u76d2\u3001\u81ea\u7136\u58f0\u97f3\uff0c\u8bad\u7ec3\u542c\u89c9\u8fa8\u522b', age:'0-12\u6708' },
+  { icon:'\u1f4d6', title:'\u7ed8\u672c\u9605\u8bfb', desc:'4-12\u6708\uff1a\u6bcf\u5929\u8bfb\u7ed8\u672c10\u5206\u949f\uff0c\u57f9\u517b\u9605\u8bfb\u5174\u8da3\u548c\u8bed\u8a00\u80fd\u529b', age:'4-12\u6708' },
+  { icon:'\u1fa80', title:'\u7ffb\u8eab\u7ec3\u4e60', desc:'4-7\u6708\uff1a\u7528\u73a9\u5177\u5f15\u5bfc\u5b9d\u5b9d\u7ffb\u8eab\uff0c\u4ece\u4ef0\u5367\u5230\u4fef\u5367', age:'4-7\u6708' },
+  { icon:'\u1f9f8', title:'\u4f20\u9012\u73a9\u5177', desc:'5-8\u6708\uff1a\u5f15\u5bfc\u5b9d\u5b9d\u4e24\u624b\u95f4\u4f20\u9012\u73a9\u5177\uff0c\u7ec3\u4e60\u53cc\u624b\u534f\u8c03', age:'5-8\u6708' },
+  { icon:'\u1f445', title:'\u5c1d\u5473\u6e38\u620f', desc:'6-12\u6708\uff1a\u8f85\u98df\u65f6\u8ba9\u5b9d\u5b9d\u95fb\u3001\u6478\u3001\u5c1d\u4e0d\u540c\u98df\u6750\u5473\u9053', age:'6-12\u6708' },
+  { icon:'\u1faf3', title:'\u634f\u53d6\u7ec3\u4e60', desc:'8-12\u6708\uff1a\u8ba9\u5b9d\u5b9d\u7528\u62c7\u6307\u98df\u6307\u634f\u5c0f\u6eb6\u8c46/\u9992\u5934\u4e01\uff0c\u7ec3\u4e60\u7cbe\u7ec6\u52a8\u4f5c', age:'8-12\u6708' },
+  { icon:'\u1f9e9', title:'\u5bb9\u5668\u6e38\u620f', desc:'9-12\u6708\uff1a\u628a\u73a9\u5177\u653e\u8fdb\u62ff\u51fa\u5bb9\u5668\uff0c\u7406\u89e3"\u91cc\u5916"\u6982\u5ff5', age:'9-12\u6708' },
+  { icon:'\u1f44b', title:'\u6325\u624b\u518d\u89c1', desc:'9-12\u6708\uff1a\u6559\u5b9d\u5b9d\u6325\u624b\u3001\u62cd\u624b\uff0c\u5efa\u7acb\u624b\u52bf\u6c9f\u901a', age:'9-12\u6708' },
+  { icon:'\u1f6b6', title:'\u6276\u8d70\u7ec3\u4e60', desc:'10-12\u6708\uff1a\u6276\u7740\u5b9d\u5b9d\u814b\u4e0b\u6216\u624b\uff0c\u7ec3\u4e60\u7ad9\u7acb\u548c\u8fc8\u6b65', age:'10-12\u6708' }
 ];
 
 var BABY_MUSIC_REC = [
-  { icon:'\uD83C\uDF19', title:'\u767D\u566A\u97F3\u00B7\u96E8\u58F0', desc:'\u6A21\u62DF\u5B50\u5BAB\u73AF\u5883\uFF0C\u5E2E\u52A90-3\u6708\u5B9D\u5B9D\u5B89\u9759\u5165\u7761', source:'\u641C\u7D22\u300C\u767D\u566A\u97F3\u96E8\u58F0\u300D' },
-  { icon:'\uD83C\uDF0A', title:'\u767D\u566A\u97F3\u00B7\u6D77\u6D6A', desc:'\u89C4\u5F8B\u7684\u6F6E\u6C50\u58F0\uFF0C\u5B89\u629A\u54ED\u95F9\uFF0C\u9002\u5408\u54C4\u7761', source:'\u641C\u7D22\u300Cbaby ocean sound\u300D' },
-  { icon:'\uD83D\uDD25', title:'\u767D\u566A\u97F3\u00B7\u7BDD\u706B', desc:'\u6E29\u6696\u7684\u567C\u556A\u58F0\uFF0C\u8425\u9020\u5B89\u5168\u611F', source:'\u641C\u7D22\u300Cfireplace white noise\u300D' },
-  { icon:'\uD83C\uDFB5', title:'\u83AB\u624E\u7279\u6548\u5E94', desc:'\u83AB\u624E\u7279\u594F\u9E23\u66F2\uFF0C\u7814\u7A76\u8868\u660E\u6709\u52A9\u4E8E\u5927\u8111\u53D1\u80B2', source:'\u641C\u7D22\u300CMozart for babies\u300D' },
-  { icon:'\uD83C\uDFBB', title:'\u53E4\u5178\u6447\u7BEE\u66F2', desc:'\u52C3\u62C9\u59C6\u65AF\u3001\u8096\u90A6\u6447\u7BEE\u66F2\uFF0C\u7ECF\u5178\u54C4\u7761\u97F3\u4E50', source:'\u641C\u7D22\u300Cbaby lullaby classical\u300D' },
-  { icon:'\uD83E\uDD41', title:'\u81EA\u7136\u6253\u51FB\u4E50', desc:'\u6728\u9C7C\u3001\u6C99\u9524\u7B49\u67D4\u548C\u6253\u51FB\u4E50\uFF0C\u8282\u594F\u611F\u542F\u8499', source:'\u641C\u7D22\u300Cbaby percussion\u300D' },
-  { icon:'\uD83C\uDFB6', title:'\u7AE5\u58F0\u5408\u5531', desc:'\u7EAF\u51C0\u7684\u7AE5\u58F0\u6F14\u5531\uFF0C\u57F9\u517B\u97F3\u4E50\u611F\u53D7\u529B', source:'\u641C\u7D22\u300Cchildren choir\u300D' },
-  { icon:'\uD83C\uDFB9', title:'\u94A2\u7434\u8F7B\u97F3\u4E50', desc:'\u8212\u7F13\u94A2\u7434\u66F2\uFF0C\u9002\u5408\u73A9\u800D\u548C\u9605\u8BFB\u65F6\u80CC\u666F', source:'\u641C\u7D22\u300Cbaby piano music\u300D' }
+  { icon:'\u1f319', title:'\u767d\u566a\u97f3\u00b7\u96e8\u58f0', desc:'\u6a21\u62df\u5b50\u5bab\u73af\u5883\uff0c\u5e2e\u52a90-3\u6708\u5b9d\u5b9d\u5b89\u9759\u5165\u7761', source:'\u641c\u7d22\u300c\u767d\u566a\u97f3\u96e8\u58f0\u300d' },
+  { icon:'\u1f30a', title:'\u767d\u566a\u97f3\u00b7\u6d77\u6d6a', desc:'\u89c4\u5f8b\u7684\u6f6e\u6c50\u58f0\uff0c\u5b89\u629a\u54ed\u95f9\uff0c\u9002\u5408\u54c4\u7761', source:'\u641c\u7d22\u300cbaby ocean sound\u300d' },
+  { icon:'\u1f525', title:'\u767d\u566a\u97f3\u00b7\u7bdd\u706b', desc:'\u6e29\u6696\u7684\u567c\u556a\u58f0\uff0c\u8425\u9020\u5b89\u5168\u611f', source:'\u641c\u7d22\u300cfireplace white noise\u300d' },
+  { icon:'\u1f3b5', title:'\u83ab\u624e\u7279\u6548\u5e94', desc:'\u83ab\u624e\u7279\u594f\u9e23\u66f2\uff0c\u7814\u7a76\u8868\u660e\u6709\u52a9\u4e8e\u5927\u8111\u53d1\u80b2', source:'\u641c\u7d22\u300cMozart for babies\u300d' },
+  { icon:'\u1f3bb', title:'\u53e4\u5178\u6447\u7bee\u66f2', desc:'\u52c3\u62c9\u59c6\u65af\u3001\u8096\u90a6\u6447\u7bee\u66f2\uff0c\u7ecf\u5178\u54c4\u7761\u97f3\u4e50', source:'\u641c\u7d22\u300cbaby lullaby classical\u300d' },
+  { icon:'\u1f941', title:'\u81ea\u7136\u6253\u51fb\u4e50', desc:'\u6728\u9c7c\u3001\u6c99\u9524\u7b49\u67d4\u548c\u6253\u51fb\u4e50\uff0c\u8282\u594f\u611f\u542f\u8499', source:'\u641c\u7d22\u300cbaby percussion\u300d' },
+  { icon:'\u1f3b6', title:'\u7ae5\u58f0\u5408\u5531', desc:'\u7eaf\u51c0\u7684\u7ae5\u58f0\u6f14\u5531\uff0c\u57f9\u517b\u97f3\u4e50\u611f\u53d7\u529b', source:'\u641c\u7d22\u300cchildren choir\u300d' },
+  { icon:'\u1f3b9', title:'\u94a2\u7434\u8f7b\u97f3\u4e50', desc:'\u8212\u7f13\u94a2\u7434\u66f2\uff0c\u9002\u5408\u73a9\u800d\u548c\u9605\u8bfb\u65f6\u80cc\u666f', source:'\u641c\u7d22\u300cbaby piano music\u300d' }
 ];
 
 var BABY_FOOD_PLAN = [
-  { stage:'4-6\u6708', label:'\u8F85\u98DF\u521D\u671F\uFF08\u7B2C1-5\u5929\uFF09', items:[
-    { day:'\u7B2C1\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF081\u52FA\u5151\u6210\u7A00\u7CCA\uFF09', note:'\u4E0A\u5348\u5582\uFF0C\u89C2\u5BDF\u8FC7\u654F' },
-    { day:'\u7B2C2\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF082\u52FA\uFF09', note:'\u65E0\u8FC7\u654F\u53EF\u52A0\u91CF' },
-    { day:'\u7B2C3\u5929', food:'\u9AD8\u94C1\u7C73\u7C89\uFF083\u52FA\u7A0D\u7A20\uFF09', note:'\u9010\u6E10\u52A0\u7A20\u5EA6' },
-    { day:'\u7B2C4\u5929', food:'\u7C73\u7C89+\u80E1\u841D\u535C\u6CE5\uFF081\u5C0F\u52FA\uFF09', note:'\u65B0\u98DF\u6750\u4E0A\u5348\u52A0\u89C2\u5BDF3\u5929' },
-    { day:'\u7B2C5\u5929', food:'\u7C73\u7C89+\u80E1\u841D\u535C\u6CE5\uFF08\u52A0\u91CF\uFF09', note:'\u65E0\u8FC7\u654F\u7EE7\u7EED' }
+  { stage:'4-6\u6708', label:'\u8f85\u98df\u521d\u671f\uff08\u7b2c1-5\u5929\uff09', items:[
+    { day:'\u7b2c1\u5929', food:'\u9ad8\u94c1\u7c73\u7c89\uff081\u52fa\u5151\u6210\u7a00\u7cca\uff09', note:'\u4e0a\u5348\u5582\uff0c\u89c2\u5bdf\u8fc7\u654f' },
+    { day:'\u7b2c2\u5929', food:'\u9ad8\u94c1\u7c73\u7c89\uff082\u52fa\uff09', note:'\u65e0\u8fc7\u654f\u53ef\u52a0\u91cf' },
+    { day:'\u7b2c3\u5929', food:'\u9ad8\u94c1\u7c73\u7c89\uff083\u52fa\u7a0d\u7a20\uff09', note:'\u9010\u6e10\u52a0\u7a20\u5ea6' },
+    { day:'\u7b2c4\u5929', food:'\u7c73\u7c89+\u80e1\u841d\u535c\u6ce5\uff081\u5c0f\u52fa\uff09', note:'\u65b0\u98df\u6750\u4e0a\u5348\u52a0\u89c2\u5bdf3\u5929' },
+    { day:'\u7b2c5\u5929', food:'\u7c73\u7c89+\u80e1\u841d\u535c\u6ce5\uff08\u52a0\u91cf\uff09', note:'\u65e0\u8fc7\u654f\u7ee7\u7eed' }
   ]},
-  { stage:'4-6\u6708', label:'\u8F85\u98DF\u521D\u671F\uFF08\u7B2C6-10\u5929\uFF09', items:[
-    { day:'\u7B2C6\u5929', food:'\u7C73\u7C89+\u5357\u74DC\u6CE5', note:'\u65B0\u98DF\u6750\u66FF\u6362\u80E1\u841D\u535C' },
-    { day:'\u7B2C7\u5929', food:'\u7C73\u7C89+\u5357\u74DC\u6CE5', note:'\u89C2\u5BDF\u8FC7\u654F\u53CD\u5E94' },
-    { day:'\u7B2C8\u5929', food:'\u7C73\u7C89+\u82F9\u679C\u6CE5', note:'\u6C34\u679C\u6CE5\u521D\u6B21\u5C1D\u8BD5' },
-    { day:'\u7B2C9\u5929', food:'\u7C73\u7C89+\u82F9\u679C\u6CE5', note:'\u65E0\u8FC7\u654F\u7EE7\u7EED' },
-    { day:'\u7B2C10\u5929', food:'\u7C73\u7C89+\u68A8\u6CE5', note:'\u66F4\u6362\u6C34\u679C' }
+  { stage:'4-6\u6708', label:'\u8f85\u98df\u521d\u671f\uff08\u7b2c6-10\u5929\uff09', items:[
+    { day:'\u7b2c6\u5929', food:'\u7c73\u7c89+\u5357\u74dc\u6ce5', note:'\u65b0\u98df\u6750\u66ff\u6362\u80e1\u841d\u535c' },
+    { day:'\u7b2c7\u5929', food:'\u7c73\u7c89+\u5357\u74dc\u6ce5', note:'\u89c2\u5bdf\u8fc7\u654f\u53cd\u5e94' },
+    { day:'\u7b2c8\u5929', food:'\u7c73\u7c89+\u82f9\u679c\u6ce5', note:'\u6c34\u679c\u6ce5\u521d\u6b21\u5c1d\u8bd5' },
+    { day:'\u7b2c9\u5929', food:'\u7c73\u7c89+\u82f9\u679c\u6ce5', note:'\u65e0\u8fc7\u654f\u7ee7\u7eed' },
+    { day:'\u7b2c10\u5929', food:'\u7c73\u7c89+\u68a8\u6ce5', note:'\u66f4\u6362\u6c34\u679c' }
   ]},
-  { stage:'6-8\u6708', label:'\u8F85\u98DF\u4E2D\u671F', items:[
-    { day:'\u6BCF\u65E52\u9910', food:'\u7C73\u7C89/\u7CA5+\u83DC\u6CE5+\u679C\u6CE5+\u86CB\u9EC4', note:'\u4ECE\u6CE5\u8FC7\u6E21\u5230\u672B\u72B6' },
-    { day:'\u8089\u7C7B\u6DFB\u52A0', food:'\u9E21\u80F8\u8089\u6CE5\u2192\u732A\u8089\u6CE5\u2192\u732A\u809D\u6CE5', note:'\u6BCF\u79CD\u89C2\u5BDF3\u5929\u8865\u94C1\u8865\u86CB\u767D' },
-    { day:'\u852C\u83DC\u7C7B', food:'\u83E0\u83DC\u3001\u897F\u5170\u82B1\u3001\u571F\u8C46\u3001\u7EA2\u85AF\u6CE5', note:'\u8F6E\u6362\u642D\u914D' },
-    { day:'\u6C34\u679C\u7C7B', food:'\u9999\u8549\u3001\u82F9\u679C\u3001\u68A8\u3001\u725B\u6CB9\u679C\u6CE5', note:'\u4E0D\u8FC7\u654F\u53EF\u6DF7\u642D' },
-    { day:'\u4E3B\u98DF\u7C7B', food:'\u5F3A\u5316\u94C1\u7C73\u7C89\u3001\u70C2\u7CA5\u3001\u8F6F\u70C2\u9762\u6761', note:'\u9010\u6E10\u589E\u52A0\u7A20\u5EA6' }
+  { stage:'6-8\u6708', label:'\u8f85\u98df\u4e2d\u671f', items:[
+    { day:'\u6bcf\u65e52\u9910', food:'\u7c73\u7c89/\u7ca5+\u83dc\u6ce5+\u679c\u6ce5+\u86cb\u9ec4', note:'\u4ece\u6ce5\u8fc7\u6e21\u5230\u672b\u72b6' },
+    { day:'\u8089\u7c7b\u6dfb\u52a0', food:'\u9e21\u80f8\u8089\u6ce5\u2192\u732a\u8089\u6ce5\u2192\u732a\u809d\u6ce5', note:'\u6bcf\u79cd\u89c2\u5bdf3\u5929\u8865\u94c1\u8865\u86cb\u767d' },
+    { day:'\u852c\u83dc\u7c7b', food:'\u83e0\u83dc\u3001\u897f\u5170\u82b1\u3001\u571f\u8c46\u3001\u7ea2\u85af\u6ce5', note:'\u8f6e\u6362\u642d\u914d' },
+    { day:'\u6c34\u679c\u7c7b', food:'\u9999\u8549\u3001\u82f9\u679c\u3001\u68a8\u3001\u725b\u6cb9\u679c\u6ce5', note:'\u4e0d\u8fc7\u654f\u53ef\u6df7\u642d' },
+    { day:'\u4e3b\u98df\u7c7b', food:'\u5f3a\u5316\u94c1\u7c73\u7c89\u3001\u70c2\u7ca5\u3001\u8f6f\u70c2\u9762\u6761', note:'\u9010\u6e10\u589e\u52a0\u7a20\u5ea6' }
   ]},
-  { stage:'8-10\u6708', label:'\u8F85\u98DF\u540E\u671F', items:[
-    { day:'\u6BCF\u65E52-3\u9910', food:'\u8F6F\u996D+\u788E\u83DC\u8089\u672B+\u86CB\u9EC4+\u6C34\u679C', note:'\u4ECE\u672B\u72B6\u8FC7\u6E21\u5230\u5C0F\u9897\u7C92' },
-    { day:'\u624B\u6307\u98DF\u7269', food:'\u84B8\u7CD5\u6761\u3001\u80E1\u841D\u535C\u6761\u3001\u9992\u5934\u7247', note:'\u953B\u70BC\u81EA\u4E3B\u8FDB\u98DF' },
-    { day:'\u86CB\u767D\u8D28', food:'\u5168\u86CB\u3001\u9C7C\u8089\u3001\u9E21\u8089\u672B\u3001\u8C46\u8150', note:'\u6CE8\u610F\u9C7C\u523A\u548C\u8FC7\u654F' },
-    { day:'\u4E3B\u98DF\u7C7B', food:'\u8F6F\u996D\u3001\u70C2\u9762\u6761\u3001\u5C0F\u9984\u9968', note:'\u63A5\u8FD1\u6210\u4EBA\u8D28\u5730' },
-    { day:'\u5976\u91CF', food:'\u6BCF\u65E5600-800ml', note:'\u5976\u4ECD\u662F\u4E3B\u98DF' }
+  { stage:'8-10\u6708', label:'\u8f85\u98df\u540e\u671f', items:[
+    { day:'\u6bcf\u65e52-3\u9910', food:'\u8f6f\u996d+\u788e\u83dc\u8089\u672b+\u86cb\u9ec4+\u6c34\u679c', note:'\u4ece\u672b\u72b6\u8fc7\u6e21\u5230\u5c0f\u9897\u7c92' },
+    { day:'\u624b\u6307\u98df\u7269', food:'\u84b8\u7cd5\u6761\u3001\u80e1\u841d\u535c\u6761\u3001\u9992\u5934\u7247', note:'\u953b\u70bc\u81ea\u4e3b\u8fdb\u98df' },
+    { day:'\u86cb\u767d\u8d28', food:'\u5168\u86cb\u3001\u9c7c\u8089\u3001\u9e21\u8089\u672b\u3001\u8c46\u8150', note:'\u6ce8\u610f\u9c7c\u523a\u548c\u8fc7\u654f' },
+    { day:'\u4e3b\u98df\u7c7b', food:'\u8f6f\u996d\u3001\u70c2\u9762\u6761\u3001\u5c0f\u9984\u9968', note:'\u63a5\u8fd1\u6210\u4eba\u8d28\u5730' },
+    { day:'\u5976\u91cf', food:'\u6bcf\u65e5600-800ml', note:'\u5976\u4ecd\u662f\u4e3b\u98df' }
   ]},
-  { stage:'10-12\u6708', label:'\u8F85\u98DF\u672B\u671F', items:[
-    { day:'\u6BCF\u65E53\u9910', food:'\u8F6F\u996D+\u83DC\u8089+\u6C34\u679C', note:'\u5411\u6210\u4EBA\u996E\u98DF\u8FC7\u6E21' },
-    { day:'\u4E3B\u98DF', food:'\u8F6F\u996D\u3001\u9762\u6761\u3001\u5C0F\u997A\u5B50\u3001\u9992\u5934', note:'\u5757\u72B6\u953B\u70BC\u5480\u56BC' },
-    { day:'\u83DC\u54C1', food:'\u7092\u788E\u83DC\u3001\u84B8\u86CB\u7FB9\u3001\u8089\u4E38\u3001\u9C7C\u6BB5', note:'\u5C11\u76D0\u5C11\u7CD6\u6E05\u6DE1' },
-    { day:'\u52A0\u9910', food:'\u9178\u5976\u3001\u6C34\u679C\u5757\u3001\u5C0F\u997C\u5E72', note:'2\u6B21\u52A0\u9910' },
-    { day:'\u5976\u91CF', food:'\u6BCF\u65E5500-600ml', note:'\u4E0D\u80FD\u4F4E\u4E8E500ml' }
+  { stage:'10-12\u6708', label:'\u8f85\u98df\u672b\u671f', items:[
+    { day:'\u6bcf\u65e53\u9910', food:'\u8f6f\u996d+\u83dc\u8089+\u6c34\u679c', note:'\u5411\u6210\u4eba\u996e\u98df\u8fc7\u6e21' },
+    { day:'\u4e3b\u98df', food:'\u8f6f\u996d\u3001\u9762\u6761\u3001\u5c0f\u997a\u5b50\u3001\u9992\u5934', note:'\u5757\u72b6\u953b\u70bc\u5480\u56bc' },
+    { day:'\u83dc\u54c1', food:'\u7092\u788e\u83dc\u3001\u84b8\u86cb\u7fb9\u3001\u8089\u4e38\u3001\u9c7c\u6bb5', note:'\u5c11\u76d0\u5c11\u7cd6\u6e05\u6de1' },
+    { day:'\u52a0\u9910', food:'\u9178\u5976\u3001\u6c34\u679c\u5757\u3001\u5c0f\u997c\u5e72', note:'2\u6b21\u52a0\u9910' },
+    { day:'\u5976\u91cf', food:'\u6bcf\u65e5500-600ml', note:'\u4e0d\u80fd\u4f4e\u4e8e500ml' }
   ]}
 ];
 
 var DEFAULT_LEARNING_MODULES = [
-  { id:1, icon:'\uD83D\uDD24', name:'\u8BC6\u5B57\u542F\u8499', desc:'\u5E38\u7528\u5B57\u3001\u8C61\u5F62\u5B57\u3001\u751F\u6D3B\u5B57' },
-  { id:2, icon:'\uD83D\uDD22', name:'\u6570\u5B66\u601D\u7EF4', desc:'\u6570\u6570\u3001\u5206\u7C7B\u3001\u7B80\u5355\u52A0\u51CF' },
-  { id:3, icon:'\uD83C\uDFA8', name:'\u7F8E\u672F\u521B\u610F', desc:'\u6D82\u9E26\u3001\u624B\u5DE5\u3001\u8272\u5F69' },
-  { id:4, icon:'\uD83C\uDFB5', name:'\u97F3\u4E50\u5F8B\u52A8', desc:'\u5531\u6B4C\u3001\u8282\u594F\u3001\u5F8B\u52A8' },
-  { id:5, icon:'\uD83C\uDFC3', name:'\u8FD0\u52A8\u4F53\u80FD', desc:'\u8DD1\u6B65\u3001\u8DF3\u8DC3\u3001\u5E73\u8861' },
-  { id:6, icon:'\uD83E\uDDE9', name:'\u903B\u8F91\u601D\u7EF4', desc:'\u62FC\u56FE\u3001\u79EF\u6728\u3001\u627E\u89C4\u5F8B' }
+  { id:1, icon:'\u1f524', name:'\u8bc6\u5b57\u542f\u8499', desc:'\u5e38\u7528\u5b57\u3001\u8c61\u5f62\u5b57\u3001\u751f\u6d3b\u5b57' },
+  { id:2, icon:'\u1f522', name:'\u6570\u5b66\u601d\u7ef4', desc:'\u6570\u6570\u3001\u5206\u7c7b\u3001\u7b80\u5355\u52a0\u51cf' },
+  { id:3, icon:'\u1f3a8', name:'\u7f8e\u672f\u521b\u610f', desc:'\u6d82\u9e26\u3001\u624b\u5de5\u3001\u8272\u5f69' },
+  { id:4, icon:'\u1f3b5', name:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u5531\u6b4c\u3001\u8282\u594f\u3001\u5f8b\u52a8' },
+  { id:5, icon:'\u1f3c3', name:'\u8fd0\u52a8\u4f53\u80fd', desc:'\u8dd1\u6b65\u3001\u8df3\u8dc3\u3001\u5e73\u8861' },
+  { id:6, icon:'\u1f9e9', name:'\u903b\u8f91\u601d\u7ef4', desc:'\u62fc\u56fe\u3001\u79ef\u6728\u3001\u627e\u89c4\u5f8b' }
 ];
+
+var LEARNING_RESOURCES = {
+  1: [
+    { type:'\u7ee8\u672c', title:'\u300a\u5c0f\u8c61\u6c49\u5b57\u300b\u5b57\u5361', desc:'3-6\u5c81\u5fc5\u5907\u8ba4\u5b57\u5361\uff0c\u4ece\u751f\u6d3b\u5e38\u89c1\u5b57\u5f00\u59cb', tag:'\u5fc5\u5165', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%B0%8F%E8%B1%A1%E6%B1%89%E5%AD%97%E5%8D%A1' },
+    { type:'\u7ee8\u672c', title:'\u300a\u56db\u4e94\u5feb\u8bfb\u300b', desc:'4-5\u5c81\u7ecf\u5178\u8bc6\u5b57\u6559\u6750\uff0c\u5faa\u5e8f\u6e10\u8fdb', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%9B%9B%E4%BA%94%E5%BF%AB%E8%AF%BB' },
+    { type:'\u7ee8\u672c', title:'\u300a\u5b66\u524d600\u5b57\u300b', desc:'\u751f\u6d3b\u5e38\u7528\u5b57600\u4e2a\uff0c\u5206\u4e3b\u9898\u5b66\u4e60', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%A6%E5%89%8D600%E5%AD%97' },
+    { type:'\u73a9\u6cd5', title:'\u8def\u4e0a\u8bc6\u5b57\u6e38\u620f', desc:'\u8d70\u5728\u8def\u4e0a\u6307\u7740\u62db\u724c\u3001\u8f66\u724c\u3001\u5e97\u540d\u8ba4\u5b57', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B7%AF%E4%B8%8A%E8%AF%86%E5%AD%97%E6%B8%B8%E6%88%8F' },
+    { type:'\u73a9\u6cd5', title:'\u8d34\u5b57\u6e38\u620f', desc:'\u628a\u5b57\u5361\u8d34\u5728\u5bf9\u5e94\u7269\u54c1\u4e0a\uff08\u95e8\u3001\u684c\u3001\u5e8a\uff09', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B4%B4%E5%AD%97%E6%B8%B8%E6%88%8F%E5%AD%A9%E5%AD%90' },
+    { type:'APP', title:'\u6d2a\u6069\u8bc6\u5b57', desc:'\u514d\u8d39\u7248\u591f\u7528\uff0c\u8c61\u5f62\u5b57\u52a8\u753b\u5f62\u8c61\u751f\u52a8', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%B4%AA%E6%81%A9%E8%AF%86%E5%AD%97' },
+    { type:'APP', title:'\u609f\u7a7a\u8bc6\u5b57', desc:'\u897f\u6e38\u8bb0\u95f7\u5173\u8bb0\u5b57\uff0c\u8da3\u5473\u6027\u5f3a', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%82%9F%E7%A9%BA%E8%AF%86%E5%AD%97' },
+    { type:'\u513f\u6b4c', title:'\u300a\u5b66\u5b57\u6b4c\u300b', desc:'\u201c\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u201d\uff0c\u8fb9\u5531\u8fb9\u8ba4\u6570', link:'https://m.bilibili.com/search?keyword=%E5%AD%A6%E5%AD%97%E6%AD%8C%E5%84%BF%E7%AB%A5' }
+  ],
+  2: [
+    { type:'\u7ee8\u672c', title:'\u300a\u597d\u73a9\u7684\u6570\u5b66\u7ee8\u672c\u300b', desc:'\u4ece\u751f\u6d3b\u4e2d\u53d1\u73b0\u6570\u5b66\uff1a\u6570\u82f9\u679c\u3001\u5206\u997c\u5e72', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%A5%BD%E7%8E%A9%E7%9A%84%E6%95%B0%E5%AD%A6%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ee8\u672c', title:'\u300a\u8d70\u8fdb\u5947\u5999\u7684\u6570\u5b66\u4e16\u754c\u300b', desc:'\u5b89\u91ce\u5149\u96c5\u7ecf\u5178\uff0c\u7528\u6e38\u620f\u7406\u89e3\u6570\u5b66', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AE%89%E9%87%8E%E5%85%89%E9%9B%85%E6%95%B0%E5%AD%A6%E4%B8%96%E7%95%8C' },
+    { type:'\u73a9\u6cd5', title:'\u6570\u697c\u68af', desc:'\u4e0a\u4e0b\u697c\u68af\u65f6\u6570\u53f0\u9636\uff0c\u5efa\u7acb\u6570\u5b57\u6982\u5ff5', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%95%B0%E6%A5%BC%E6%A2%AF%E5%AD%A9%E5%AD%90%E6%95%B0%E5%AD%A6' },
+    { type:'\u73a9\u6cd5', title:'\u5206\u7c7b\u6e38\u620f', desc:'\u628a\u73a9\u5177\u6309\u989c\u8272/\u5f62\u72b6/\u5927\u5c0f\u5206\u7c7b', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%88%86%E7%B1%BB%E6%B8%B8%E6%88%8F%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u6bd4\u5927\u5c0f\u591a\u5c11', desc:'\u7528\u79ef\u6728\u3001\u997c\u5e72\u6bd4\u8f83\u591a\u548c\u5c11\u3001\u9ad8\u548c\u77ee', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%AF%94%E5%A4%A7%E5%B0%8F%E5%A4%9A%E5%B0%91%E6%95%B0%E5%AD%A6' },
+    { type:'\u73a9\u5177', title:'\u6570\u68d2\uff081-10\uff09', desc:'\u8499\u53f0\u68ad\u5229\u7ecf\u5178\u6559\u5177\uff0c\u7406\u89e3\u6570\u5b57\u548c\u6570\u91cf', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%95%B0%E6%A3%92%E8%92%99%E5%8F%B0%E6%A2%AD%E5%88%A9' },
+    { type:'\u73a9\u5177', title:'\u6570\u5b57\u62fc\u56fe', desc:'\u6728\u8d28\u6570\u5b57\u62fc\u56fe\uff0c1-10\u6570\u5b57\u4e0e\u56fe\u5f62\u5bf9\u5e94', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%95%B0%E5%AD%97%E6%8B%BC%E5%9B%BE%E6%9C%A8%E8%B4%A8' },
+    { type:'APP', title:'\u90fd\u90fd\u6570\u5b66', desc:'\u6bcf\u592910\u5206\u949f\uff0c\u5206\u7ea7\u6570\u5b66\u542f\u8499', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%83%BD%E9%83%BD%E6%95%B0%E5%AD%A6' }
+  ],
+  3: [
+    { type:'\u7ee8\u672c', title:'\u300a\u5c0f\u84dd\u548c\u5c0f\u9ec4\u300b', desc:'\u674e\u6b27\u00b7\u674e\u5965\u5c3c\u7ecf\u5178\uff0c\u8ba4\u8bc6\u8272\u5f69\u548c\u53cb\u8c0a', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%B0%8F%E8%93%9D%E5%92%8C%E5%B0%8F%E9%BB%84%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ee8\u672c', title:'\u300a\u70b9\u70b9\u70b9\u300b', desc:'\u4f1a\u53d8\u9b54\u672f\u7684\u7ee8\u672c\uff0c\u6fc0\u53d1\u521b\u9020\u529b', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%82%B9%E7%82%B9%E7%82%B9%E7%BB%98%E6%9C%AC' },
+    { type:'\u73a9\u6cd5', title:'\u624b\u6307\u753b', desc:'\u7528\u624b\u6307\u8638\u989c\u6599\u753b\u5706\u70b9\u3001\u7ebf\u6761\u3001\u56fe\u6848', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%89%8B%E6%8C%87%E7%94%BB%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u6495\u7eb8\u62fc\u8d34', desc:'\u628a\u5f69\u8272\u7eb8\u6495\u6210\u5404\u79cd\u5f62\u72b6\u7c98\u8d34\u6210\u753b', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%92%95%E7%BA%B8%E6%8B%BC%E8%B4%B4%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u81ea\u7136\u7d20\u6750\u753b', desc:'\u7528\u6811\u53f6\u3001\u6811\u679d\u3001\u77f3\u5934\u6446\u753b', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%87%AA%E7%84%B6%E7%B4%A0%E6%9D%90%E7%94%BB%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u5177', title:'\u6c34\u5f69\u7b14\u5957\u88c5', desc:'12\u8272\u53ef\u6c34\u6d17\u6c34\u5f69\u7b14\uff0c\u5b89\u5168\u4e0d\u810f\u624b', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8F%AF%E6%B0%B4%E6%B4%97%E6%B0%B4%E5%BD%A9%E7%AC%94%E5%84%BF%E7%AB%A5' },
+    { type:'\u73a9\u5177', title:'\u5f69\u8272\u9ecf\u571f', desc:'\u6a61\u76ae\u6ce5/\u8d85\u8f7b\u9ecf\u571f\uff0c\u953b\u70bc\u624b\u90e8\u7cbe\u7ec6\u52a8\u4f5c', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B6%85%E8%BD%BB%E9%BB%8F%E5%9C%9F%E5%84%BF%E7%AB%A5' },
+    { type:'\u73a9\u5177', title:'\u513f\u7ae5\u5b89\u5168\u526a\u5200\u5957\u88c5', desc:'\u7ec3\u4e60\u526a\u7eb8\uff0c\u953b\u70bc\u624b\u773c\u534f\u8c03', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E5%AE%89%E5%85%A8%E5%89%AA%E5%88%80' }
+  ],
+  4: [
+    { type:'\u513f\u6b4c', title:'\u300a\u5c0f\u661f\u661f\u300b', desc:'\u5168\u4e16\u754c\u6700\u7ecf\u5178\u7684\u7ae5\u8c23\uff0c\u7b80\u5355\u4e0a\u53e3', link:'https://m.bilibili.com/search?keyword=%E5%B0%8F%E6%98%9F%E6%98%9F%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u4e24\u53ea\u8001\u864e\u300b', desc:'\u8282\u594f\u611f\u5f3a\uff0c\u9002\u5408\u6253\u51fb\u4e50\u4f34\u594f', link:'https://m.bilibili.com/search?keyword=%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u8309\u8389\u82b1\u300b', desc:'\u4e2d\u56fd\u4f20\u7edf\u6c11\u6b4c\uff0c\u4f18\u7f8e\u52a8\u542c', link:'https://m.bilibili.com/search?keyword=%E8%8C%89%E8%8E%89%E8%8A%B1%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u4e0a\u5b66\u6b4c\u300b', desc:'\u201c\u592a\u9633\u5f53\u7a7a\u7167\uff0c\u82b1\u513f\u5bf9\u6211\u7b11\u201d', link:'https://m.bilibili.com/search?keyword=%E4%B8%8A%E5%AD%A6%E6%AD%8C%E5%84%BF%E7%AB%A5' },
+    { type:'\u73a9\u6cd5', title:'\u6572\u51fb\u8282\u594f', desc:'\u8ddf\u7740\u6b4c\u66f2\u62cd\u624b\u3001\u6572\u7897\u3001\u6572\u79ef\u6728', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%95%B2%E5%87%BB%E8%8A%82%E5%A5%8F%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u542c\u97f3\u4e50\u6a21\u4eff\u52a8\u4f5c\uff1a\u5c0f\u9e1f\u98de\u3001\u5c0f\u9c7c\u6cf3', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%9F%B3%E4%B9%90%E5%BE%8B%E5%8A%A8%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u5177', title:'\u513f\u7ae5\u6253\u51fb\u4e50\u5668', desc:'\u6c99\u9524\u3001\u6728\u9c7c\u3001\u5c0f\u9f13\u3001\u6447\u94c3\u7ec4\u5408', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E6%89%93%E5%87%BB%E4%B9%90%E5%99%A8' },
+    { type:'\u73a9\u5177', title:'\u516b\u97f3\u7434', desc:'\u6728\u7434/\u94dd\u677f\u7434\uff0c\u6572\u51fa\u7b80\u5355\u65cb\u5f8b', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%85%AB%E9%9F%B3%E7%90%B4%E5%84%BF%E7%AB%A5' }
+  ],
+  5: [
+    { type:'\u73a9\u6cd5', title:'\u8df3\u623f\u5b50', desc:'\u7528\u7c89\u7b14\u5728\u5730\u4e0a\u753b\u623f\u5b50\uff0c\u5355\u811a\u53cc\u811a\u8df3', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B7%B3%E6%88%BF%E5%AD%90%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u8001\u9e70\u6349\u5c0f\u9e21', desc:'\u7ecf\u5178\u6237\u5916\u6e38\u620f\uff0c\u953b\u70bc\u53cd\u5e94\u548c\u4f53\u80fd', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%80%81%E9%B9%B0%E6%8D%89%E5%B0%8F%E9%B8%A1' },
+    { type:'\u73a9\u6cd5', title:'\u5e73\u8861\u6728\u884c\u8d70', desc:'\u7528\u7c89\u7b14\u6216\u7ef3\u5b50\u753b\u7ebf\uff0c\u6cbf\u7740\u8d70\u76f4\u7ebf', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%B9%B3%E8%A1%A1%E6%9C%A8%E8%A1%8C%E8%B5%B0%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u62cd\u7403\u7ec3\u4e60', desc:'3-4\u5c81\u62cd\u5927\u7403\uff0c5-6\u5c81\u62cd\u5c0f\u7403', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%8B%8D%E7%90%83%E5%AD%A9%E5%AD%90%E7%BB%83%E4%B9%A0' },
+    { type:'\u73a9\u6cd5', title:'\u969c\u788d\u8dd1', desc:'\u5bb6\u91cc\u8bbe\u7f6e\u969c\u788d\uff08\u6795\u5934\u3001\u6905\u5b50\uff09\u8dd1\u8df3', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%9A%9C%E7%A2%8D%E8%B7%91%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u52a8\u7269\u6a21\u4eff', desc:'\u5b66\u5c0f\u9752\u86d9\u8df3\u3001\u5c0f\u87f9\u87f9\u6a2a\u8d70\u3001\u5c0f\u9e1f\u98de', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8A%A8%E7%89%A9%E6%A8%A1%E4%BB%BF%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u5177', title:'\u8df3\u7ef3', desc:'5-6\u5c81\u5f00\u59cb\u7ec3\uff0c\u5927\u4eba\u5e26\u7740\u8df3', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E8%B7%B3%E7%BB%B3' },
+    { type:'\u73a9\u5177', title:'\u513f\u7ae5\u81ea\u884c\u8f66', desc:'\u5e73\u8861\u8f66\u8fc7\u6e21\u5230\u81ea\u884c\u8f66\uff0c\u953b\u70bc\u5e73\u8861\u611f', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E5%B9%B3%E8%A1%A1%E8%BD%A6' }
+  ],
+  6: [
+    { type:'\u73a9\u5177', title:'\u62fc\u56fe\uff08\u6e10\u8fdb\u96be\u5ea6\uff09', desc:'\u4ece6\u7247\u523060\u7247\uff0c\u6839\u636e\u5e74\u9f84\u9009\u96be\u5ea6', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E6%8B%BC%E5%9B%BE' },
+    { type:'\u73a9\u5177', title:'\u4e50\u9ad8Duplo\u5927\u9897\u7c92', desc:'3-4\u5c81\u5927\u9897\u7c92\uff0c5-6\u5c81\u5c0f\u9897\u7c92', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B9%90%E9%AB%98Duplo%E5%A4%A7%E9%A2%97%E7%B2%92' },
+    { type:'\u73a9\u5177', title:'\u78c1\u529b\u7247', desc:'\u767e\u53d8\u78c1\u6027\u6784\u5efa\u7247\uff0c\u642d\u5efa\u5404\u79cd\u9020\u578b', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%A3%81%E5%8A%9B%E7%89%87%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u627e\u89c4\u5f8b\u6e38\u620f', desc:'\u6309\u989c\u8272/\u5f62\u72b6/\u5927\u5c0f\u627e\u89c4\u5f8b\u586b\u7a7a', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%89%BE%E8%A7%84%E5%BE%8B%E6%B8%B8%E6%88%8F%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u914d\u5bf9\u6e38\u620f', desc:'\u627e\u76f8\u540c\u56fe\u6848/\u989c\u8272/\u5f62\u72b6', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%85%8D%E5%AF%B9%E6%B8%B8%E6%88%8F%E5%AD%A9%E5%AD%90' },
+    { type:'\u73a9\u6cd5', title:'\u8ff0\u5bab\u4e66', desc:'\u8d70\u8ff0\u5bab\u8bad\u7ec3\u7a7a\u95f4\u611f\u548c\u89c4\u5212\u80fd\u529b', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%BF%B7%E5%AE%AB%E4%B9%A6%E5%AD%A9%E5%AD%90' },
+    { type:'\u7ee8\u672c', title:'\u300a\u795e\u5947\u7684\u903b\u8f91\u601d\u7ef4\u6e38\u620f\u4e66\u300b', desc:'\u65e5\u672c\u7ecf\u5178\u601d\u7ef4\u8bad\u7ec3\u6e38\u620f\u4e66', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%80%BB%E8%BE%91%E6%80%9D%E7%BB%B4%E6%B8%B8%E6%88%8F%E4%B9%A6' },
+    { type:'APP', title:'Khan Academy Kids', desc:'\u53ef\u6c57\u5b66\u9662\u513f\u7ae5\u7248\uff0c\u601d\u7ef4\u8bad\u7ec3+\u82f1\u6587', link:'https://www.xiaohongshu.com/search_result?keyword=Khan%20Academy%20Kids' }
+  ]
+};
 
 function renderBig() {
   var d = appData.petBig || {};
   if (!d.info) d.info = {name:'',birth:'',cls:''};
   if (!d.suppliesChecked) d.suppliesChecked = {};
   if (!d.learning) d.learning = deepClone(DEFAULT_LEARNING_MODULES);
+  if (!d.learningCompleted) d.learningCompleted = {};
+  if (!d.learningCustom) d.learningCustom = {};
   if (!d.health) d.health = [];
   if (!d.memo) d.memo = [];
   document.getElementById('pet-big-name').value = d.info.name || '';
@@ -1893,7 +1960,7 @@ function renderBigSupplies() {
       html += '<div class="bag-item">';
       html += '<div class="bag-checkbox ' + (isChecked ? 'checked' : '') + '" data-supply-key="' + key + '">' + (isChecked ? '\u2713' : '') + '</div>';
       html += '<div class="bag-item-body"><div class="bag-item-name ' + (isChecked ? 'completed' : '') + '">' + escapeHtml(item.name) + '</div>';
-      html += '<div style="font-size:11px;color:var(--text-light);">' + escapeHtml(item.qty) + ' \u00B7 ' + escapeHtml(item.note) + '</div></div>';
+      html += '<div style="font-size:11px;color:var(--text-light);">' + escapeHtml(item.qty) + ' \u00b7 ' + escapeHtml(item.note) + '</div></div>';
       html += '</div>';
     }
   }
@@ -1901,25 +1968,90 @@ function renderBigSupplies() {
   document.getElementById('big-supplies-count').textContent = done + ' / ' + total;
   document.getElementById('big-supplies-progress').style.width = (total ? (done / total * 100) : 0) + '%';
 }
+var currentLearningModuleId = null;
 function renderBigLearning() {
+  if (currentLearningModuleId !== null) { renderLearningDetail(currentLearningModuleId); return; }
   var modules = (appData.petBig && appData.petBig.learning) || DEFAULT_LEARNING_MODULES;
+  var completed = (appData.petBig && appData.petBig.learningCompleted) || {};
   var html = '';
   for (var i = 0; i < modules.length; i++) {
     var m = modules[i];
-    html += '<div class="learning-card">';
+    var resCount = (LEARNING_RESOURCES[m.id] ? LEARNING_RESOURCES[m.id].length : 0)
+      + ((appData.petBig.learningCustom && appData.petBig.learningCustom[m.id]) ? appData.petBig.learningCustom[m.id].length : 0);
+    var doneCount = 0;
+    if (completed[m.id]) {
+      for (var k in completed[m.id]) { if (completed[m.id][k]) doneCount++; }
+    }
+    html += '<div class="learning-card" data-learn-module="' + m.id + '">';
     html += '<button class="lc-delete" data-learn-id="' + m.id + '">\u2715</button>';
     html += '<div class="lc-icon">' + m.icon + '</div>';
     html += '<div class="lc-name">' + escapeHtml(m.name) + '</div>';
-    html += '<div class="lc-count">' + escapeHtml(m.desc || '') + '</div>';
+    html += '<div class="lc-count">' + doneCount + ' / ' + resCount + ' \u5df2\u5b8c\u6210</div>';
     html += '</div>';
   }
-  html += '<div class="learning-add-card" data-action="add-learning">+ \u6DFB\u52A0\u7C7B\u76EE</div>';
+  html += '<div class="learning-add-card" data-action="add-learning">+ \u6dfb\u52a0\u7c7b\u76ee</div>';
   document.getElementById('big-learning-modules').innerHTML = html;
+  document.getElementById('big-learning-add-form').style.display = '';
+}
+function renderLearningDetail(moduleId) {
+  var modules = (appData.petBig && appData.petBig.learning) || DEFAULT_LEARNING_MODULES;
+  var mod = null;
+  for (var i = 0; i < modules.length; i++) { if (modules[i].id == moduleId) { mod = modules[i]; break; } }
+  if (!mod) { currentLearningModuleId = null; renderBigLearning(); return; }
+  if (!appData.petBig.learningCompleted) appData.petBig.learningCompleted = {};
+  if (!appData.petBig.learningCompleted[moduleId]) appData.petBig.learningCompleted[moduleId] = {};
+  var completed = appData.petBig.learningCompleted[moduleId];
+  if (!appData.petBig.learningCustom) appData.petBig.learningCustom = {};
+  var customRes = appData.petBig.learningCustom[moduleId] || [];
+  var presetRes = LEARNING_RESOURCES[moduleId] || [];
+  var allRes = presetRes.concat(customRes);
+  var doneCount = 0;
+  for (var k in completed) { if (completed[k]) doneCount++; }
+  var html = '';
+  html += '<div class="learning-detail-header">';
+  html += '<button class="learning-back-btn" data-action="back-to-modules">\u2190 \u8fd4\u56de\u7c7b\u76ee</button>';
+  html += '<div class="learning-detail-title"><span class="ldt-icon">' + mod.icon + '</span><span class="ldt-name">' + escapeHtml(mod.name) + '</span></div>';
+  html += '<div class="learning-detail-progress">' + doneCount + ' / ' + allRes.length + ' \u5df2\u5b8c\u6210</div>';
+  html += '</div>';
+  var typeColors = { '\u7ee8\u672c':'#ff6b6b', '\u73a9\u6cd5':'#4ecdc4', '\u73a9\u5177':'#45b7d1', 'APP':'#96ceb4', '\u513f\u6b4c':'#ffe66d' };
+  for (var j = 0; j < allRes.length; j++) {
+    var r = allRes[j];
+    var resKey = 'res_' + j;
+    var isDone = completed[resKey] ? true : false;
+    var isCustom = j >= presetRes.length;
+    var tc = typeColors[r.type] || '#999';
+    html += '<div class="resource-item' + (isDone ? ' completed' : '') + '" data-res-key="' + resKey + '">';
+    html += '<label class="resource-check"><input type="checkbox" data-res-check="' + resKey + '"' + (isDone ? ' checked' : '') + '><span class="checkmark"></span></label>';
+    html += '<div class="resource-body">';
+    html += '<div class="resource-top"><span class="resource-type-badge" style="background:' + tc + '">' + escapeHtml(r.type) + '</span><span class="resource-title">' + escapeHtml(r.title) + '</span>';
+    if (r.tag) html += '<span class="resource-tag">' + escapeHtml(r.tag) + '</span>';
+    if (isCustom) html += '<button class="resource-delete" data-res-delete="' + resKey + '">\u2715</button>';
+    html += '</div>';
+    if (r.desc) html += '<div class="resource-desc">' + escapeHtml(r.desc) + '</div>';
+    if (r.link) html += '<a class="resource-link" href="' + r.link + '" target="_blank">\u67e5\u770b\u89c6\u9891 \u2192</a>';
+    html += '</div>';
+    html += '</div>';
+  }
+  html += '<div class="resource-add-form">';
+  html += '<h4>\u2795 \u6dfb\u52a0\u81ea\u5b9a\u4e49\u8d44\u6e90</h4>';
+  html += '<div class="raf-row"><select id="custom-res-type">';
+  var types = ['\u7ee8\u672c','\u73a9\u6cd5','\u73a9\u5177','APP','\u513f\u6b4c'];
+  for (var t = 0; t < types.length; t++) {
+    html += '<option value="' + types[t] + '">' + types[t] + '</option>';
+  }
+  html += '</select><input type="text" id="custom-res-title" placeholder="\u8d44\u6e90\u540d\u79f0\uff08\u5982\uff1a\u300a\u5c0f\u732b\u9493\u9c7c\u300b\uff09"></div>';
+  html += '<input type="text" id="custom-res-desc" placeholder="\u63cf\u8ff0\uff08\u53ef\u9009\uff09">';
+  html += '<input type="text" id="custom-res-link" placeholder="\u94fe\u63a5\uff08\u53ef\u9009\uff09">';
+  html += '<button id="add-custom-res-btn">\u6dfb\u52a0</button>';
+  html += '</div>';
+  document.getElementById('big-learning-modules').innerHTML = html;
+  var form = document.getElementById('big-learning-add-form');
+  if (form) form.style.display = 'none';
 }
 function renderBigHealth() {
   var records = (appData.petBig && appData.petBig.health) || [];
   var list = document.getElementById('pet-big-health-list');
-  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
+  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65e0\u8bb0\u5f55</p></div>'; return; }
   var sorted = records.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
   var html = '';
   for (var i = 0; i < sorted.length; i++) {
@@ -1933,7 +2065,7 @@ function renderBigHealth() {
 function renderBigMemo() {
   var records = (appData.petBig && appData.petBig.memo) || [];
   var list = document.getElementById('pet-big-memo-list');
-  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65E0\u8BB0\u5F55</p></div>'; return; }
+  if (!records.length) { list.innerHTML = '<div class="empty-state"><p>\u6682\u65e0\u8bb0\u5f55</p></div>'; return; }
   var sorted = records.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
   var html = '';
   for (var i = 0; i < sorted.length; i++) {
@@ -1968,11 +2100,11 @@ function renderSmallGrowth() {
 function renderSmallGrowthDetail(idx) {
   var g = BABY_GROWTH_GUIDE[idx];
   if (!g) return;
-  var html = '<h4 style="margin:0 0 12px;font-size:16px;color:var(--primary-dark);">' + g.stage + ' \u00B7 ' + g.label + '</h4>';
-  html += '<div class="gd-section"><h5>\uD83D\uDCCA \u751F\u957F\u53D1\u80B2</h5><p>' + escapeHtml(g.growth) + '</p></div>';
-  html += '<div class="gd-section"><h5>\uD83C\uDF7C \u5582\u517B\u996E\u98DF</h5><p>' + escapeHtml(g.feeding) + '</p></div>';
-  html += '<div class="gd-section"><h5>\uD83D\uDEC1 \u62A4\u7406\u5EFA\u8BAE</h5><p>' + escapeHtml(g.care) + '</p></div>';
-  html += '<div class="gd-section"><h5>\u26A0\uFE0F \u6CE8\u610F\u4E8B\u9879</h5><p>' + escapeHtml(g.caution) + '</p></div>';
+  var html = '<h4 style="margin:0 0 12px;font-size:16px;color:var(--primary-dark);">' + g.stage + ' \u00b7 ' + g.label + '</h4>';
+  html += '<div class="gd-section"><h5>\u1f4ca \u751f\u957f\u53d1\u80b2</h5><p>' + escapeHtml(g.growth) + '</p></div>';
+  html += '<div class="gd-section"><h5>\u1f37c \u5582\u517b\u996e\u98df</h5><p>' + escapeHtml(g.feeding) + '</p></div>';
+  html += '<div class="gd-section"><h5>\u1f6c1 \u62a4\u7406\u5efa\u8bae</h5><p>' + escapeHtml(g.care) + '</p></div>';
+  html += '<div class="gd-section"><h5>\u26a0\ufe0f \u6ce8\u610f\u4e8b\u9879</h5><p>' + escapeHtml(g.caution) + '</p></div>';
   document.getElementById('small-growth-detail').innerHTML = html;
 }
 function renderSmallEarlyEdu() {
@@ -1989,8 +2121,8 @@ function renderSmallEarlyEdu() {
     html += '<div class="ee-icon">' + c.icon + '</div>';
     html += '<div class="ee-title">' + escapeHtml(c.title) + '</div>';
     html += '<div class="ee-desc">' + escapeHtml(c.desc) + '</div>';
-    html += '<button class="ee-check ' + (isChecked ? 'checked' : '') + '" data-ee-idx="' + i + '">' + (isChecked ? '\u2713 \u5DF2\u6253\u5361' : '\u6253\u5361') + '</button>';
-    if (streakCount > 0) html += '<div class="ee-streak">\u8FDE\u7EED ' + streakCount + ' \u5929 \uD83D\uDD25</div>';
+    html += '<button class="ee-check ' + (isChecked ? 'checked' : '') + '" data-ee-idx="' + i + '">' + (isChecked ? '\u2713 \u5df2\u6253\u5361' : '\u6253\u5361') + '</button>';
+    if (streakCount > 0) html += '<div class="ee-streak">\u8fde\u7eed ' + streakCount + ' \u5929 \u1f525</div>';
     html += '</div>';
   }
   document.getElementById('small-earlyedu-cards').innerHTML = html;
@@ -2021,7 +2153,7 @@ function renderSmallFoodDetail(idx) {
   var f = BABY_FOOD_PLAN[idx];
   if (!f) return;
   var html = '<h4 style="margin:0 0 12px;font-size:16px;color:var(--primary-dark);">' + f.label + '</h4>';
-  html += '<div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">\u6708\u9F84\u9636\u6BB5\uFF1A' + f.stage + '</div>';
+  html += '<div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">\u6708\u9f84\u9636\u6bb5\uff1a' + f.stage + '</div>';
   for (var i = 0; i < f.items.length; i++) {
     var item = f.items[i];
     html += '<div style="background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;">';
@@ -2033,48 +2165,48 @@ function renderSmallFoodDetail(idx) {
   document.getElementById('small-food-detail').innerHTML = html;
 }
 
-// \u5927\u5B9D\u4FE1\u606F\u4FDD\u5B58
+// \u5927\u5b9d\u4fe1\u606f\u4fdd\u5b58
 document.getElementById('save-pet-big-btn').addEventListener('click', function(){
-  if (!appData.petBig) appData.petBig = { info:{}, suppliesChecked:{}, learning:deepClone(DEFAULT_LEARNING_MODULES), health:[], memo:[] };
+  if (!appData.petBig) appData.petBig = { info:{}, suppliesChecked:{}, learning:deepClone(DEFAULT_LEARNING_MODULES), learningCompleted:{}, learningCustom:{}, health:[], memo:[] };
   appData.petBig.info.name = document.getElementById('pet-big-name').value.trim();
   appData.petBig.info.birth = document.getElementById('pet-big-birth').value;
   var clsInput = document.getElementById('pet-big-class');
   if (clsInput) appData.petBig.info.cls = clsInput.value.trim();
-  saveData(); alert('\u5DF2\u4FDD\u5B58');
+  saveData(); alert('\u5df2\u4fdd\u5b58');
 });
-// \u5927\u5B9D\u5065\u5EB7\u8BB0\u5F55
+// \u5927\u5b9d\u5065\u5eb7\u8bb0\u5f55
 document.getElementById('add-pet-big-health-btn').addEventListener('click', function(){
   var date = document.getElementById('pet-big-health-date').value || todayISO();
   var item = document.getElementById('pet-big-health-item').value.trim();
   var note = document.getElementById('pet-big-health-note').value.trim();
-  if (!item) { alert('\u8BF7\u586B\u5199\u5065\u5EB7\u4E8B\u9879'); return; }
+  if (!item) { alert('\u8bf7\u586b\u5199\u5065\u5eb7\u4e8b\u9879'); return; }
   if (!appData.petBig.health) appData.petBig.health = [];
   appData.petBig.health.push({ id:newId(appData.petBig.health), date:date, item:item, note:note });
   saveData(); renderBigHealth();
   document.getElementById('pet-big-health-item').value = '';
   document.getElementById('pet-big-health-note').value = '';
 });
-// \u5927\u5B9D\u6210\u957F\u8BB0\u5F55
+// \u5927\u5b9d\u6210\u957f\u8bb0\u5f55
 document.getElementById('add-pet-big-memo-btn').addEventListener('click', function(){
   var date = document.getElementById('pet-big-memo-date').value || todayISO();
   var text = document.getElementById('pet-big-memo-text').value.trim();
-  if (!text) { alert('\u8BF7\u586B\u5199\u5185\u5BB9'); return; }
+  if (!text) { alert('\u8bf7\u586b\u5199\u5185\u5bb9'); return; }
   if (!appData.petBig.memo) appData.petBig.memo = [];
   appData.petBig.memo.push({ id:newId(appData.petBig.memo), date:date, text:text });
   saveData(); renderBigMemo();
   document.getElementById('pet-big-memo-text').value = '';
 });
-// \u5927\u5B9D\u5B66\u4E60\u7C7B\u76EE\u6DFB\u52A0
+// \u5927\u5b9d\u5b66\u4e60\u7c7b\u76ee\u6dfb\u52a0
 document.getElementById('add-big-learning-btn').addEventListener('click', function(){
   var name = document.getElementById('big-learning-name').value.trim();
   var icon = document.getElementById('big-learning-icon').value;
-  if (!name) { alert('\u8BF7\u586B\u5199\u7C7B\u76EE\u540D\u79F0'); return; }
+  if (!name) { alert('\u8bf7\u586b\u5199\u7c7b\u76ee\u540d\u79f0'); return; }
   if (!appData.petBig.learning) appData.petBig.learning = deepClone(DEFAULT_LEARNING_MODULES);
-  appData.petBig.learning.push({ id:newId(appData.petBig.learning), icon:icon, name:name, desc:'\u81EA\u5B9A\u4E49\u7C7B\u76EE' });
+  appData.petBig.learning.push({ id:newId(appData.petBig.learning), icon:icon, name:name, desc:'\u81ea\u5b9a\u4e49\u7c7b\u76ee' });
   saveData(); renderBigLearning();
   document.getElementById('big-learning-name').value = '';
 });
-// \u5927\u5B9D\u533A\u57DF\u70B9\u51FB\u59D4\u6258
+// \u5927\u5b9d\u533a\u57df\u70b9\u51fb\u59d4\u6258
 document.getElementById('pet-big').addEventListener('click', function(e){
   var supplyBox = e.target.closest ? e.target.closest('[data-supply-key]') : null;
   if (supplyBox) {
@@ -2088,7 +2220,71 @@ document.getElementById('pet-big').addEventListener('click', function(e){
   if (learnDel) {
     var lid = parseInt(learnDel.dataset.learnId);
     appData.petBig.learning = appData.petBig.learning.filter(function(m){ return m.id !== lid; });
+    if (appData.petBig.learningCompleted && appData.petBig.learningCompleted[lid]) delete appData.petBig.learningCompleted[lid];
+    if (appData.petBig.learningCustom && appData.petBig.learningCustom[lid]) delete appData.petBig.learningCustom[lid];
     saveData(); renderBigLearning();
+    return;
+  }
+  var learnModule = e.target.closest ? e.target.closest('[data-learn-module]') : null;
+  if (learnModule && !e.target.classList.contains('lc-delete')) {
+    currentLearningModuleId = parseInt(learnModule.dataset.learnModule);
+    renderBigLearning();
+    return;
+  }
+  var backBtn = e.target.closest ? e.target.closest('[data-action="back-to-modules"]') : null;
+  if (backBtn) {
+    currentLearningModuleId = null;
+    renderBigLearning();
+    return;
+  }
+  var resCheck = e.target.closest ? e.target.closest('[data-res-check]') : null;
+  if (resCheck) {
+    var key = resCheck.dataset.resCheck;
+    var mid = currentLearningModuleId;
+    if (!appData.petBig.learningCompleted) appData.petBig.learningCompleted = {};
+    if (!appData.petBig.learningCompleted[mid]) appData.petBig.learningCompleted[mid] = {};
+    appData.petBig.learningCompleted[mid][key] = resCheck.checked;
+    saveData();
+    var item = resCheck.closest('.resource-item');
+    if (item) item.classList.toggle('completed', resCheck.checked);
+    renderLearningDetail(mid);
+    return;
+  }
+  var resDel = e.target.closest ? e.target.closest('[data-res-delete]') : null;
+  if (resDel) {
+    var rkey = resDel.dataset.resDelete;
+    var dmid = currentLearningModuleId;
+    var presetCount = (LEARNING_RESOURCES[dmid] || []).length;
+    var customIdx = parseInt(rkey.replace('res_','')) - presetCount;
+    if (appData.petBig.learningCustom && appData.petBig.learningCustom[dmid] && customIdx >= 0 && customIdx < appData.petBig.learningCustom[dmid].length) {
+      appData.petBig.learningCustom[dmid].splice(customIdx, 1);
+      if (appData.petBig.learningCompleted && appData.petBig.learningCompleted[dmid]) {
+        var newCompleted = {};
+        for (var ck in appData.petBig.learningCompleted[dmid]) {
+          var ci = parseInt(ck.replace('res_',''));
+          if (ci < presetCount + customIdx) newCompleted[ck] = appData.petBig.learningCompleted[dmid][ck];
+          else if (ci > presetCount + customIdx) newCompleted['res_' + (ci - 1)] = appData.petBig.learningCompleted[dmid][ck];
+        }
+        appData.petBig.learningCompleted[dmid] = newCompleted;
+      }
+      saveData(); renderLearningDetail(dmid);
+    }
+    return;
+  }
+  var addResBtn = e.target.closest ? e.target.closest('#add-custom-res-btn') : null;
+  if (addResBtn) {
+    var rtype = document.getElementById('custom-res-type').value;
+    var rtitle = document.getElementById('custom-res-title').value.trim();
+    var rdesc = document.getElementById('custom-res-desc').value.trim();
+    var rlink = document.getElementById('custom-res-link').value.trim();
+    if (!rtitle) { alert('\u8bf7\u586b\u5199\u8d44\u6e90\u540d\u79f0'); return; }
+    var amId = currentLearningModuleId;
+    if (!appData.petBig.learningCustom) appData.petBig.learningCustom = {};
+    if (!appData.petBig.learningCustom[amId]) appData.petBig.learningCustom[amId] = [];
+    var newRes = { type:rtype, title:rtitle, desc:rdesc };
+    if (rlink) newRes.link = rlink;
+    appData.petBig.learningCustom[amId].push(newRes);
+    saveData(); renderLearningDetail(amId);
     return;
   }
   var addCard = e.target.closest ? e.target.closest('[data-action="add-learning"]') : null;
@@ -2121,14 +2317,14 @@ document.getElementById('pet-big').addEventListener('click', function(e){
   }
 });
 
-// \u5C0F\u5B9D\u4FE1\u606F\u4FDD\u5B58
+// \u5c0f\u5b9d\u4fe1\u606f\u4fdd\u5b58
 document.getElementById('save-pet-small-btn').addEventListener('click', function(){
   if (!appData.petSmall) appData.petSmall = { info:{}, earlyEduChecked:{}, earlyEduStreak:{} };
   appData.petSmall.info.name = document.getElementById('pet-small-name').value.trim();
   appData.petSmall.info.birth = document.getElementById('pet-small-birth').value;
-  saveData(); alert('\u5DF2\u4FDD\u5B58');
+  saveData(); alert('\u5df2\u4fdd\u5b58');
 });
-// \u5C0F\u5B9D\u533A\u57DF\u70B9\u51FB\u59D4\u6258
+// \u5c0f\u5b9d\u533a\u57df\u70b9\u51fb\u59d4\u6258
 document.getElementById('pet-small').addEventListener('click', function(e){
   var growthBtn = e.target.closest ? e.target.closest('[data-growth-idx]') : null;
   if (growthBtn) {
@@ -2179,7 +2375,7 @@ document.getElementById('pet-small').addEventListener('click', function(e){
   }
 });
 
-// \u6210\u957F\u677F\u5757 sub-nav \u5207\u6362
+// \u6210\u957f\u677f\u5757 sub-nav \u5207\u6362
 document.querySelectorAll('.growth-nav-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     var panel = btn.dataset.panel;
@@ -2193,7 +2389,7 @@ document.querySelectorAll('.growth-nav-btn').forEach(function(btn){
 function renderMemos() {
   var list = document.getElementById('memo-list');
   var memos = (appData.memos || []).slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
-  if (!memos.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">\uD83D\uDCDD</div><p>\u8FD8\u6CA1\u6709\u5907\u5FD8\u5F55</p></div>'; return; }
+  if (!memos.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">\u1f4dd</div><p>\u8fd8\u6ca1\u6709\u5907\u5fd8\u5f55</p></div>'; return; }
   list.innerHTML = '';
   var pending = [];
   for (var i = 0; i < memos.length; i++) {
@@ -2205,7 +2401,7 @@ function renderMemos() {
       } else {
         dbGet('hudie_audio', 'memos', m.content).then(function(blob){
           var url = blob ? URL.createObjectURL(blob) : '';
-          item.innerHTML = '<div class="memo-audio"><audio controls src="' + url + '"></audio><span>\uD83C\uDF99\uFE0F ' + (m.duration || '?') + 's</span></div><div class="memo-meta">' + m.date + '<button class="memo-delete" data-id="' + m.id + '">\u5220\u9664</button></div>';
+          item.innerHTML = '<div class="memo-audio"><audio controls src="' + url + '"></audio><span>\u1f399\ufe0f ' + (m.duration || '?') + 's</span></div><div class="memo-meta">' + m.date + '<button class="memo-delete" data-id="' + m.id + '">\u5220\u9664</button></div>';
           list.appendChild(item);
         }).catch(function(){});
       }
@@ -2223,7 +2419,7 @@ document.getElementById('memo-list').addEventListener('click', function(e){
   }
 });
 
-/* ====== \u6570\u636E\u5BFC\u51FA/\u5BFC\u5165 ====== */
+/* ====== \u6570\u636e\u5bfc\u51fa/\u5bfc\u5165 ====== */
 function exportData() {
   var blob = new Blob([JSON.stringify(appData, null, 2)], { type:'application/json' });
   var url = URL.createObjectURL(blob);
@@ -2239,14 +2435,14 @@ function importData(file) {
   reader.onload = function(ev){
     try {
       var imported = JSON.parse(ev.target.result);
-      if (confirm('\u786E\u8BA4\u5BFC\u5165\uFF1F\u8FD9\u5C06\u8986\u76D6\u5F53\u524D\u6570\u636E\u3002')) {
+      if (confirm('\u786e\u8ba4\u5bfc\u5165\uff1f\u8fd9\u5c06\u8986\u76d6\u5f53\u524d\u6570\u636e\u3002')) {
         appData = migrateData(imported);
         saveData();
-        alert('\u5BFC\u5165\u6210\u529F\uFF01\u9875\u9762\u5C06\u5237\u65B0\u3002');
+        alert('\u5bfc\u5165\u6210\u529f\uff01\u9875\u9762\u5c06\u5237\u65b0\u3002');
         location.reload();
       }
     } catch(err) {
-      alert('\u6587\u4EF6\u683C\u5F0F\u9519\u8BEF\uFF0C\u65E0\u6CD5\u5BFC\u5165');
+      alert('\u6587\u4ef6\u683c\u5f0f\u9519\u8bef\uff0c\u65e0\u6cd5\u5bfc\u5165');
     }
   };
   reader.readAsText(file);
@@ -2258,7 +2454,7 @@ importBtns.forEach(function(btn){ btn.addEventListener('click', function(){ var 
 var importFiles = document.querySelectorAll('#import-file, #import-file2');
 importFiles.forEach(function(input){ input.addEventListener('change', function(e){ importData(e.target.files[0]); e.target.value = ''; }); });
 
-/* ====== \u521D\u59CB\u5316 ====== */
+/* ====== \u521d\u59cb\u5316 ====== */
 function init() {
   document.getElementById('today-date').textContent = todayStr();
   document.getElementById('today-weekday').textContent = weekdayStr();

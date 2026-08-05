@@ -115,6 +115,46 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 .learning-card .lc-delete:hover { background:#ffebee; color:#c62828; }
 .learning-add-card { background:var(--bg); border:2px dashed var(--border); border-radius:12px; padding:14px; text-align:center; cursor:pointer; color:var(--text-light); font-size:13px; }
 
+/* 学习资源详情 */
+.learning-detail-header { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+.learning-back-btn { padding:8px 14px; border:1px solid var(--border); background:var(--card-bg); border-radius:8px; cursor:pointer; font-size:13px; color:var(--text); }
+.learning-back-btn:hover { background:var(--bg); }
+.learning-detail-title { flex:1; display:flex; align-items:center; gap:8px; }
+.ldt-icon { font-size:24px; }
+.ldt-name { font-size:18px; font-weight:700; color:var(--text); }
+.learning-detail-progress { font-size:13px; color:var(--text-light); }
+.resource-item { display:flex; gap:12px; background:var(--card-bg); border-radius:12px; padding:14px; border:1px solid var(--border); margin-bottom:10px; transition:all 0.2s; }
+.resource-item.completed { opacity:0.55; }
+.resource-item.completed .resource-title { text-decoration:line-through; }
+.resource-check { position:relative; flex-shrink:0; width:22px; height:22px; cursor:pointer; margin-top:2px; }
+.resource-check input { position:absolute; opacity:0; width:22px; height:22px; margin:0; cursor:pointer; }
+.resource-check .checkmark { position:absolute; top:0; left:0; width:22px; height:22px; border:2px solid var(--border); border-radius:6px; background:var(--card-bg); transition:all 0.2s; }
+.resource-check input:checked + .checkmark { background:var(--primary); border-color:var(--primary); }
+.resource-check input:checked + .checkmark::after { content:''; position:absolute; top:3px; left:6px; width:6px; height:11px; border:solid white; border-width:0 2px 2px 0; transform:rotate(45deg); }
+.resource-body { flex:1; min-width:0; }
+.resource-top { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.resource-type-badge { display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; color:white; font-weight:600; }
+.resource-title { font-size:14px; font-weight:600; color:var(--text); }
+.resource-tag { display:inline-block; padding:1px 7px; border-radius:4px; font-size:11px; background:#fff3cd; color:#856404; border:1px solid #ffe082; }
+.resource-desc { font-size:13px; color:var(--text-light); margin-top:4px; line-height:1.6; }
+.resource-link { display:inline-block; font-size:12px; color:var(--primary); margin-top:6px; text-decoration:none; }
+.resource-link:hover { text-decoration:underline; }
+.resource-delete { width:24px; height:24px; border:none; background:transparent; color:var(--text-light); cursor:pointer; border-radius:4px; font-size:12px; margin-left:auto; }
+.resource-delete:hover { background:#ffebee; color:#c62828; }
+.resource-add-form { background:var(--bg); border-radius:12px; padding:14px; border:1px dashed var(--border); margin-top:16px; }
+.resource-add-form h4 { margin:0 0 10px; font-size:14px; color:var(--text); }
+.raf-row { display:flex; gap:8px; margin-bottom:8px; }
+.resource-add-form select, .resource-add-form input { padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; background:var(--card-bg); }
+.resource-add-form select { flex-shrink:0; }
+.resource-add-form input { flex:1; min-width:0; }
+.resource-add-form button { padding:8px 16px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:13px; cursor:pointer; margin-top:6px; }
+.resource-add-form button:hover { background:var(--primary-dark); }
+@media (max-width:600px) {
+  .learning-detail-header { flex-direction:column; align-items:flex-start; }
+  .resource-item { padding:10px; gap:8px; }
+  .raf-row { flex-direction:column; }
+}
+
 /* 发育指导 */
 .growth-stage-selector, .food-stage-selector { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
 .stage-btn { padding:8px 14px; border:1px solid var(--border); background:var(--card-bg); border-radius:20px; cursor:pointer; font-size:13px; color:var(--text-light); }
