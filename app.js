@@ -6,44 +6,44 @@ const MEAL_KEYS = ['breakfast','morningSnack','lunch','afternoonSnack','dinner',
 const MEAL_LABELS = { breakfast:'\u65e9\u9910', morningSnack:'\u65e9\u52a0\u9910', lunch:'\u5348\u9910', afternoonSnack:'\u5348\u52a0\u9910', dinner:'\u665a\u9910', eveningSnack:'\u665a\u52a0\u9910' };
 const DAILY_VIDEOS = {
   pilates: [
-    { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
-    { title:'\u5c45\u5bb6\u666e\u62c9\u63d0 10 \u5206\u949f\u5165\u95e8', link:'https://m.bilibili.com/search?keyword=%E5%B1%85%E5%AE%B6%E6%99%AE%E6%8B%89%E6%8F%90%E5%85%A5%E9%97%A8' },
-    { title:'\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d0 15 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E4%BA%A7%E5%90%8E%E6%99%AE%E6%8B%89%E6%8F%90%E6%81%A2%E5%A4%8D' },
-    { title:'\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3 \u521d\u7ea7', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E6%A0%B8%E5%BF%83%E8%AE%AD%E7%BB%83%E5%88%9D%E7%BA%A7' },
-    { title:'\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f38 12 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E7%9D%A1%E5%89%8D%E6%99%AE%E6%8B%89%E6%8F%90%E6%8B%89%E4%BC%B8' },
-    { title:'\u5b55\u5987\u666e\u62c9\u63d0 \u7f13\u89e3\u8170\u80cc\u75bc\u75db', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E5%A6%87%E6%99%AE%E6%8B%89%E6%8F%90%E8%85%B0%E8%83%8C' },
-    { title:'30 \u5929\u666e\u62c9\u63d0\u5851\u5f62 \u00b7 \u7b2c 1 \u5929', link:'https://m.bilibili.com/search?keyword=30%E5%A4%A9%E6%99%AE%E6%8B%89%E6%8F%90%E5%A1%91%E5%BD%A2' },
-    { title:'\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e60 5 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E5%91%BC%E5%90%B8%E6%B3%95' }
+    { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
+    { title:'\u5c45\u5bb6\u666e\u62c9\u63d0 10 \u5206\u949f\u5165\u95e8', link:'https://search.bilibili.com/all?keyword=%E5%B1%85%E5%AE%B6%E6%99%AE%E6%8B%89%E6%8F%90%E5%85%A5%E9%97%A8' },
+    { title:'\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d0 15 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E4%BA%A7%E5%90%8E%E6%99%AE%E6%8B%89%E6%8F%90%E6%81%A2%E5%A4%8D' },
+    { title:'\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3 \u521d\u7ea7', link:'https://search.bilibili.com/all?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E6%A0%B8%E5%BF%83%E8%AE%AD%E7%BB%83%E5%88%9D%E7%BA%A7' },
+    { title:'\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f38 12 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E7%9D%A1%E5%89%8D%E6%99%AE%E6%8B%89%E6%8F%90%E6%8B%89%E4%BC%B8' },
+    { title:'\u5b55\u5987\u666e\u62c9\u63d0 \u7f13\u89e3\u8170\u80cc\u75bc\u75db', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E5%A6%87%E6%99%AE%E6%8B%89%E6%8F%90%E8%85%B0%E8%83%8C' },
+    { title:'30 \u5929\u666e\u62c9\u63d0\u5851\u5f62 \u00b7 \u7b2c 1 \u5929', link:'https://search.bilibili.com/all?keyword=30%E5%A4%A9%E6%99%AE%E6%8B%89%E6%8F%90%E5%A1%91%E5%BD%A2' },
+    { title:'\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e60 5 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E5%91%BC%E5%90%B8%E6%B3%95' }
   ],
   beauty: [
     { title:'\u5b55\u671f\u901a\u52e4\u7a7f\u642d 5 \u5957 LOOK', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E9%80%9A%E5%8B%A4' },
-    { title:'\u65b0\u624b\u5316\u5986\u6559\u7a0b \u4f2a\u7d20\u989c\u5986', link:'https://m.bilibili.com/search?keyword=%E6%96%B0%E6%89%8B%E5%8C%96%E5%A6%86%E6%95%99%E7%A8%8B' },
+    { title:'\u65b0\u624b\u5316\u5986\u6559\u7a0b \u4f2a\u7d20\u989c\u5986', link:'https://search.bilibili.com/all?keyword=%E6%96%B0%E6%89%8B%E5%8C%96%E5%A6%86%E6%95%99%E7%A8%8B' },
     { title:'\u68a8\u5f62\u8eab\u6750\u7a7f\u642d\u516c\u5f0f', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%A2%A8%E5%BD%A2%E8%BA%AB%E6%9D%90%E7%A9%BF%E6%90%AD%E5%85%AC%E5%BC%8F' },
     { title:'\u5b55\u671f\u7a7f\u642d\u663e\u7626 10 \u4e2a\u6280\u5de7', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E6%98%BE%E7%98%A6' },
-    { title:'\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u5986 5 \u5206\u949f', link:'https://m.bilibili.com/search?keyword=%E6%97%A9%E5%85%AB%E5%BF%AB%E9%80%9F%E5%87%BA%E9%97%A8%E5%A6%86' },
+    { title:'\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u5986 5 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E6%97%A9%E5%85%AB%E5%BF%AB%E9%80%9F%E5%87%BA%E9%97%A8%E5%A6%86' },
     { title:'\u5b55\u671f\u7a7f\u642d\u535a\u4e3b\u5408\u96c6\u63a8\u8350', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E5%8D%9A%E4%B8%BB' },
     { title:'\u5355\u773c\u76ae\u773c\u5986\u6559\u7a0b \u81ea\u7136\u653e\u5927', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%95%E7%9C%BC%E7%9A%AE%E7%9C%BC%E5%A6%86%E6%95%99%E7%A8%8B' },
     { title:'\u57fa\u7840\u6b3e\u7a7f\u642d\u9ad8\u7ea7\u611f', link:'https://www.douyin.com/search/%E5%9F%BA%E7%A1%80%E6%AC%BE%E9%AB%98%E7%BA%A7%E6%84%9F%E7%A9%BF%E6%90%AD' }
   ],
   nutrition: [
-    { title:'\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565', link:'https://m.bilibili.com/search?keyword=%E5%AD%95%E6%9C%9F%E6%8E%A7%E7%B3%96%E9%A5%AE%E9%A3%9F' },
-    { title:'\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb', link:'https://m.bilibili.com/search?keyword=%E4%B8%AD%E5%9B%BD%E5%B1%85%E6%B0%91%E8%86%B3%E9%A3%9F%E6%8C%87%E5%8D%97' },
+    { title:'\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E6%9C%9F%E6%8E%A7%E7%B3%96%E9%A5%AE%E9%A3%9F' },
+    { title:'\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb', link:'https://search.bilibili.com/all?keyword=%E4%B8%AD%E5%9B%BD%E5%B1%85%E6%B0%91%E8%86%B3%E9%A3%9F%E6%8C%87%E5%8D%97' },
     { title:'\u51cf\u8102\u671f\u86cb\u767d\u8d28\u600e\u4e48\u5403', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E8%9B%8B%E7%99%BD%E8%B4%A8' },
     { title:'\u5b55\u671f\u8865\u94c1\u8865\u9499\u98df\u7269\u6e05\u5355', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%A1%A5%E9%93%81%E8%A1%A5%E9%92%99' },
-    { title:'\u4f4e GI \u98df\u7269\u9009\u62e9\u6307\u5357', link:'https://m.bilibili.com/search?keyword=%E4%BD%8EGI%E9%A3%9F%E7%89%A9' },
-    { title:'\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406', link:'https://m.bilibili.com/search?keyword=%E5%A6%8A%E5%A8%A0%E6%9C%9F%E7%B3%96%E5%B0%BF%E7%97%85%E9%A5%AE%E9%A3%9F' },
+    { title:'\u4f4e GI \u98df\u7269\u9009\u62e9\u6307\u5357', link:'https://search.bilibili.com/all?keyword=%E4%BD%8EGI%E9%A3%9F%E7%89%A9' },
+    { title:'\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406', link:'https://search.bilibili.com/all?keyword=%E5%A6%8A%E5%A8%A0%E6%9C%9F%E7%B3%96%E5%B0%BF%E7%97%85%E9%A5%AE%E9%A3%9F' },
     { title:'\u5b55\u671f\u8425\u517b\u8865\u5145\u5242\u600e\u4e48\u9009', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%90%A5%E5%85%BB%E8%A1%A5%E5%85%85%E5%89%82' },
     { title:'\u51cf\u8102\u671f\u4e00\u65e5\u4e09\u9910\u642d\u914d', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E4%B8%80%E6%97%A5%E4%B8%89%E9%A4%90' }
   ],
   english: [
-    { title:'\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed 100 \u53e5', link:'https://m.bilibili.com/search?keyword=%E6%97%A5%E5%B8%B8%E8%8B%B1%E8%AF%AD%E5%8F%A3%E8%AF%AD100%E5%8F%A5' },
-    { title:'\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd', link:'https://m.bilibili.com/search?keyword=%E6%9C%BA%E5%9C%BA%E9%80%9A%E5%85%B3%E8%8B%B1%E8%AF%AD%E5%AF%B9%E8%AF%9D' },
-    { title:'\u9910\u5385\u70b9\u9910\u82f1\u8bed \u5b9e\u7528\u53e5\u578b', link:'https://m.bilibili.com/search?keyword=%E9%A4%90%E5%8E%85%E7%82%B9%E9%A4%90%E8%8B%B1%E8%AF%AD' },
-    { title:'\u8d2d\u7269\u82f1\u8bed \u8ba8\u4ef7\u8fd8\u4ef7', link:'https://m.bilibili.com/search?keyword=%E8%B4%AD%E7%89%A9%E8%8B%B1%E8%AF%AD%E8%AE%A8%E4%BB%B7%E8%BF%98%E4%BB%B7' },
-    { title:'\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed 30 \u79d2\u7248', link:'https://m.bilibili.com/search?keyword=%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D%E8%8B%B1%E8%AF%AD30%E7%A7%92' },
-    { title:'\u7535\u8bdd\u82f1\u8bed \u9884\u7ea6/\u53d6\u6d88', link:'https://m.bilibili.com/search?keyword=%E7%94%B5%E8%AF%9D%E8%8B%B1%E8%AF%AD%E9%A2%84%E7%BA%A6' },
-    { title:'\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd', link:'https://m.bilibili.com/search?keyword=%E9%85%92%E5%BA%97%E5%85%A5%E4%BD%8F%E8%8B%B1%E8%AF%AD' },
-    { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://m.bilibili.com/search?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
+    { title:'\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed 100 \u53e5', link:'https://search.bilibili.com/all?keyword=%E6%97%A5%E5%B8%B8%E8%8B%B1%E8%AF%AD%E5%8F%A3%E8%AF%AD100%E5%8F%A5' },
+    { title:'\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd', link:'https://search.bilibili.com/all?keyword=%E6%9C%BA%E5%9C%BA%E9%80%9A%E5%85%B3%E8%8B%B1%E8%AF%AD%E5%AF%B9%E8%AF%9D' },
+    { title:'\u9910\u5385\u70b9\u9910\u82f1\u8bed \u5b9e\u7528\u53e5\u578b', link:'https://search.bilibili.com/all?keyword=%E9%A4%90%E5%8E%85%E7%82%B9%E9%A4%90%E8%8B%B1%E8%AF%AD' },
+    { title:'\u8d2d\u7269\u82f1\u8bed \u8ba8\u4ef7\u8fd8\u4ef7', link:'https://search.bilibili.com/all?keyword=%E8%B4%AD%E7%89%A9%E8%8B%B1%E8%AF%AD%E8%AE%A8%E4%BB%B7%E8%BF%98%E4%BB%B7' },
+    { title:'\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed 30 \u79d2\u7248', link:'https://search.bilibili.com/all?keyword=%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D%E8%8B%B1%E8%AF%AD30%E7%A7%92' },
+    { title:'\u7535\u8bdd\u82f1\u8bed \u9884\u7ea6/\u53d6\u6d88', link:'https://search.bilibili.com/all?keyword=%E7%94%B5%E8%AF%9D%E8%8B%B1%E8%AF%AD%E9%A2%84%E7%BA%A6' },
+    { title:'\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd', link:'https://search.bilibili.com/all?keyword=%E9%85%92%E5%BA%97%E5%85%A5%E4%BD%8F%E8%8B%B1%E8%AF%AD' },
+    { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://search.bilibili.com/all?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
   ]
 };
 const defaultData = {
@@ -110,6 +110,17 @@ function migrateData(stored) {
       if (!merged[k].info) merged[k].info = {name:'',birth:'',cls:''};
       if (!merged[k].suppliesChecked) merged[k].suppliesChecked = {};
       if (!merged[k].learning || !merged[k].learning.length) merged[k].learning = deepClone(DEFAULT_LEARNING_MODULES);
+      else {
+        // \u4fdd\u8bc1 id:7(\u82f1\u8bed\u542f\u8499) \u548c id:8(\u7ed8\u672c\u9605\u8bfb) \u5728\u5b66\u4e60\u6570\u636e\u4e2d\uff0c\u5e76\u4e14 id \u8981\u4e0e DEFAULT_LEARNING_MODULES \u4e2d\u7684\u4e00\u81f4
+        var hasEnglish = false; var hasPictureBook = false;
+        for (var li = 0; li < merged[k].learning.length; li++) {
+          var ln = merged[k].learning[li];
+          if (ln.name === '\u82f1\u8bed\u542f\u8499') { ln.id = 7; hasEnglish = true; }
+          else if (ln.name === '\u7ed8\u672c\u9605\u8bfb') { ln.id = 8; hasPictureBook = true; }
+        }
+        if (!hasEnglish) merged[k].learning.push({ id:7, icon:'\ud83c\udf10', name:'\u82f1\u8bed\u542f\u8499', desc:'\u82f1\u6589\u513f\u6b4c\u3001\u52a8\u753b\u7247\u3001\u53e3\u8bed' });
+        if (!hasPictureBook) merged[k].learning.push({ id:8, icon:'\ud83d\udcda', name:'\u7ed8\u672c\u9605\u8bfb', desc:'3-6\u5c81\u7ed8\u672c\u3001\u7eaa\u5f55\u7247\u3001\u81ea\u6211\u4fdd\u62a4' });
+      }
       if (!merged[k].learningCompleted) merged[k].learningCompleted = {};
       if (!merged[k].learningCustom) merged[k].learningCustom = {};
       if (!merged[k].health) merged[k].health = [];
@@ -1629,7 +1640,7 @@ function analyzeTodayDiet() {
 function openRecipeSearch(platform) {
   var q = document.getElementById('recipe-search').value.trim() || '\u51cf\u8102\u9910';
   var urls = {
-    bilibili:'https://m.bilibili.com/search?keyword=' + encodeURIComponent(q),
+    bilibili:'https://search.bilibili.com/all?keyword=' + encodeURIComponent(q),
     douyin:'https://www.douyin.com/search/' + encodeURIComponent(q),
     xhs:'https://www.xiaohongshu.com/search_result?keyword=' + encodeURIComponent(q)
   };
@@ -1860,7 +1871,9 @@ var DEFAULT_LEARNING_MODULES = [
   { id:3, icon:'\u1f3a8', name:'\u7f8e\u672f\u521b\u610f', desc:'\u6d82\u9e26\u3001\u624b\u5de5\u3001\u8272\u5f69' },
   { id:4, icon:'\u1f3b5', name:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u5531\u6b4c\u3001\u8282\u594f\u3001\u5f8b\u52a8' },
   { id:5, icon:'\u1f3c3', name:'\u8fd0\u52a8\u4f53\u80fd', desc:'\u8dd1\u6b65\u3001\u8df3\u8dc3\u3001\u5e73\u8861' },
-  { id:6, icon:'\u1f9e9', name:'\u903b\u8f91\u601d\u7ef4', desc:'\u62fc\u56fe\u3001\u79ef\u6728\u3001\u627e\u89c4\u5f8b' }
+  { id:6, icon:'\u1f9e9', name:'\u903b\u8f91\u601d\u7ef4', desc:'\u62fc\u56fe\u3001\u79ef\u6728\u3001\u627e\u89c4\u5f8b' },
+  { id:7, icon:'\u1f310', name:'\u82f1\u8bed\u542f\u8499', desc:'\u82f1\u6587\u513f\u6b4c\u3001\u52a8\u753b\u7247\u3001\u53e3\u8bed' },
+  { id:8, icon:'\u1f4da', name:'\u7ed8\u672c\u9605\u8bfb', desc:'3-6\u5c81\u7ed8\u672c\u3001\u7eaa\u5f55\u7247\u3001\u81ea\u6211\u4fdd\u62a4' }
 ];
 
 var LEARNING_RESOURCES = {
@@ -1872,7 +1885,7 @@ var LEARNING_RESOURCES = {
     { type:'\u73a9\u6cd5', title:'\u8d34\u5b57\u6e38\u620f', desc:'\u628a\u5b57\u5361\u8d34\u5728\u5bf9\u5e94\u7269\u54c1\u4e0a\uff08\u95e8\u3001\u684c\u3001\u5e8a\uff09', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B4%B4%E5%AD%97%E6%B8%B8%E6%88%8F%E5%AD%A9%E5%AD%90' },
     { type:'APP', title:'\u6d2a\u6069\u8bc6\u5b57', desc:'\u514d\u8d39\u7248\u591f\u7528\uff0c\u8c61\u5f62\u5b57\u52a8\u753b\u5f62\u8c61\u751f\u52a8', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%B4%AA%E6%81%A9%E8%AF%86%E5%AD%97' },
     { type:'APP', title:'\u609f\u7a7a\u8bc6\u5b57', desc:'\u897f\u6e38\u8bb0\u95f7\u5173\u8bb0\u5b57\uff0c\u8da3\u5473\u6027\u5f3a', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%82%9F%E7%A9%BA%E8%AF%86%E5%AD%97' },
-    { type:'\u513f\u6b4c', title:'\u300a\u5b66\u5b57\u6b4c\u300b', desc:'\u201c\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u201d\uff0c\u8fb9\u5531\u8fb9\u8ba4\u6570', link:'https://m.bilibili.com/search?keyword=%E5%AD%A6%E5%AD%97%E6%AD%8C%E5%84%BF%E7%AB%A5' }
+    { type:'\u513f\u6b4c', title:'\u300a\u5b66\u5b57\u6b4c\u300b', desc:'\u201c\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u201d\uff0c\u8fb9\u5531\u8fb9\u8ba4\u6570', link:'https://search.bilibili.com/all?keyword=%E5%AD%A6%E5%AD%97%E6%AD%8C%E5%84%BF%E7%AB%A5' }
   ],
   2: [
     { type:'\u7ee8\u672c', title:'\u300a\u597d\u73a9\u7684\u6570\u5b66\u7ee8\u672c\u300b', desc:'\u4ece\u751f\u6d3b\u4e2d\u53d1\u73b0\u6570\u5b66\uff1a\u6570\u82f9\u679c\u3001\u5206\u997c\u5e72', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%A5%BD%E7%8E%A9%E7%9A%84%E6%95%B0%E5%AD%A6%E7%BB%98%E6%9C%AC' },
@@ -1895,10 +1908,10 @@ var LEARNING_RESOURCES = {
     { type:'\u73a9\u5177', title:'\u513f\u7ae5\u5b89\u5168\u526a\u5200\u5957\u88c5', desc:'\u7ec3\u4e60\u526a\u7eb8\uff0c\u953b\u70bc\u624b\u773c\u534f\u8c03', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E5%AE%89%E5%85%A8%E5%89%AA%E5%88%80' }
   ],
   4: [
-    { type:'\u513f\u6b4c', title:'\u300a\u5c0f\u661f\u661f\u300b', desc:'\u5168\u4e16\u754c\u6700\u7ecf\u5178\u7684\u7ae5\u8c23\uff0c\u7b80\u5355\u4e0a\u53e3', link:'https://m.bilibili.com/search?keyword=%E5%B0%8F%E6%98%9F%E6%98%9F%E5%84%BF%E6%AD%8C' },
-    { type:'\u513f\u6b4c', title:'\u300a\u4e24\u53ea\u8001\u864e\u300b', desc:'\u8282\u594f\u611f\u5f3a\uff0c\u9002\u5408\u6253\u51fb\u4e50\u4f34\u594f', link:'https://m.bilibili.com/search?keyword=%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E%E5%84%BF%E6%AD%8C' },
-    { type:'\u513f\u6b4c', title:'\u300a\u8309\u8389\u82b1\u300b', desc:'\u4e2d\u56fd\u4f20\u7edf\u6c11\u6b4c\uff0c\u4f18\u7f8e\u52a8\u542c', link:'https://m.bilibili.com/search?keyword=%E8%8C%89%E8%8E%89%E8%8A%B1%E5%84%BF%E6%AD%8C' },
-    { type:'\u513f\u6b4c', title:'\u300a\u4e0a\u5b66\u6b4c\u300b', desc:'\u201c\u592a\u9633\u5f53\u7a7a\u7167\uff0c\u82b1\u513f\u5bf9\u6211\u7b11\u201d', link:'https://m.bilibili.com/search?keyword=%E4%B8%8A%E5%AD%A6%E6%AD%8C%E5%84%BF%E7%AB%A5' },
+    { type:'\u513f\u6b4c', title:'\u300a\u5c0f\u661f\u661f\u300b', desc:'\u5168\u4e16\u754c\u6700\u7ecf\u5178\u7684\u7ae5\u8c23\uff0c\u7b80\u5355\u4e0a\u53e3', link:'https://search.bilibili.com/all?keyword=%E5%B0%8F%E6%98%9F%E6%98%9F%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u4e24\u53ea\u8001\u864e\u300b', desc:'\u8282\u594f\u611f\u5f3a\uff0c\u9002\u5408\u6253\u51fb\u4e50\u4f34\u594f', link:'https://search.bilibili.com/all?keyword=%E4%B8%A4%E5%8F%AA%E8%80%81%E8%99%8E%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u8309\u8389\u82b1\u300b', desc:'\u4e2d\u56fd\u4f20\u7edf\u6c11\u6b4c\uff0c\u4f18\u7f8e\u52a8\u542c', link:'https://search.bilibili.com/all?keyword=%E8%8C%89%E8%8E%89%E8%8A%B1%E5%84%BF%E6%AD%8C' },
+    { type:'\u513f\u6b4c', title:'\u300a\u4e0a\u5b66\u6b4c\u300b', desc:'\u201c\u592a\u9633\u5f53\u7a7a\u7167\uff0c\u82b1\u513f\u5bf9\u6211\u7b11\u201d', link:'https://search.bilibili.com/all?keyword=%E4%B8%8A%E5%AD%A6%E6%AD%8C%E5%84%BF%E7%AB%A5' },
     { type:'\u73a9\u6cd5', title:'\u6572\u51fb\u8282\u594f', desc:'\u8ddf\u7740\u6b4c\u66f2\u62cd\u624b\u3001\u6572\u7897\u3001\u6572\u79ef\u6728', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%95%B2%E5%87%BB%E8%8A%82%E5%A5%8F%E5%AD%A9%E5%AD%90' },
     { type:'\u73a9\u6cd5', title:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u542c\u97f3\u4e50\u6a21\u4eff\u52a8\u4f5c\uff1a\u5c0f\u9e1f\u98de\u3001\u5c0f\u9c7c\u6cf3', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%9F%B3%E4%B9%90%E5%BE%8B%E5%8A%A8%E5%AD%A9%E5%AD%90' },
     { type:'\u73a9\u5177', title:'\u513f\u7ae5\u6253\u51fb\u4e50\u5668', desc:'\u6c99\u9524\u3001\u6728\u9c7c\u3001\u5c0f\u9f13\u3001\u6447\u94c3\u7ec4\u5408', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%84%BF%E7%AB%A5%E6%89%93%E5%87%BB%E4%B9%90%E5%99%A8' },
@@ -1923,6 +1936,55 @@ var LEARNING_RESOURCES = {
     { type:'\u73a9\u6cd5', title:'\u8ff0\u5bab\u4e66', desc:'\u8d70\u8ff0\u5bab\u8bad\u7ec3\u7a7a\u95f4\u611f\u548c\u89c4\u5212\u80fd\u529b', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%BF%B7%E5%AE%AB%E4%B9%A6%E5%AD%A9%E5%AD%90' },
     { type:'\u7ee8\u672c', title:'\u300a\u795e\u5947\u7684\u903b\u8f91\u601d\u7ef4\u6e38\u620f\u4e66\u300b', desc:'\u65e5\u672c\u7ecf\u5178\u601d\u7ef4\u8bad\u7ec3\u6e38\u620f\u4e66', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%80%BB%E8%BE%91%E6%80%9D%E7%BB%B4%E6%B8%B8%E6%88%8F%E4%B9%A6' },
     { type:'APP', title:'Khan Academy Kids', desc:'\u53ef\u6c57\u5b66\u9662\u513f\u7ae5\u7248\uff0c\u601d\u7ef4\u8bad\u7ec3+\u82f1\u6587', link:'https://www.xiaohongshu.com/search_result?keyword=Khan%20Academy%20Kids' }
+  ],
+  7: [
+    { type:'\u82f1\u6589\u6b4c', title:'Twinkle Twinkle Little Star', desc:'\u4e00\u657c\u578b\u661f\u661f\uff0c\u5168\u4e16\u754c\u6700\u7ecf\u5178\u7684\u82f1\u6589\u513f\u6b4c\u4e4b\u4e00', tag:'\u5fc5\u542c', link:'https://search.bilibili.com/all?keyword=Twinkle%20Twinkle%20Little%20Star%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u82f1\u6589\u6b4c', title:'Down by the Bay', desc:'\u53ef\u7231\u7684\u91cd\u590d\u53e3\u8bed\u5151\u73a9\u6b4c\uff0c\u91cd\u8c03\u62fc\u8bcd\u73a9\u6cd5', link:'https://search.bilibili.com/all?keyword=Down%20by%20the%20Bay%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u82f1\u6589\u6b4c', title:'One Little Finger', desc:'\u201c\u4e00\u6839\u5c0f\u624b\u6307\u201d\uff0c\u8eab\u4f53\u52a8\u4f5c\u5151\u73a9\u6b4c', link:'https://search.bilibili.com/all?keyword=One%20Little%20Finger%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u82f1\u6589\u6b4c', title:'The Hokey Pokey', desc:'\u8eab\u4f53\u52a8\u4f5c\u5151\u73a9\u6b4c\uff0c\u52a0\u6df1\u8eab\u4f53\u5404\u90e8\u540d\u8bcd\u8bb0\u5fc6', link:'https://search.bilibili.com/all?keyword=The%20Hokey%20Pokey%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u82f1\u6589\u6b4c', title:'Ten Little Fingers', desc:'\u5341\u4e2a\u5c0f\u624b\u6307\uff0c\u8ba1\u6570\u52a8\u4f5c\u5151\u73a9\u6b4c', link:'https://search.bilibili.com/all?keyword=Ten%20Little%20Fingers%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u82f1\u6589\u6b4c', title:'Apples and Bananas', desc:'\u53d8\u8c03\u5151\u73a9\u6b4c\uff0c\u5e2e\u52a9\u5b69\u5b50\u7406\u89e3\u5143\u97f3\u53d8\u5316', link:'https://search.bilibili.com/all?keyword=Apples%20and%20Bananas%20%E5%84%BF%E6%AD%8C' },
+    { type:'\u52a8\u753b', title:'\u300a\u840c\u9e21\u5c0f\u961f\u300b', desc:'\u597d\u7b11\u5168\u96c6\uff0c\u80b2\u513f\u52a8\u753b\u00b7\u793e\u4ea4\u00b7\u6c83\u91ce\u52a7\u52a8', tag:'\u63a8\u8350', link:'https://search.bilibili.com/all?keyword=%E8%90%8C%E9%B8%A1%E5%B0%8F%E9%98%9F%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u72ee\u5b50\u738b\u300b', desc:'1994\u5e74\u540d\u8457\uff0c\u53ef\u7231\u52a8\u753b\u7248\uff0c\u7ed9\u5b69\u5b50\u5165\u95e8\u82f1\u6587', link:'https://search.bilibili.com/all?keyword=%E7%8B%AE%E5%AD%90%E7%8E%8B%20%E5%8A%A8%E7%94%BB%E7%89%87%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u4e50\u667a\u5c0f\u5929\u5730\u300b', desc:'\u5b69\u5b50\u7231\u770b\u7684\u52a8\u753b\uff0c\u542b\u601d\u654f\u4e0e\u751f\u6d3b\u5e38\u8bc6', link:'https://search.bilibili.com/all?keyword=%E4%B9%90%E6%99%BA%E5%B0%8F%E5%A4%A9%E5%9C%B0%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u7231\u5192\u9669\u7684\u6735\u62c9\u300b', desc:'\u53cc\u8bed\u52a8\u753b\uff0c\u73a9\u4e2d\u5b66\u82f1\u6589', link:'https://search.bilibili.com/all?keyword=%E7%88%B1%E5%86%92%E9%99%A9%E7%9A%84%E6%9C%B5%E6%8B%89%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u5e03\u9c81\u4f0a\u300b', desc:'\u8c0a\u8bdd\u793e\u4ea4\u52a8\u753b\uff0c\u5e26\u5b69\u5b50\u4e0a\u52a8\u624b\u80fd\u529b', link:'https://search.bilibili.com/all?keyword=%E5%B8%83%E9%B2%81%E4%BC%8A%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u5b57\u6bcd\u79ef\u6728\u300b', desc:'\u5b57\u6bcd\u8c79\u73a9\u6cd5\u52a8\u753b\uff0cBBC\u7ecf\u5178\u8bcd\u8bcd\u52a8\u753b', tag:'\u63a8\u8350', link:'https://search.bilibili.com/all?keyword=%E5%AD%97%E6%AF%8D%E7%A7%AF%E6%9C%A8%20Alphablock%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300aWow%20English\u300b', desc:'\u82f1\u8bed\u542f\u8499YouTuber\uff0c\u52a8\u753b\u6d3b\u8dc3\u751f\u52a8', link:'https://search.bilibili.com/all?keyword=Wow%20English%20%E5%8A%A8%E7%94%BB' },
+    { type:'\u52a8\u753b', title:'\u300aSSS\u513f\u6b4c\u300b', desc:'\u5168\u7403\u53d7\u6b22\u8fce\u7684\u82f1\u6589\u513f\u6b4c\u9891\u9053\uff0c\u4f34\u8eab\u52a8\u4f5c', tag:'\u5fc5\u542c', link:'https://search.bilibili.com/all?keyword=Super%20Simple%20Songs%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300aLittle%20Fox\u300b', desc:'\u7ea7\u522b\u82f1\u8bed\u52a8\u753b\uff0c\u9002\u5408\u5b69\u5b50\u542c\u8bfb\u4e0e\u542c\u529b', link:'https://search.bilibili.com/all?keyword=Little%20Fox%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300aDidi%27s%20Day\u300b', desc:'\u5b9d\u8d1d\u4e1c\u7c73\u82f1\u8bed\u52a8\u753b\uff0c\u751f\u6d3b\u4e2d\u5b66\u4e60\u53e3\u8bed', link:'https://search.bilibili.com/all?keyword=Didi%27s%20Day%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u52a8\u753b', title:'\u300a\u731c\u731c\u6211\u6709\u591a\u7231\u4f60\u300b', desc:'\u52a8\u753b\u7248\uff0c\u6e29\u99a8\u4e3b\u9898\u00b7\u7231\u4e0e\u88ab\u7231', link:'https://search.bilibili.com/all?keyword=%E7%8C%9C%E7%8C%9C%E6%88%91%E6%9C%89%E5%A4%9A%E7%88%B1%E4%BD%A0%20%E5%8A%A8%E7%94%BB' },
+    { type:'APP', title:'Khan Academy Kids', desc:'\u82f1\u8bed\u5e7c\u513f\u514d\u8d39\u52a8\u753bAPP\uff0c\u542b\u9605\u8bfb\u3001\u8bcd\u6c47\u3001\u8ba1\u7b97', link:'https://search.bilibili.com/all?keyword=Khan%20Academy%20Kids%20%E5%85%A8%E5%9B%BD%E8%AF%9D' }
+  ],
+  8: [
+    { type:'\u7ed8\u672c', title:'\u300a\u731c\u731c\u6211\u6709\u591a\u7231\u4f60\u300b', desc:'\u5168\u7403\u9500\u91cf30\u4e07+\uff0c\u6e29\u99a8\u4e3b\u9898\u00b7\u7231\u4e0e\u88ab\u7231', tag:'\u5fc5\u8bfb', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%8C%9C%E7%8C%9C%E6%88%91%E6%9C%89%E5%A4%9A%E7%88%B1%E4%BD%A0%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u5c0f\u8c61\u6c49\u5b57\u300b\u5b57\u5361', desc:'3-6\u5c81\u8ba4\u5b57\u5fc5\u5907\uff0c\u8c61\u5f62\u8bb0\u5fc6\u5b57', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%B0%8F%E8%B1%A1%E6%B1%89%E5%AD%97%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u5c0f\u84dd\u548c\u5c0f\u9ec4\u300b', desc:'\u674e\u6b27\u00b7\u674e\u5965\u5c3c\u7ecf\u5178\uff0c\u5c0f\u53cb\u8c0a\u00b7\u8272\u5f69', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%B0%8F%E8%93%9D%E5%92%8C%E5%B0%8F%E9%BB%84%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u4e94\u51e0\u5feb\u8bfb\u300b', desc:'\u8bc6\u5b57\u7ecf\u5178\u6559\u6750\uff0c\u8fb9\u6545\u4e8b\u8fb9\u8bc6\u5b57', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%9B%9B%E4%BA%94%E5%BF%AB%E8%AF%BB%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u90a3\u4e2a\u5230\u5e95\u5982\u4f55\u300b\u7cfb\u5217', desc:'\u4e2d\u6587\u7248\u7248\u00b7\u5170\u67ef\u59cb\u00b7\u673a\u68b0\u9053\u00b7\u533b\u751f\u00b7\u5e08\u5fb7\u00b7\u6cd5\u5f8b', link:'https://www.xiaohongshu.com/search_result?keyword=%E9%82%A3%E4%B8%AA%E5%88%B0%E5%BA%95%E5%A6%82%E4%BD%95%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u6d3e\u4e2d\u83b1\u00b7\u54ea\u5412\u513f\u300b', desc:'\u6d3e\u4e2d\u83b1\u5973\u738b\u00b7\u5973\u5b69\u4e3b\u4e49\u52f8\u91cf\u00b7\u53cd\u5377\u601d\u8003', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%B4%BE%E4%B8%AD%E8%8E%B1%20%E5%93%AA%E5%90%91%E5%84%BF%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u51ef\u8fea\u00b7\u53ef\u8c14\u00b7\u7ed8\u672c\u300b', desc:'\u521b\u610f\u52a8\u8111\u52f8\u91cf\u00b7\u4e0d\u53ef\u601d\u8bae\u00b7\u80b2\u513f\u624b\u6728\u753b', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%87%AF%E8%BF%AA%20%E5%8F%AF%E8%AE%B6%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u7c73\u9f0e\u00b7\u963f\u67ef\u5fb7\u00b7\u5947\u8c34\u7ed8\u672c\u300b', desc:'\u793e\u4f1a\u5165\u5fc3\u00b7\u9ad8\u54c1\u8d28\u7ed8\u672c\u00b7\u751f\u6d3b\u91cd\u70b9', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%B1%B3%E9%BC%8E%20%E9%98%BF%E6%9F%AF%E5%BE%B7%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u6613\u9ed1\u4e0a\u53c9\u7684\u5154\u5b50\u300b', desc:'\u5168\u4e16\u754c\u9500\u91cf\u6700\u9ad8\u7684\u7ed8\u672c\u4e4b\u4e00\uff0c\u667a\u80fd\u542f\u8499', tag:'\u5fc5\u8bfb', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%98%93%E9%BB%91%E4%B8%8A%E5%8F%89%E7%9A%84%E5%85%94%E5%AD%90%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u8d64\u978f\u4e0e\u96f7\u5fb7\u300b', desc:'\u9707\u60e8\u4e16\u754c\u00b7\u6697\u9ed1\u4e0e\u5fc5\u8bfb\u00b7\u54c8\u5229\u6ce2\u7279', link:'https://www.xiaohongshu.com/search_result?keyword=%E8%B5%A4%E9%B9%8F%E4%B8%8E%E9%9B%B7%E5%BE%B7%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u5fc3\u7075\u8c31\u753b\u4e66\u300b', desc:'\u5fc3\u7406\u00b7\u4e0d\u5b89\u00b7\u5e76\u8c03\u00b7\u60c5\u7eea\u00b7\u542f\u8499\u00b7\u5fc3\u667a\u5ea6', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%BF%83%E7%81%B5%E8%B0%B1%E7%94%BB%E4%B9%A6%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7ed8\u672c', title:'\u300a\u8c01\u80ce\u00b7\u5341\u4e07\u4e2a\u4e3a\u4ec0\u4e48\u300b', desc:'\u53e4\u5fb7\u62c9\u00b7\u53d1\u95ee\u00b7\u5b69\u5b50\u7231\u95ee\u4e3a\u4ec0\u4e48', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8F%A4%E5%BE%B7%E6%8B%89%20%E5%8D%81%E4%B8%87%E4%B8%AA%E4%B8%BA%E4%BB%80%E4%B9%88%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u4e0d\u7ed9\u9694\u751f\u4eba\u5f00\u95e8\u300b', desc:'\u513f\u7ae5\u793e\u4ea4\u5b89\u5168\u00b7\u5fc5\u8bfb\u00b7\u9694\u79bb\u5c0f\u9b3c', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%8D%E7%BB%99%E9%9A%94%E7%94%9F%E4%BA%BA%E5%BC%80%E9%97%A8%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u4e0d\u8ddf\u9694\u751f\u4eba\u8d70\u300b', desc:'\u9694\u79bb\u5c0f\u9b3c\u00b7\u5b89\u5168\u77e5\u8bc6\u00b7\u52a8\u624b\u52a8\u8111', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%8D%E8%B7%9F%E9%9A%94%E7%94%9F%E4%BA%BA%E8%B5%B0%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u4e0d\u751f\u6c14\uff0c\u597d\u597d\u5730\u8bf4\u300b', desc:'\u60c5\u7eea\u7ba1\u7406\u00b7\u8868\u8fbe\u80fd\u529b\u00b7\u542c\u5165\u68d2', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%8D%E7%94%9F%E6%B0%94%20%E5%A5%BD%E5%A5%BD%E5%9C%B0%E8%AF%B4%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u4e0d\u8981\u968f\u4fbf\u6478\u6211\u300b', desc:'\u8eab\u4f53\u4e3b\u6743\u00b7\u9632\u6027\u4fb5\u00b7\u544a\u8bc9\u5b69\u5b50\u8eab\u4f53\u662f\u81ea\u5df1\u7684', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%8D%E8%A6%81%E9%9A%8F%E4%BE%BF%E6%91%B8%E6%88%91%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u5403\u996d\u4e0d\u6311\u98df\u300b', desc:'\u5065\u5eb7\u996e\u98df\u00b7\u4e0d\u504f\u98df\u00b7\u80fd\u5403\u662f\u798f', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%90%83%E9%A5%AD%E4%B8%8D%E6%8C%91%E9%A3%9F%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u7535\u8001\u864e\uff0c\u597d\u53ef\u6015\u300b', desc:'\u7528\u7535\u5b89\u5168\u00b7\u63a5\u89e6\u7535\u6e90\u00b7\u70b9\u8bc6\u513f\u7ae5', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%94%B5%E8%80%81%E8%99%8E%20%E5%A5%BD%E5%8F%AF%E6%80%95%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u591a\u8fd0\u52a8\uff0c\u5c11\u751f\u75c5\u300b', desc:'\u8fd0\u52a8\u00b7\u4f53\u80fd\u00b7\u5065\u5eb7\u751f\u6d3b\u4e60\u60ef', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%A4%9A%E8%BF%90%E5%8A%A8%20%E5%B0%91%E7%94%9F%E7%97%85%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u7ea2\u706f\u505c\uff0c\u7eff\u706f\u884c\u300b', desc:'\u4ea4\u901a\u5b89\u5168\u00b7\u8fc7\u9a6c\u8def\u00b7\u7ea2\u7eff\u706f', link:'https://www.xiaohongshu.com/search_result?keyword=%E7%BA%A2%E7%81%AF%E5%81%9C%20%E7%BB%BF%E7%81%AF%E8%A1%8C%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u52e4\u6d17\u6f74\uff0c\u7231\u536b\u751f\u300b', desc:'\u4e2a\u4eba\u536b\u751f\u00b7\u6d17\u624b\u00b7\u4e60\u60ef\u00b7\u5fc5\u8bfb', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8B%A4%E6%B4%97%E6%A5%9A%20%E7%88%B1%E5%8D%AB%E7%94%9F%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u81ea\u6211\u4fdd\u62a4', title:'\u300a\u4e0b\u96e8\u5929\uff0c\u9632\u96f7\u7535\u300b', desc:'\u9632\u96f7\u00b7\u9632\u7535\u00b7\u9632\u6d2a\u00b7\u5b89\u5168\u5fc5\u8bfb', link:'https://www.xiaohongshu.com/search_result?keyword=%E4%B8%8B%E9%9B%A8%E5%A4%A9%20%E9%98%B2%E9%9B%B7%E7%94%B5%20%E7%BB%98%E6%9C%AC' },
+    { type:'\u7eaa\u5f55\u7247', title:'\u300a\u5b87\u5b99\u7684\u5947\u8ff9\u300b', desc:'\u8ba9\u5b69\u5b50\u611f\u53d7\u5b87\u5b99\u7684\u5947\u5999\u00b7BBC\u7ecf\u5178', link:'https://search.bilibili.com/all?keyword=%E5%AE%87%E5%AE%99%E7%9A%84%E5%A5%87%E8%BF%B9%20%E7%BA%AA%E5%BD%95%E7%89%87%20%E5%85%A8%E5%9B%BD%E8%AF%9D' },
+    { type:'\u7eaa\u5f55\u7247', title:'\u300a\u5b8c\u7f8e\u7684\u4e16\u754c\u300b', desc:'\u540d\u8457\u8bb0\u5f55\u7247\u00b7\u793e\u4f1a\u00b7\u81ea\u7136\u00b7\u542f\u8499', link:'https://search.bilibili.com/all?keyword=%E5%AE%8C%E7%BE%8E%E7%9A%84%E4%B8%96%E7%95%8C%20%E7%BA%AA%E5%BD%95%E7%89%87' },
+    { type:'\u7eaa\u5f55\u7247', title:'\u300a\u8702\u72e8\u751f\u6d3b\u8bb0\u300b', desc:'\u52a8\u7269\u00b7\u751f\u6001\u00b7\u8ba9\u5b69\u5b50\u7231\u4e0a\u5927\u81ea\u7136', link:'https://search.bilibili.com/all?keyword=%E5%B0%8F%E8%9C%82%E8%9C%88%20%E7%BA%AA%E5%BD%95%E7%89%87' },
+    { type:'\u7eaa\u5f55\u7247', title:'\u300a\u5947\u5999\u7684\u6c34\u6c96\u300b', desc:'\u81ea\u7136\u00b7\u52a8\u7269\u00b7\u751f\u6001\u00b7\u8ba9\u5b69\u5b50\u7231\u4e0a\u5927\u81ea\u7136', link:'https://search.bilibili.com/all?keyword=%E5%A5%87%E5%A6%99%E7%9A%84%E6%B0%B4%E6%B3%B3%20%E7%BA%AA%E5%BD%95%E7%89%87' },
+    { type:'\u7eaa\u5f55\u7247', title:'\u300a\u679c\u5236\u4e16\u754c\u300b', desc:'\u51e0\u4f55\u00b7\u6570\u5b66\u00b7\u9002\u5408\u5b69\u5b50\u770b\u7684\u8bb0\u5f55\u7247', link:'https://search.bilibili.com/all?keyword=%E6%9E%9C%E5%88%B6%E4%B8%96%E7%95%8C%20%E7%BA%AA%E5%BD%95%E7%89%87' }
   ]
 };
 
