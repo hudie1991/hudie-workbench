@@ -367,6 +367,7 @@
       </div>
       <div class="pet-tabs" id="pet-big-tabs">
         <button class="pet-tab active" data-cat="supplies">🎒 入园清单</button>
+        <button class="pet-tab" data-cat="attendance">📅 出勤记录</button>
         <button class="pet-tab" data-cat="learning">📖 学习</button>
         <button class="pet-tab" data-cat="health">🏥 健康</button>
         <button class="pet-tab" data-cat="memo">📝 成长记录</button>
@@ -375,6 +376,19 @@
         <div class="bag-progress"><span>入园物品已备齐</span><span id="big-supplies-count">0 / 0</span></div>
         <div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" id="big-supplies-progress"></div></div>
         <div class="bag-list" id="big-supplies-list"></div>
+      </div>
+      <div class="pet-panel" data-panel="big-attendance">
+        <div class="attendance-header">
+          <button class="att-month-btn" data-att-month="-1">‹</button>
+          <div class="att-month-title" id="att-month-title">2026 年 9 月</div>
+          <button class="att-month-btn" data-att-month="1">›</button>
+        </div>
+        <div class="att-stats" id="att-stats"></div>
+        <div class="att-weekdays">
+          <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+        </div>
+        <div class="att-calendar" id="att-calendar"></div>
+        <div class="att-edit-panel" id="att-edit-panel" style="display:none;"></div>
       </div>
       <div class="pet-panel" data-panel="big-learning">
         <div class="learning-modules" id="big-learning-modules"></div>

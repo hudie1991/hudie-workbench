@@ -532,3 +532,52 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   body { user-select:none; -webkit-user-select:none; }
   input, textarea { user-select:text; -webkit-user-select:text; }
 }
+
+/* 出勤记录 */
+.attendance-header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+.att-month-btn { width:36px; height:36px; border:1px solid var(--border); background:var(--card-bg); border-radius:8px; cursor:pointer; font-size:18px; color:var(--text); }
+.att-month-btn:hover { background:var(--bg); border-color:var(--primary); color:var(--primary); }
+.att-month-title { flex:1; text-align:center; font-size:16px; font-weight:600; color:var(--text); }
+.att-stats { display:flex; justify-content:space-around; background:var(--card-bg); border-radius:10px; padding:10px; margin-bottom:14px; border:1px solid var(--border); }
+.att-stat { text-align:center; }
+.att-stat-num { font-size:18px; font-weight:700; color:var(--text); }
+.att-stat-label { font-size:11px; color:var(--text-light); margin-top:2px; }
+.att-stat.present .att-stat-num { color:var(--primary); }
+.att-stat.absent .att-stat-num { color:#c62828; }
+.att-stat.empty .att-stat-num { color:var(--text-light); }
+.att-weekdays { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:6px; }
+.att-weekdays span { text-align:center; font-size:12px; font-weight:600; color:var(--text-light); padding:4px 0; }
+.att-calendar { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+.att-day { aspect-ratio:1; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; position:relative; transition:all 0.15s; font-size:14px; padding:4px; overflow:hidden; }
+.att-day:hover { transform:translateY(-1px); box-shadow:var(--shadow-hover); border-color:var(--primary); }
+.att-day.empty { background:transparent; border:none; cursor:default; pointer-events:none; }
+.att-day.today { border-color:var(--primary); border-width:2px; }
+.att-day-num { font-weight:600; color:var(--text); }
+.att-day.present { background:#e8f5e9; border-color:#66bb6a; }
+.att-day.present .att-day-num { color:#2e7d32; font-weight:700; }
+.att-day.absent { background:#ffebee; border-color:#ef5350; }
+.att-day.absent .att-day-num { color:#c62828; font-weight:700; }
+.att-day-mark { font-size:14px; margin-top:2px; line-height:1; }
+.att-day-note { font-size:10px; color:var(--text-light); margin-top:2px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.att-edit-panel { margin-top:16px; padding:14px; background:var(--card-bg); border:1px solid var(--border); border-radius:12px; }
+.att-edit-title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:10px; }
+.att-edit-options { display:flex; gap:8px; margin-bottom:10px; }
+.att-opt { flex:1; padding:10px; border:1px solid var(--border); background:var(--card-bg); border-radius:8px; cursor:pointer; text-align:center; font-size:13px; }
+.att-opt.active.present { background:#e8f5e9; border-color:#66bb6a; color:#2e7d32; font-weight:600; }
+.att-opt.active.absent { background:#ffebee; border-color:#ef5350; color:#c62828; font-weight:600; }
+.att-opt.active.empty { background:#f5f5f5; border-color:#bdbdbd; color:#616161; font-weight:600; }
+.att-edit-note { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:13px; box-sizing:border-box; margin-bottom:8px; background:var(--bg); color:var(--text); }
+.att-quick-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+.att-quick-tag { padding:4px 10px; background:var(--bg); border:1px solid var(--border); border-radius:14px; font-size:12px; cursor:pointer; color:var(--text-light); }
+.att-quick-tag:hover { background:var(--primary); color:white; border-color:var(--primary); }
+.att-edit-actions { display:flex; gap:8px; }
+.att-edit-actions button { flex:1; padding:9px; border:none; border-radius:8px; font-size:13px; cursor:pointer; }
+.att-save-btn { background:var(--primary); color:white; }
+.att-save-btn:hover { background:var(--primary-dark); }
+.att-cancel-btn { background:var(--bg); color:var(--text); border:1px solid var(--border) !important; }
+@media (max-width:600px) {
+  .att-day { font-size:12px; padding:2px; }
+  .att-day-note { display:none; }
+  .att-stats { padding:8px; }
+  .att-stat-num { font-size:15px; }
+}

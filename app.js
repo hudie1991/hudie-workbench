@@ -55,7 +55,7 @@ const defaultData = {
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
-  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[] },
+  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{} },
   petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
   todosDate:null,
   weeklyPlan:{},
@@ -125,6 +125,7 @@ function migrateData(stored) {
       if (!merged[k].learningCustom) merged[k].learningCustom = {};
       if (!merged[k].health) merged[k].health = [];
       if (!merged[k].memo) merged[k].memo = [];
+      if (!merged[k].attendance) merged[k].attendance = {};
     } else {
       if (!merged[k].info) merged[k].info = {name:'',birth:''};
       if (!merged[k].earlyEduChecked) merged[k].earlyEduChecked = {};
@@ -2002,11 +2003,13 @@ function renderBig() {
   if (!d.learningCustom) d.learningCustom = {};
   if (!d.health) d.health = [];
   if (!d.memo) d.memo = [];
+  if (!d.attendance) d.attendance = {};
   document.getElementById('pet-big-name').value = d.info.name || '';
   document.getElementById('pet-big-birth').value = d.info.birth || '';
   var clsInput = document.getElementById('pet-big-class');
   if (clsInput) clsInput.value = d.info.cls || '';
   renderBigSupplies();
+  renderBigAttendance();
   renderBigLearning();
   renderBigHealth();
   renderBigMemo();
@@ -2035,6 +2038,96 @@ function renderBigSupplies() {
   document.getElementById('big-supplies-count').textContent = done + ' / ' + total;
   document.getElementById('big-supplies-progress').style.width = (total ? (done / total * 100) : 0) + '%';
 }
+
+// \u51fa\u52e4\u8bb0\u5f55
+var currentAttendanceMonth = null;  // YYYY-MM
+var currentEditingAttendanceDate = null;
+function getTodayYM() {
+  var d = new Date();
+  return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2);
+}
+function renderBigAttendance() {
+  if (!currentAttendanceMonth) currentAttendanceMonth = getTodayYM();
+  var parts = currentAttendanceMonth.split('-');
+  var year = parseInt(parts[0], 10);
+  var month = parseInt(parts[1], 10); // 1-12
+  var firstDay = new Date(year, month - 1, 1);
+  var daysInMonth = new Date(year, month, 0).getDate();
+  // \u7528\u5468\u4e00\u4f5c\u4e3a\u4e00\u5468\u5f00\u59cb: getDay() \u8fd4\u56de 0=\u5468\u65e5, 1=\u5468\u4e00 ... 6=\u5468\u516d -> \u8f6c\u6362\u4e3a 0=\u5468\u4e00 ... 6=\u5468\u65e5
+  var startCol = (firstDay.getDay() + 6) % 7;
+  var todayIso = getTodayYM() + '-' + ('0' + new Date().getDate()).slice(-2);
+  var attendance = (appData.petBig && appData.petBig.attendance) || {};
+  // \u8ba1\u7b97\u5f53\u6708\u7edf\u8ba1
+  var stat = { present: 0, absent: 0, empty: 0 };
+  for (var d = 1; d <= daysInMonth; d++) {
+    var iso = currentAttendanceMonth + '-' + ('0' + d).slice(-2);
+    var rec = attendance[iso];
+    if (!rec || (!rec.present && !rec.absent && !rec.note)) stat.empty++;
+    else if (rec.present) stat.present++;
+    else if (rec.absent) stat.absent++;
+  }
+  // \u6807\u9898
+  document.getElementById('att-month-title').textContent = year + ' \u5e74 ' + month + ' \u6708';
+  // \u7edf\u8ba1
+  var statsHtml = '';
+  statsHtml += '<div class="att-stat present"><div class="att-stat-num">' + stat.present + '</div><div class="att-stat-label">\u51fa\u52e4</div></div>';
+  statsHtml += '<div class="att-stat absent"><div class="att-stat-num">' + stat.absent + '</div><div class="att-stat-label">\u7f3a\u52e4</div></div>';
+  statsHtml += '<div class="att-stat empty"><div class="att-stat-num">' + stat.empty + '</div><div class="att-stat-label">\u672a\u8bb0\u5f55</div></div>';
+  document.getElementById('att-stats').innerHTML = statsHtml;
+  // \u65e5\u5386
+  var calHtml = '';
+  for (var i = 0; i < startCol; i++) calHtml += '<div class="att-day empty"></div>';
+  for (var dd = 1; dd <= daysInMonth; dd++) {
+    var iso2 = currentAttendanceMonth + '-' + ('0' + dd).slice(-2);
+    var r = attendance[iso2];
+    var cls = 'att-day';
+    if (iso2 === todayIso) cls += ' today';
+    var mark = '';
+    var noteShort = '';
+    if (r) {
+      if (r.present) { cls += ' present'; mark = '<div class="att-day-mark">\u2713</div>'; }
+      else if (r.absent) { cls += ' absent'; mark = '<div class="att-day-mark">\u2717</div>'; }
+      if (r.note) noteShort = '<div class="att-day-note">' + escapeHtml(r.note.length > 4 ? r.note.slice(0,4) + '\u2026' : r.note) + '</div>';
+    }
+    calHtml += '<div class="' + cls + '" data-att-date="' + iso2 + '"><div class="att-day-num">' + dd + '</div>' + mark + noteShort + '</div>';
+  }
+  document.getElementById('att-calendar').innerHTML = calHtml;
+  // \u5982\u679c\u5f53\u524d\u7f16\u8f91\u65e5\u671f\u4e0d\u5728\u65b0\u6708\u4efd\uff0c\u91cd\u7f6e
+  if (currentEditingAttendanceDate && currentEditingAttendanceDate.indexOf(currentAttendanceMonth) !== 0) {
+    currentEditingAttendanceDate = null;
+  }
+  // \u6e32\u67d3\u7f16\u8f91\u9762\u677f\uff08\u5982\u679c\u6709\uff09
+  renderAttendanceEditPanel();
+}
+function renderAttendanceEditPanel() {
+  var panel = document.getElementById('att-edit-panel');
+  if (!currentEditingAttendanceDate) { panel.style.display = 'none'; panel.innerHTML = ''; return; }
+  var iso = currentEditingAttendanceDate;
+  var rec = (appData.petBig && appData.petBig.attendance && appData.petBig.attendance[iso]) || {};
+  var status = rec.present ? 'present' : (rec.absent ? 'absent' : 'none');
+  var html = '';
+  html += '<div class="att-edit-title">\u7f16\u8f91 ' + iso + ' \u51fa\u52e4</div>';
+  html += '<div class="att-edit-options">';
+  html += '<div class="att-opt ' + (status==='present'?'active present':'') + '" data-att-status="present">\u2713 \u51fa\u52e4</div>';
+  html += '<div class="att-opt ' + (status==='absent'?'active absent':'') + '" data-att-status="absent">\u2717 \u7f3a\u52e4</div>';
+  html += '<div class="att-opt ' + (status==='none'?'active empty':'') + '" data-att-status="none">\u25cb \u672a\u8bb0\u5f55</div>';
+  html += '</div>';
+  html += '<input type="text" class="att-edit-note" id="att-edit-note" placeholder="\u5907\u6ce8\uff08\u75c5\u5047/\u4e8b\u5047/\u8282\u5047\u65e5\u7b49\uff09" value="' + escapeHtml(rec.note || '') + '">';
+  html += '<div class="att-quick-tags">';
+  var tags = ['\u75c5\u5047','\u4e8b\u5047','\u8282\u5047\u65e5','\u75ab\u82d7','\u53d1\u70e7','\u54b3\u55fd','\u5bb6\u5ead\u539f\u56e0'];
+  for (var i = 0; i < tags.length; i++) {
+    html += '<span class="att-quick-tag" data-att-quick="' + tags[i] + '">' + tags[i] + '</span>';
+  }
+  html += '</div>';
+  html += '<div class="att-edit-actions">';
+  html += '<button class="att-cancel-btn" data-att-cancel>\u53d6\u6d88</button>';
+  html += '<button class="att-save-btn" data-att-save>\u4fdd\u5b58</button>';
+  if (rec.present || rec.absent || rec.note) html += '<button class="att-cancel-btn" data-att-clear>\u6e05\u9664</button>';
+  html += '</div>';
+  panel.innerHTML = html;
+  panel.style.display = '';
+}
+
 var currentLearningModuleId = null;
 function renderBigLearning() {
   if (currentLearningModuleId !== null) { renderLearningDetail(currentLearningModuleId); return; }
@@ -2234,7 +2327,7 @@ function renderSmallFoodDetail(idx) {
 
 // \u5927\u5b9d\u4fe1\u606f\u4fdd\u5b58
 document.getElementById('save-pet-big-btn').addEventListener('click', function(){
-  if (!appData.petBig) appData.petBig = { info:{}, suppliesChecked:{}, learning:deepClone(DEFAULT_LEARNING_MODULES), learningCompleted:{}, learningCustom:{}, health:[], memo:[] };
+  if (!appData.petBig) appData.petBig = { info:{}, suppliesChecked:{}, learning:deepClone(DEFAULT_LEARNING_MODULES), learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{} };
   appData.petBig.info.name = document.getElementById('pet-big-name').value.trim();
   appData.petBig.info.birth = document.getElementById('pet-big-birth').value;
   var clsInput = document.getElementById('pet-big-class');
@@ -2275,6 +2368,99 @@ document.getElementById('add-big-learning-btn').addEventListener('click', functi
 });
 // \u5927\u5b9d\u533a\u57df\u70b9\u51fb\u59d4\u6258
 document.getElementById('pet-big').addEventListener('click', function(e){
+  // \u51fa\u52e4\u8bb0\u5f55 - \u6708\u4efd\u5207\u6362
+  var monthBtn = e.target.closest ? e.target.closest('[data-att-month]') : null;
+  if (monthBtn) {
+    var delta = parseInt(monthBtn.dataset.attMonth, 10);
+    var parts2 = currentAttendanceMonth.split('-');
+    var y = parseInt(parts2[0], 10);
+    var m = parseInt(parts2[1], 10) + delta;
+    if (m < 1) { m = 12; y--; }
+    if (m > 12) { m = 1; y++; }
+    currentAttendanceMonth = y + '-' + ('0' + m).slice(-2);
+    currentEditingAttendanceDate = null;
+    renderBigAttendance();
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u70b9\u51fb\u65e5\u5386\u683c\u5b50
+  var dayCell = e.target.closest ? e.target.closest('[data-att-date]') : null;
+  if (dayCell) {
+    currentEditingAttendanceDate = dayCell.dataset.attDate;
+    renderAttendanceEditPanel();
+    // \u6eda\u52a8\u5230\u7f16\u8f91\u9762\u677f
+    var panel = document.getElementById('att-edit-panel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u5207\u6362\u72b6\u6001
+  var statusOpt = e.target.closest ? e.target.closest('[data-att-status]') : null;
+  if (statusOpt) {
+    var st = statusOpt.dataset.attStatus;
+    var opts = document.querySelectorAll('#pet-big [data-att-status]');
+    for (var oi = 0; oi < opts.length; oi++) {
+      opts[oi].classList.remove('active','present','absent','empty');
+      if (opts[oi].dataset.attStatus === st) {
+        opts[oi].classList.add('active');
+        if (st === 'present') opts[oi].classList.add('present');
+        else if (st === 'absent') opts[oi].classList.add('absent');
+        else opts[oi].classList.add('empty');
+      }
+    }
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u5feb\u6377\u5907\u6ce8
+  var quickTag = e.target.closest ? e.target.closest('[data-att-quick]') : null;
+  if (quickTag) {
+    var noteInput = document.getElementById('att-edit-note');
+    if (noteInput) {
+      var cur = noteInput.value.trim();
+      noteInput.value = cur ? (cur + ' \u00b7 ' + quickTag.dataset.attQuick) : quickTag.dataset.attQuick;
+    }
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u4fdd\u5b58
+  var saveBtn = e.target.closest ? e.target.closest('[data-att-save]') : null;
+  if (saveBtn) {
+    var iso3 = currentEditingAttendanceDate;
+    if (!iso3) return;
+    var sel = document.querySelector('.att-edit-options .att-opt.active');
+    var status2 = sel ? sel.dataset.attStatus : 'none';
+    var note = (document.getElementById('att-edit-note') || {}).value || '';
+    note = note.trim();
+    if (!appData.petBig.attendance) appData.petBig.attendance = {};
+    if (status2 === 'none' && !note) {
+      delete appData.petBig.attendance[iso3];
+    } else {
+      appData.petBig.attendance[iso3] = {
+        present: status2 === 'present',
+        absent: status2 === 'absent',
+        note: note
+      };
+    }
+    saveData();
+    currentEditingAttendanceDate = null;
+    renderBigAttendance();
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u53d6\u6d88
+  var cancelBtn = e.target.closest ? e.target.closest('[data-att-cancel]') : null;
+  if (cancelBtn) {
+    currentEditingAttendanceDate = null;
+    renderAttendanceEditPanel();
+    return;
+  }
+  // \u51fa\u52e4\u8bb0\u5f55 - \u6e05\u9664
+  var clearBtn = e.target.closest ? e.target.closest('[data-att-clear]') : null;
+  if (clearBtn) {
+    if (currentEditingAttendanceDate && appData.petBig.attendance) {
+      delete appData.petBig.attendance[currentEditingAttendanceDate];
+      saveData();
+      currentEditingAttendanceDate = null;
+      renderBigAttendance();
+    }
+    return;
+  }
+
   var supplyBox = e.target.closest ? e.target.closest('[data-supply-key]') : null;
   if (supplyBox) {
     var key = supplyBox.dataset.supplyKey;
