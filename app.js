@@ -6,44 +6,44 @@ const MEAL_KEYS = ['breakfast','morningSnack','lunch','afternoonSnack','dinner',
 const MEAL_LABELS = { breakfast:'\u65e9\u9910', morningSnack:'\u65e9\u52a0\u9910', lunch:'\u5348\u9910', afternoonSnack:'\u5348\u52a0\u9910', dinner:'\u665a\u9910', eveningSnack:'\u665a\u52a0\u9910' };
 const DAILY_VIDEOS = {
   pilates: [
-    { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E6%9C%9F%E6%99%AE%E6%8B%89%E6%8F%90' },
-    { title:'\u5c45\u5bb6\u666e\u62c9\u63d0 10 \u5206\u949f\u5165\u95e8', link:'https://search.bilibili.com/all?keyword=%E5%B1%85%E5%AE%B6%E6%99%AE%E6%8B%89%E6%8F%90%E5%85%A5%E9%97%A8' },
-    { title:'\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d0 15 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E4%BA%A7%E5%90%8E%E6%99%AE%E6%8B%89%E6%8F%90%E6%81%A2%E5%A4%8D' },
-    { title:'\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3 \u521d\u7ea7', link:'https://search.bilibili.com/all?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E6%A0%B8%E5%BF%83%E8%AE%AD%E7%BB%83%E5%88%9D%E7%BA%A7' },
-    { title:'\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f38 12 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E7%9D%A1%E5%89%8D%E6%99%AE%E6%8B%89%E6%8F%90%E6%8B%89%E4%BC%B8' },
-    { title:'\u5b55\u5987\u666e\u62c9\u63d0 \u7f13\u89e3\u8170\u80cc\u75bc\u75db', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E5%A6%87%E6%99%AE%E6%8B%89%E6%8F%90%E8%85%B0%E8%83%8C' },
-    { title:'30 \u5929\u666e\u62c9\u63d0\u5851\u5f62 \u00b7 \u7b2c 1 \u5929', link:'https://search.bilibili.com/all?keyword=30%E5%A4%A9%E6%99%AE%E6%8B%89%E6%8F%90%E5%A1%91%E5%BD%A2' },
-    { title:'\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e60 5 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E6%99%AE%E6%8B%89%E6%8F%90%E5%91%BC%E5%90%B8%E6%B3%95' }
+    { title:'\u5b55\u671f\u666e\u62c9\u63d0 20 \u5206\u949f\uff08\u5b89\u5168\u8212\u7f13\uff09', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u666e\u62c9\u63d020\u5206\u949f\u5b89\u5168\u8212\u7f13' },
+    { title:'\u5c45\u5bb6\u666e\u62c9\u63d0 10 \u5206\u949f\u5165\u95e8', link:'https://www.baidu.com/s?wd=\u5c45\u5bb6\u666e\u62c9\u63d010\u5206\u949f\u5165\u95e8' },
+    { title:'\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d0 15 \u5206\u949f', link:'https://www.baidu.com/s?wd=\u4ea7\u540e\u6062\u590d\u666e\u62c9\u63d015\u5206\u949f' },
+    { title:'\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3 \u521d\u7ea7', link:'https://www.baidu.com/s?wd=\u666e\u62c9\u63d0\u6838\u5fc3\u8bad\u7ec3\u521d\u7ea7' },
+    { title:'\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f38 12 \u5206\u949f', link:'https://www.baidu.com/s?wd=\u7761\u524d\u666e\u62c9\u63d0\u62c9\u4f3812\u5206\u949f' },
+    { title:'\u5b55\u5987\u666e\u62c9\u63d0 \u7f13\u89e3\u8170\u80cc\u75bc\u75db', link:'https://www.baidu.com/s?wd=\u5b55\u5987\u666e\u62c9\u63d0\u7f13\u89e3\u8170\u80cc\u75bc\u75db' },
+    { title:'30 \u5929\u666e\u62c9\u63d0\u5851\u5f62 \u00b7 \u7b2c 1 \u5929', link:'https://www.baidu.com/s?wd=30\u5929\u666e\u62c9\u63d0\u5851\u5f62\u7b2c1\u5929' },
+    { title:'\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e60 5 \u5206\u949f', link:'https://www.baidu.com/s?wd=\u666e\u62c9\u63d0\u547c\u5438\u6cd5\u7ec3\u4e605\u5206\u949f' }
   ],
   beauty: [
-    { title:'\u5b55\u671f\u901a\u52e4\u7a7f\u642d 5 \u5957 LOOK', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E9%80%9A%E5%8B%A4' },
-    { title:'\u65b0\u624b\u5316\u5986\u6559\u7a0b \u4f2a\u7d20\u989c\u5986', link:'https://search.bilibili.com/all?keyword=%E6%96%B0%E6%89%8B%E5%8C%96%E5%A6%86%E6%95%99%E7%A8%8B' },
-    { title:'\u68a8\u5f62\u8eab\u6750\u7a7f\u642d\u516c\u5f0f', link:'https://www.xiaohongshu.com/search_result?keyword=%E6%A2%A8%E5%BD%A2%E8%BA%AB%E6%9D%90%E7%A9%BF%E6%90%AD%E5%85%AC%E5%BC%8F' },
-    { title:'\u5b55\u671f\u7a7f\u642d\u663e\u7626 10 \u4e2a\u6280\u5de7', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E6%98%BE%E7%98%A6' },
-    { title:'\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u5986 5 \u5206\u949f', link:'https://search.bilibili.com/all?keyword=%E6%97%A9%E5%85%AB%E5%BF%AB%E9%80%9F%E5%87%BA%E9%97%A8%E5%A6%86' },
-    { title:'\u5b55\u671f\u7a7f\u642d\u535a\u4e3b\u5408\u96c6\u63a8\u8350', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E7%A9%BF%E6%90%AD%E5%8D%9A%E4%B8%BB' },
-    { title:'\u5355\u773c\u76ae\u773c\u5986\u6559\u7a0b \u81ea\u7136\u653e\u5927', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%8D%95%E7%9C%BC%E7%9A%AE%E7%9C%BC%E5%A6%86%E6%95%99%E7%A8%8B' },
-    { title:'\u57fa\u7840\u6b3e\u7a7f\u642d\u9ad8\u7ea7\u611f', link:'https://www.douyin.com/search/%E5%9F%BA%E7%A1%80%E6%AC%BE%E9%AB%98%E7%BA%A7%E6%84%9F%E7%A9%BF%E6%90%AD' }
+    { title:'\u5b55\u671f\u901a\u52e4\u7a7f\u642d 5 \u5957 LOOK', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u901a\u52e4\u7a7f\u642d5\u5957LOOK' },
+    { title:'\u65b0\u624b\u5316\u5986\u6559\u7a0b \u4f2a\u7d20\u989c\u5986', link:'https://www.baidu.com/s?wd=\u65b0\u624b\u5316\u5986\u6559\u7a0b\u4f2a\u7d20\u989c\u5986' },
+    { title:'\u68a8\u5f62\u8eab\u6750\u7a7f\u642d\u516c\u5f0f', link:'https://www.baidu.com/s?wd=\u68a8\u5f62\u8eab\u6750\u7a7f\u642d\u516c\u5f0f' },
+    { title:'\u5b55\u671f\u7a7f\u642d\u663e\u7626 10 \u4e2a\u6280\u5de7', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u7a7f\u642d\u663e\u762610\u4e2a\u6280\u5de7' },
+    { title:'\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u5986 5 \u5206\u949f', link:'https://www.baidu.com/s?wd=\u65e9\u516b\u5feb\u901f\u51fa\u95e8\u59865\u5206\u949f' },
+    { title:'\u5b55\u671f\u7a7f\u642d\u535a\u4e3b\u5408\u96c6\u63a8\u8350', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u7a7f\u642d\u535a\u4e3b\u5408\u96c6\u63a8\u8350' },
+    { title:'\u5355\u773c\u76ae\u773c\u5986\u6559\u7a0b \u81ea\u7136\u653e\u5927', link:'https://www.baidu.com/s?wd=\u5355\u773c\u76ae\u773c\u5986\u6559\u7a0b\u81ea\u7136\u653e\u5927' },
+    { title:'\u57fa\u7840\u6b3e\u7a7f\u642d\u9ad8\u7ea7\u611f', link:'https://www.baidu.com/s?wd=\u57fa\u7840\u6b3e\u7a7f\u642d\u9ad8\u7ea7\u611f' }
   ],
   nutrition: [
-    { title:'\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565', link:'https://search.bilibili.com/all?keyword=%E5%AD%95%E6%9C%9F%E6%8E%A7%E7%B3%96%E9%A5%AE%E9%A3%9F' },
-    { title:'\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb', link:'https://search.bilibili.com/all?keyword=%E4%B8%AD%E5%9B%BD%E5%B1%85%E6%B0%91%E8%86%B3%E9%A3%9F%E6%8C%87%E5%8D%97' },
-    { title:'\u51cf\u8102\u671f\u86cb\u767d\u8d28\u600e\u4e48\u5403', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E8%9B%8B%E7%99%BD%E8%B4%A8' },
-    { title:'\u5b55\u671f\u8865\u94c1\u8865\u9499\u98df\u7269\u6e05\u5355', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%A1%A5%E9%93%81%E8%A1%A5%E9%92%99' },
-    { title:'\u4f4e GI \u98df\u7269\u9009\u62e9\u6307\u5357', link:'https://search.bilibili.com/all?keyword=%E4%BD%8EGI%E9%A3%9F%E7%89%A9' },
-    { title:'\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406', link:'https://search.bilibili.com/all?keyword=%E5%A6%8A%E5%A8%A0%E6%9C%9F%E7%B3%96%E5%B0%BF%E7%97%85%E9%A5%AE%E9%A3%9F' },
-    { title:'\u5b55\u671f\u8425\u517b\u8865\u5145\u5242\u600e\u4e48\u9009', link:'https://www.xiaohongshu.com/search_result?keyword=%E5%AD%95%E6%9C%9F%E8%90%A5%E5%85%BB%E8%A1%A5%E5%85%85%E5%89%82' },
-    { title:'\u51cf\u8102\u671f\u4e00\u65e5\u4e09\u9910\u642d\u914d', link:'https://www.douyin.com/search/%E5%87%8F%E8%84%82%E6%9C%9F%E4%B8%80%E6%97%A5%E4%B8%89%E9%A4%90' }
+    { title:'\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u63a7\u7cd6\u996e\u98df\u5168\u653b\u7565' },
+    { title:'\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb', link:'https://www.baidu.com/s?wd=\u4e2d\u56fd\u5c45\u6c11\u81b3\u98df\u6307\u5357\u89e3\u8bfb' },
+    { title:'\u51cf\u8102\u671f\u86cb\u767d\u8d28\u600e\u4e48\u5403', link:'https://www.baidu.com/s?wd=\u51cf\u8102\u671f\u86cb\u767d\u8d28\u600e\u4e48\u5403' },
+    { title:'\u5b55\u671f\u8865\u94c1\u8865\u9499\u98df\u7269\u6e05\u5355', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u8865\u94c1\u8865\u9499\u98df\u7269\u6e05\u5355' },
+    { title:'\u4f4e GI \u98df\u7269\u9009\u62e9\u6307\u5357', link:'https://www.baidu.com/s?wd=\u4f4eGI\u98df\u7269\u9009\u62e9\u6307\u5357' },
+    { title:'\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406', link:'https://www.baidu.com/s?wd=\u598a\u5a20\u671f\u7cd6\u5c3f\u75c5\u996e\u98df\u7ba1\u7406' },
+    { title:'\u5b55\u671f\u8425\u517b\u8865\u5145\u5242\u600e\u4e48\u9009', link:'https://www.baidu.com/s?wd=\u5b55\u671f\u8425\u517b\u8865\u5145\u5242\u600e\u4e48\u9009' },
+    { title:'\u51cf\u8102\u671f\u4e00\u65e5\u4e09\u9910\u642d\u914d', link:'https://www.baidu.com/s?wd=\u51cf\u8102\u671f\u4e00\u65e5\u4e09\u9910\u642d\u914d' }
   ],
   english: [
-    { title:'\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed 100 \u53e5', link:'https://search.bilibili.com/all?keyword=%E6%97%A5%E5%B8%B8%E8%8B%B1%E8%AF%AD%E5%8F%A3%E8%AF%AD100%E5%8F%A5' },
-    { title:'\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd', link:'https://search.bilibili.com/all?keyword=%E6%9C%BA%E5%9C%BA%E9%80%9A%E5%85%B3%E8%8B%B1%E8%AF%AD%E5%AF%B9%E8%AF%9D' },
-    { title:'\u9910\u5385\u70b9\u9910\u82f1\u8bed \u5b9e\u7528\u53e5\u578b', link:'https://search.bilibili.com/all?keyword=%E9%A4%90%E5%8E%85%E7%82%B9%E9%A4%90%E8%8B%B1%E8%AF%AD' },
-    { title:'\u8d2d\u7269\u82f1\u8bed \u8ba8\u4ef7\u8fd8\u4ef7', link:'https://search.bilibili.com/all?keyword=%E8%B4%AD%E7%89%A9%E8%8B%B1%E8%AF%AD%E8%AE%A8%E4%BB%B7%E8%BF%98%E4%BB%B7' },
-    { title:'\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed 30 \u79d2\u7248', link:'https://search.bilibili.com/all?keyword=%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D%E8%8B%B1%E8%AF%AD30%E7%A7%92' },
-    { title:'\u7535\u8bdd\u82f1\u8bed \u9884\u7ea6/\u53d6\u6d88', link:'https://search.bilibili.com/all?keyword=%E7%94%B5%E8%AF%9D%E8%8B%B1%E8%AF%AD%E9%A2%84%E7%BA%A6' },
-    { title:'\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd', link:'https://search.bilibili.com/all?keyword=%E9%85%92%E5%BA%97%E5%85%A5%E4%BD%8F%E8%8B%B1%E8%AF%AD' },
-    { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://search.bilibili.com/all?keyword=%E7%9C%8B%E7%97%85%E5%B0%B1%E5%8C%BB%E8%8B%B1%E8%AF%AD' }
+    { title:'\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed 100 \u53e5', link:'https://www.baidu.com/s?wd=\u65e5\u5e38\u82f1\u8bed\u53e3\u8bed100\u53e5' },
+    { title:'\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd', link:'https://www.baidu.com/s?wd=\u673a\u573a\u901a\u5173\u82f1\u8bed\u5bf9\u8bdd' },
+    { title:'\u9910\u5385\u70b9\u9910\u82f1\u8bed \u5b9e\u7528\u53e5\u578b', link:'https://www.baidu.com/s?wd=\u9910\u5385\u70b9\u9910\u82f1\u8bed\u5b9e\u7528\u53e5\u578b' },
+    { title:'\u8d2d\u7269\u82f1\u8bed \u8ba8\u4ef7\u8fd8\u4ef7', link:'https://www.baidu.com/s?wd=\u8d2d\u7269\u82f1\u8bed\u8ba8\u4ef7\u8fd8\u4ef7' },
+    { title:'\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed 30 \u79d2\u7248', link:'https://www.baidu.com/s?wd=\u81ea\u6211\u4ecb\u7ecd\u82f1\u8bed30\u79d2\u7248' },
+    { title:'\u7535\u8bdd\u82f1\u8bed \u9884\u7ea6/\u53d6\u6d88', link:'https://www.baidu.com/s?wd=\u7535\u8bdd\u82f1\u8bed\u9884\u7ea6\u53d6\u6d88' },
+    { title:'\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd', link:'https://www.baidu.com/s?wd=\u9152\u5e97\u5165\u4f4f\u82f1\u8bed\u5bf9\u8bdd' },
+    { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://www.baidu.com/s?wd=\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe' }
   ]
 };
 const defaultData = {
@@ -1192,7 +1192,7 @@ function getFavoriteItems() {
 function renderFavorites() {
   var list = document.getElementById('favorite-list');
   var items = getFavoriteItems();
-  var TYPE_ICONS = { video:'\u1f3ac', article:'\u1f4c4', recipe:'\u1f957', other:'\u1f4cc' };
+  var TYPE_ICONS = { video:'\u25b6', article:'\u6587', recipe:'\u83dc', other:'\u2605' };
   var TYPE_LABELS = { video:'\u89c6\u9891', article:'\u6587\u7ae0', recipe:'\u83dc\u8c31', other:'\u5176\u4ed6' };
   var html = '';
   if (!items.length) {
@@ -1304,7 +1304,7 @@ function renderFavoriteResults(containerId, query) {
            (i.ingredients && i.ingredients.toLowerCase().indexOf(q) !== -1) ||
            (i.note && i.note.toLowerCase().indexOf(q) !== -1);
   }).slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
-  var TYPE_ICONS = { video:'\u1f3ac', article:'\u1f4c4', recipe:'\u1f957', other:'\u1f4cc' };
+  var TYPE_ICONS = { video:'\u25b6', article:'\u6587', recipe:'\u83dc', other:'\u2605' };
   var html = '<div class="weekly-fav-header">\u6211\u7684\u6536\u85cf\u4e2d\u542b\u300c' + escapeHtml(query) + '\u300d\u7684\u8bb0\u5f55</div>';
   if (!items.length) {
     html += '<div class="weekly-fav-empty">\u6682\u65e0\u5339\u914d\u8bb0\u5f55</div>';
