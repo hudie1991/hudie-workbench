@@ -1389,7 +1389,7 @@ function renderWeeklyPlan() {
   }
   html += '</tbody></table></div>';
   html += '<div class="diet-analysis-section">';
-  html += '<h3>\u1f957 \u4eca\u65e5\u996e\u98df\u5206\u6790</h3>';
+  html += '<h3>\u4eca\u65e5\u996e\u98df\u5206\u6790</h3>';
   html += '<button id="analyze-diet-btn" class="analyze-btn">\u5206\u6790\u4eca\u65e5\u996e\u98df</button>';
   html += '<div id="diet-analysis-result" class="diet-analysis-result"></div>';
   html += '</div>';
@@ -1613,13 +1613,13 @@ function analyzeTodayDiet() {
     if (m.data.tags) allTags = allTags.concat(m.data.tags);
   });
   var html = '';
-  html += '<div class="analysis-block"><h5>\u1f4cb \u4eca\u65e5\u9910\u98df\u8bb0\u5f55</h5><p>' + summary.join('<br>') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f969 \u8089\u7c7b/\u86cb\u7c7b</h5><p>' + (allMeat.length ? escapeHtml(allMeat.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f96c \u852c\u83dc</h5><p>' + (allVeg.length ? escapeHtml(allVeg.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f35a \u4e3b\u98df/\u8c37\u7269</h5><p>' + (allStaple.length ? escapeHtml(allStaple.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f34e \u6c34\u679c</h5><p>' + (allFruit.length ? escapeHtml(allFruit.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f95b \u5176\u4ed6</h5><p>' + (allOthers.length ? escapeHtml(allOthers.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
-  html += '<div class="analysis-block"><h5>\u1f3f7\ufe0f \u8425\u517b\u6807\u7b7e</h5><p>' + (allTags.length ? allTags.map(function(t){ return '<span class="analysis-tag">' + escapeHtml(t) + '</span>'; }).join(' ') : '\u672a\u52fe\u9009') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u4eca\u65e5\u9910\u98df\u8bb0\u5f55</h5><p>' + summary.join('<br>') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u8089\u7c7b/\u86cb\u7c7b</h5><p>' + (allMeat.length ? escapeHtml(allMeat.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u852c\u83dc</h5><p>' + (allVeg.length ? escapeHtml(allVeg.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u4e3b\u98df/\u8c37\u7269</h5><p>' + (allStaple.length ? escapeHtml(allStaple.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u6c34\u679c</h5><p>' + (allFruit.length ? escapeHtml(allFruit.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u5176\u4ed6</h5><p>' + (allOthers.length ? escapeHtml(allOthers.join('\u3001')) : '\u672a\u8bb0\u5f55') + '</p></div>';
+  html += '<div class="analysis-block"><h5>\u258c\u8425\u517b\u6807\u7b7e</h5><p>' + (allTags.length ? allTags.map(function(t){ return '<span class="analysis-tag">' + escapeHtml(t) + '</span>'; }).join(' ') : '\u672a\u52fe\u9009') + '</p></div>';
 
   // \u6539\u5584\u5efa\u8bae
   var suggestions = [];
@@ -1632,7 +1632,7 @@ function analyzeTodayDiet() {
   if (allTags.indexOf('\u8865DHA') < 0 && !/(\u9c7c|\u867e|\u6d77|\u85fb|\u6838\u6843)/.test((allMeat.join('') + allOthers.join('')))) suggestions.push('DHA \u6709\u52a9\u4e8e\u80ce\u513f\u5927\u8111\u53d1\u80b2\uff0c\u53ef\u6bcf\u5468\u5403 2-3 \u6b21\u6df1\u6d77\u9c7c\u6216\u6838\u6843\u3002');
   if (!suggestions.length) suggestions.push('\u4eca\u65e5\u996e\u98df\u7ed3\u6784\u8f83\u5747\u8861\uff0c\u7ee7\u7eed\u4fdd\u6301\uff01\u6ce8\u610f\u591a\u559d\u6c34\u3001\u9002\u91cf\u8fd0\u52a8\u3002');
 
-  html += '<div class="analysis-block suggestions"><h5>\u1f4a1 \u6539\u5584\u5efa\u8bae</h5><ul>';
+  html += '<div class="analysis-block suggestions"><h5>\u258c\u6539\u5584\u5efa\u8bae</h5><ul>';
   suggestions.forEach(function(s){ html += '<li>' + s + '</li>'; });
   html += '</ul></div>';
   result.innerHTML = html;
@@ -2232,7 +2232,7 @@ function renderBigMemo() {
     var r = sorted[i];
     html += '<div class="record-item"><div class="record-main"><span class="record-date">' + r.date + '</span></div>';
     if (r.text) html += '<div class="record-note">' + escapeHtml(r.text) + '</div>';
-    html += '<button class="record-delete" data-big-memo-id="' + r.id + '">\u2715</button></div>';
+    html += '<div class="record-actions"><button class="big-memo-edit" data-big-memo-edit-id="' + r.id + '" title="\u7f16\u8f91">\u270e</button><button class="record-delete" data-big-memo-id="' + r.id + '" title="\u5220\u9664">\u2715</button></div></div>';
   }
   list.innerHTML = html;
 }
@@ -2560,6 +2560,20 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     saveData(); renderBigMemo();
     return;
   }
+  var memoEdit = e.target.closest ? e.target.closest('[data-big-memo-edit-id]') : null;
+  if (memoEdit) {
+    var eid = parseInt(memoEdit.dataset.bigMemoEditId);
+    var rec = appData.petBig.memo.find(function(r){ return r.id === eid; });
+    if (rec) {
+      document.getElementById('pet-big-memo-date').value = rec.date || '';
+      document.getElementById('pet-big-memo-text').value = rec.text || '';
+      appData.petBig.memo = appData.petBig.memo.filter(function(r){ return r.id !== eid; });
+      saveData(); renderBigMemo();
+      document.getElementById('pet-big-memo-text').scrollIntoView({block:'center'});
+      document.getElementById('pet-big-memo-text').focus();
+    }
+    return;
+  }
   var tab = e.target.closest ? e.target.closest('.pet-tab') : null;
   if (tab && tab.dataset.cat) {
     var cat = tab.dataset.cat;
@@ -2649,7 +2663,7 @@ function renderMemos() {
     (function(m){
       var item = document.createElement('div'); item.className = 'memo-item';
       if (m.type === 'text') {
-        item.innerHTML = '<div class="memo-content">' + escapeHtml(m.content) + '</div><div class="memo-meta">' + m.date + '<button class="memo-delete" data-id="' + m.id + '">\u5220\u9664</button></div>';
+        item.innerHTML = '<div class="memo-content">' + escapeHtml(m.content) + '</div><div class="memo-meta">' + m.date + '<button class="memo-edit" data-id="' + m.id + '">\u7f16\u8f91</button><button class="memo-delete" data-id="' + m.id + '">\u5220\u9664</button></div>';
         list.appendChild(item);
       } else {
         dbGet('hudie_audio', 'memos', m.content).then(function(blob){
@@ -2669,6 +2683,22 @@ document.getElementById('memo-list').addEventListener('click', function(e){
     if (memo && memo.type === 'audio') dbDelete('hudie_audio', 'memos', memo.content).catch(function(){});
     appData.memos = appData.memos.filter(function(m){ return m.id !== id; });
     saveData(); renderMemos();
+    return;
+  }
+  var editBtn = e.target.closest ? e.target.closest('.memo-edit') : null;
+  if (editBtn) {
+    var eid = parseInt(editBtn.dataset.id);
+    var em = appData.memos.find(function(m){ return m.id === eid; });
+    if (em && em.type === 'text') {
+      var ta = document.getElementById('memo-text');
+      if (ta) {
+        ta.value = em.content || '';
+        ta.scrollIntoView({block:'center'});
+        ta.focus();
+      }
+      appData.memos = appData.memos.filter(function(m){ return m.id !== eid; });
+      saveData(); renderMemos();
+    }
   }
 });
 

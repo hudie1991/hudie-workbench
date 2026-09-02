@@ -581,3 +581,16 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .att-stats { padding:8px; }
   .att-stat-num { font-size:15px; }
 }
+
+/* 记录项操作区（编辑+删除并排） */
+.record-actions { position:absolute; top:8px; right:8px; display:flex; gap:2px; }
+.big-memo-edit { width:24px; height:24px; border:none; background:transparent; color:var(--primary); cursor:pointer; border-radius:5px; font-size:13px; display:flex; align-items:center; justify-content:center; }
+.big-memo-edit:hover { background:rgba(90,122,79,0.12); color:var(--primary-dark); }
+/* 备忘录编辑按钮（文本类） */
+.memo-edit { padding:4px 10px; background:transparent; border:1px solid var(--border); border-radius:6px; color:var(--primary); cursor:pointer; font-size:12px; margin-right:6px; }
+.memo-edit:hover { background:rgba(90,122,79,0.12); border-color:var(--primary); }
+/* 适配新的 record-actions 容器，把 record-delete 改成相对容器定位 */
+.record-item .record-delete { position:static; }
+/* 一周饮食分析标题：用左侧彩色竖条代替原 emoji */
+.diet-analysis-section h3, .analysis-block h5 { display:flex; align-items:center; gap:8px; }
+.diet-analysis-section h3::before, .analysis-block h5::before { content:''; display:inline-block; width:4px; height:1em; background:var(--primary); border-radius:2px; }
