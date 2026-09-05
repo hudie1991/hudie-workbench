@@ -55,7 +55,7 @@ const defaultData = {
   ],
   weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
-  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{} },
+  petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{}, fees:[] },
   petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
   todosDate:null,
   weeklyPlan:{},
@@ -126,6 +126,7 @@ function migrateData(stored) {
       if (!merged[k].health) merged[k].health = [];
       if (!merged[k].memo) merged[k].memo = [];
       if (!merged[k].attendance) merged[k].attendance = {};
+      if (!merged[k].fees) merged[k].fees = [];
     } else {
       if (!merged[k].info) merged[k].info = {name:'',birth:''};
       if (!merged[k].earlyEduChecked) merged[k].earlyEduChecked = {};
@@ -2004,11 +2005,13 @@ function renderBig() {
   if (!d.health) d.health = [];
   if (!d.memo) d.memo = [];
   if (!d.attendance) d.attendance = {};
+  if (!d.fees) d.fees = [];
   document.getElementById('pet-big-name').value = d.info.name || '';
   document.getElementById('pet-big-birth').value = d.info.birth || '';
   var clsInput = document.getElementById('pet-big-class');
   if (clsInput) clsInput.value = d.info.cls || '';
   renderBigSupplies();
+  renderBigFees();
   renderBigAttendance();
   renderBigLearning();
   renderBigHealth();
@@ -2037,6 +2040,85 @@ function renderBigSupplies() {
   document.getElementById('big-supplies-list').innerHTML = html;
   document.getElementById('big-supplies-count').textContent = done + ' / ' + total;
   document.getElementById('big-supplies-progress').style.width = (total ? (done / total * 100) : 0) + '%';
+}
+
+// \u7f34\u8d39\u6e05\u5355
+var currentFeeMonth = null;
+var currentFeeVoucher = null;
+function getFeeMonthFromDate(dateStr) {
+  return dateStr ? dateStr.substring(0, 7) : '';
+}
+function initFeeMonth() {
+  if (!currentFeeMonth) currentFeeMonth = getTodayYM();
+  var mInput = document.getElementById('fee-month');
+  if (mInput && !mInput.value) mInput.value = currentFeeMonth;
+}
+function feeItemTotal() {
+  var rows = document.querySelectorAll('#fee-items .fee-item-row');
+  var total = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var amt = parseFloat(rows[i].querySelector('.fee-item-amount').value) || 0;
+    total += amt;
+  }
+  return total;
+}
+function updateFeeTotal() {
+  var el = document.getElementById('fee-total-num');
+  if (el) el.textContent = feeItemTotal().toFixed(2);
+}
+function renderFeeItems(items, mode) {
+  // mode 'edit' means keep existing DOM and just recalc totals; otherwise rebuild
+  if (mode === 'edit') return;
+  var container = document.getElementById('fee-items');
+  if (!container) return;
+  var arr = items && items.length ? items : [{name:'', amount:''}];
+  var html = '';
+  for (var i = 0; i < arr.length; i++) {
+    html += '<div class="fee-item-row" data-fee-item-idx="' + i + '">';
+    html += '<input type="text" class="fee-item-name" placeholder="\u7f34\u8d39\u9879\u76ee\uff08\u5982\u5b66\u8d39\uff09" value="' + escapeHtml(arr[i].name || '') + '">';
+    html += '<input type="number" class="fee-item-amount" placeholder="\u91d1\u989d" min="0" step="0.01" value="' + (arr[i].amount || '') + '">';
+    html += '<button type="button" class="fee-item-remove" data-fee-item-remove="' + i + '">\u2715</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  updateFeeTotal();
+}
+function resetFeeForm() {
+  currentFeeVoucher = null;
+  document.getElementById('fee-date').value = '';
+  document.getElementById('fee-editing-id').value = '';
+  document.getElementById('fee-voucher').value = '';
+  document.getElementById('fee-voucher-preview').innerHTML = '';
+  renderFeeItems([{name:'', amount:''}]);
+}
+function renderBigFees() {
+  initFeeMonth();
+  var fees = (appData.petBig && appData.petBig.fees) || [];
+  var month = document.getElementById('fee-month').value || currentFeeMonth;
+  currentFeeMonth = month;
+  var monthFees = fees.filter(function(f){ return f.month === month || getFeeMonthFromDate(f.date) === month; }).sort(function(a,b){ return (b.date || '').localeCompare(a.date || ''); });
+  var monthTotal = monthFees.reduce(function(s, f){ return s + (f.total || 0); }, 0);
+  var summary = document.getElementById('fee-month-summary');
+  summary.innerHTML = '<div><div class="fee-summary-label">' + month + ' \u7f34\u8d39\u5408\u8ba1\uff08' + monthFees.length + ' \u7b14\uff09</div></div><div class="fee-summary-amount">' + monthTotal.toFixed(2) + ' \u5143</div>';
+  var list = document.getElementById('fee-list');
+  if (!monthFees.length) { list.innerHTML = '<div class="empty-state"><p>\u8be5\u6708\u6682\u65e0\u7f34\u8d39\u8bb0\u5f55</p></div>'; return; }
+  var html = '';
+  for (var i = 0; i < monthFees.length; i++) {
+    var f = monthFees[i];
+    html += '<div class="fee-card">';
+    html += '<div class="fee-card-actions"><button class="fee-card-edit" data-fee-edit="' + f.id + '" title="\u7f16\u8f91">\u270e</button><button class="fee-card-delete" data-fee-delete="' + f.id + '" title="\u5220\u9664">\u2715</button></div>';
+    html += '<div class="fee-card-date">' + (f.date || '') + '</div>';
+    html += '<div class="fee-card-items">';
+    for (var j = 0; j < f.items.length; j++) {
+      var it = f.items[j];
+      html += '<div class="fee-card-item"><span class="fee-card-item-name">' + escapeHtml(it.name || '') + '</span><span class="fee-card-item-amount">' + (parseFloat(it.amount) || 0).toFixed(2) + '</span></div>';
+    }
+    html += '</div>';
+    html += '<div class="fee-card-total"><span>\u5408\u8ba1</span><span>' + (f.total || 0).toFixed(2) + ' \u5143</span></div>';
+    if (f.voucher) html += '<div class="fee-card-voucher"><img src="' + f.voucher + '" alt="\u8f6c\u8d26\u51ed\u8bc1"></div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
 }
 
 // \u51fa\u52e4\u8bb0\u5f55
@@ -2574,6 +2656,77 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     }
     return;
   }
+  // \u7f34\u8d39\u6e05\u5355 - \u6dfb\u52a0\u660e\u7ec6
+  if (e.target.id === 'add-fee-item-btn') {
+    var container = document.getElementById('fee-items');
+    var idx = container.querySelectorAll('.fee-item-row').length;
+    var row = document.createElement('div');
+    row.className = 'fee-item-row';
+    row.setAttribute('data-fee-item-idx', idx);
+    row.innerHTML = '<input type="text" class="fee-item-name" placeholder="\u7f34\u8d39\u9879\u76ee\uff08\u5982\u5b66\u8d39\uff09"><input type="number" class="fee-item-amount" placeholder="\u91d1\u989d" min="0" step="0.01"><button type="button" class="fee-item-remove" data-fee-item-remove="' + idx + '">\u2715</button>';
+    container.appendChild(row);
+    return;
+  }
+  // \u7f34\u8d39\u6e05\u5355 - \u5220\u9664\u660e\u7ec6
+  var feeItemRemove = e.target.closest ? e.target.closest('[data-fee-item-remove]') : null;
+  if (feeItemRemove) {
+    feeItemRemove.parentElement.remove();
+    updateFeeTotal();
+    return;
+  }
+  // \u7f34\u8d39\u6e05\u5355 - \u5220\u9664\u51ed\u8bc1
+  if (e.target.id === 'fee-voucher-remove') {
+    currentFeeVoucher = null;
+    document.getElementById('fee-voucher').value = '';
+    document.getElementById('fee-voucher-preview').innerHTML = '';
+    return;
+  }
+  // \u7f34\u8d39\u6e05\u5355 - \u4fdd\u5b58\u7f34\u8d39
+  if (e.target.id === 'add-fee-btn') {
+    var feeDate = document.getElementById('fee-date').value;
+    if (!feeDate) { alert('\u8bf7\u9009\u62e9\u7f34\u8d39\u65e5\u671f'); return; }
+    var rows = document.querySelectorAll('#fee-items .fee-item-row');
+    var items = [];
+    for (var fi = 0; fi < rows.length; fi++) {
+      var nm = rows[fi].querySelector('.fee-item-name').value.trim();
+      var am = parseFloat(rows[fi].querySelector('.fee-item-amount').value) || 0;
+      if (nm) items.push({ name:nm, amount:am });
+    }
+    if (!items.length) { alert('\u8bf7\u81f3\u5c11\u586b\u5199\u4e00\u9879\u7f34\u8d39\u660e\u7ec6'); return; }
+    var editingId = document.getElementById('fee-editing-id').value;
+    var feeRec = { id: editingId ? parseInt(editingId) : newId(appData.petBig.fees), date:feeDate, month:getFeeMonthFromDate(feeDate), items:items, total:feeItemTotal(), voucher:currentFeeVoucher || '' };
+    if (editingId) {
+      appData.petBig.fees = appData.petBig.fees.filter(function(f){ return f.id !== feeRec.id; });
+    }
+    appData.petBig.fees.push(feeRec);
+    saveData();
+    resetFeeForm();
+    renderBigFees();
+    return;
+  }
+  // \u7f34\u8d39\u6e05\u5355 - \u7f16\u8f91/\u5220\u9664\u5361\u7247
+  var feeEdit = e.target.closest ? e.target.closest('[data-fee-edit]') : null;
+  if (feeEdit) {
+    var fid = parseInt(feeEdit.dataset.feeEdit);
+    var frec = appData.petBig.fees.find(function(f){ return f.id === fid; });
+    if (frec) {
+      document.getElementById('fee-date').value = frec.date || '';
+      document.getElementById('fee-editing-id').value = frec.id;
+      currentFeeVoucher = frec.voucher || null;
+      renderFeeItems(frec.items);
+      var preview = document.getElementById('fee-voucher-preview');
+      preview.innerHTML = currentFeeVoucher ? ('<img src="' + currentFeeVoucher + '"><button type="button" id="fee-voucher-remove" class="fee-voucher-remove">\u5220\u9664\u51ed\u8bc1</button>') : '';
+      document.getElementById('fee-date').scrollIntoView({block:'center'});
+    }
+    return;
+  }
+  var feeDelete = e.target.closest ? e.target.closest('[data-fee-delete]') : null;
+  if (feeDelete) {
+    var fdid = parseInt(feeDelete.dataset.feeDelete);
+    appData.petBig.fees = appData.petBig.fees.filter(function(f){ return f.id !== fdid; });
+    saveData(); renderBigFees();
+    return;
+  }
   var tab = e.target.closest ? e.target.closest('.pet-tab') : null;
   if (tab && tab.dataset.cat) {
     var cat = tab.dataset.cat;
@@ -2582,6 +2735,29 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     document.querySelectorAll('#pet-big .pet-panel').forEach(function(p){ p.classList.remove('active'); });
     document.querySelector('#pet-big .pet-panel[data-panel="big-' + cat + '"]').classList.add('active');
   }
+});
+
+// \u7f34\u8d39\u6e05\u5355 - \u91d1\u989d\u8f93\u5165\u5b9e\u65f6\u66f4\u65b0\u603b\u8ba1
+document.getElementById('pet-big').addEventListener('input', function(e){
+  if (e.target.classList.contains('fee-item-amount')) updateFeeTotal();
+});
+// \u7f34\u8d39\u6e05\u5355 - \u6708\u4efd\u5207\u6362
+document.getElementById('fee-month').addEventListener('change', function(){
+  currentFeeMonth = this.value;
+  renderBigFees();
+});
+// \u7f34\u8d39\u6e05\u5355 - \u51ed\u8bc1\u4e0a\u4f20
+document.getElementById('fee-voucher').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('\u8bf7\u9009\u62e9\u56fe\u7247\u6587\u4ef6'); e.target.value = ''; return; }
+  if (file.size > 2 * 1024 * 1024) { alert('\u56fe\u7247\u8bf7\u5c0f\u4e8e 2MB'); e.target.value = ''; return; }
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    currentFeeVoucher = ev.target.result;
+    document.getElementById('fee-voucher-preview').innerHTML = '<img src="' + currentFeeVoucher + '"><button type="button" id="fee-voucher-remove" class="fee-voucher-remove">\u5220\u9664\u51ed\u8bc1</button>';
+  };
+  reader.readAsDataURL(file);
 });
 
 // \u5c0f\u5b9d\u4fe1\u606f\u4fdd\u5b58

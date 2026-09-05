@@ -367,6 +367,7 @@
       </div>
       <div class="pet-tabs" id="pet-big-tabs">
         <button class="pet-tab active" data-cat="supplies">🎒 入园清单</button>
+        <button class="pet-tab" data-cat="fees">💰 缴费清单</button>
         <button class="pet-tab" data-cat="attendance">📅 出勤记录</button>
         <button class="pet-tab" data-cat="learning">📖 学习</button>
         <button class="pet-tab" data-cat="health">🏥 健康</button>
@@ -376,6 +377,34 @@
         <div class="bag-progress"><span>入园物品已备齐</span><span id="big-supplies-count">0 / 0</span></div>
         <div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" id="big-supplies-progress"></div></div>
         <div class="bag-list" id="big-supplies-list"></div>
+      </div>
+      <div class="pet-panel" data-panel="big-fees">
+        <div class="fee-form">
+          <input type="month" id="fee-month">
+          <input type="date" id="fee-date">
+          <div class="fee-items" id="fee-items">
+            <div class="fee-item-row" data-fee-item-idx="0">
+              <input type="text" class="fee-item-name" placeholder="缴费项目（如学费）">
+              <input type="number" class="fee-item-amount" placeholder="金额" min="0" step="0.01">
+              <button class="fee-item-remove" data-fee-item-remove="0">✕</button>
+            </div>
+          </div>
+          <button type="button" id="add-fee-item-btn" class="fee-add-item-btn">+ 添加明细</button>
+          <div class="fee-voucher-wrap">
+            <label class="fee-voucher-label">转账凭证</label>
+            <input type="file" id="fee-voucher" accept="image/*" class="fee-voucher-input">
+            <div class="fee-voucher-preview" id="fee-voucher-preview"></div>
+          </div>
+          <div class="fee-total-wrap">
+            <span class="fee-total-label">总计</span>
+            <span class="fee-total-num" id="fee-total-num">0.00</span>
+            <span class="fee-total-currency">元</span>
+          </div>
+          <input type="hidden" id="fee-editing-id">
+          <button id="add-fee-btn" class="fee-save-btn">保存缴费</button>
+        </div>
+        <div class="fee-summary" id="fee-month-summary"></div>
+        <div class="fee-list" id="fee-list"></div>
       </div>
       <div class="pet-panel" data-panel="big-attendance">
         <div class="attendance-header">
