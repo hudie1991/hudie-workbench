@@ -695,3 +695,24 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .fee-total-num { font-size:18px; }
   .fee-summary { flex-direction:column; align-items:flex-start; gap:4px; }
 }
+
+/* 凭证图片点击查看大图 */
+.fee-voucher-img { cursor: zoom-in; }
+.voucher-viewer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  cursor: zoom-out;
+}
+.voucher-viewer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}

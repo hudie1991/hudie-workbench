@@ -2128,7 +2128,7 @@ function renderBigFees() {
     if (vouchers.length) {
       html += '<div class="fee-card-voucher">';
       for (var vi = 0; vi < vouchers.length; vi++) {
-        html += '<img src="' + vouchers[vi] + '" alt="\u8f6c\u8d26\u51ed\u8bc1' + (vi+1) + '">';
+        html += '<img src="' + vouchers[vi] + '" alt="\u8f6c\u8d26\u51ed\u8bc1' + (vi+1) + '" class="fee-voucher-img" data-voucher-view="' + f.id + '_' + vi + '">';
       }
       html += '</div>';
     }
@@ -2743,6 +2743,26 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     saveData(); renderBigFees();
     return;
   }
+  // \u7f34\u8d39\u51ed\u8bc1 - \u70b9\u51fb\u67e5\u770b\u5927\u56fe
+  var voucherView = e.target.closest ? e.target.closest('[data-voucher-view]') : null;
+  if (voucherView) {
+    var vparts = String(voucherView.dataset.voucherView).split('_');
+    var vfid = parseInt(vparts[0], 10);
+    var vidx = parseInt(vparts[1], 10);
+    var vfrec = (appData.petBig && appData.petBig.fees || []).find(function(f){ return f.id === vfid; });
+    if (vfrec) {
+      var vlist = Array.isArray(vfrec.voucher) ? vfrec.voucher : (vfrec.voucher ? [vfrec.voucher] : []);
+      if (vlist[vidx]) {
+        var viewerImg = document.getElementById('voucher-viewer-img');
+        var viewerBox = document.getElementById('voucher-viewer');
+        if (viewerImg && viewerBox) {
+          viewerImg.src = vlist[vidx];
+          viewerBox.style.display = 'flex';
+        }
+      }
+    }
+    return;
+  }
   var tab = e.target.closest ? e.target.closest('.pet-tab') : null;
   if (tab && tab.dataset.cat) {
     var cat = tab.dataset.cat;
@@ -2936,6 +2956,18 @@ var importBtns = document.querySelectorAll('#import-data-btn, #import-data-btn2'
 importBtns.forEach(function(btn){ btn.addEventListener('click', function(){ var f = btn.id === 'import-data-btn' ? 'import-file' : 'import-file2'; document.getElementById(f).click(); }); });
 var importFiles = document.querySelectorAll('#import-file, #import-file2');
 importFiles.forEach(function(input){ input.addEventListener('change', function(e){ importData(e.target.files[0]); e.target.value = ''; }); });
+
+/* ====== \u51ed\u8bc1\u5927\u56fe\u67e5\u770b\u5668\uff1a\u70b9\u51fb\u906e\u7f69/\u56fe\u7247\u5173\u95ed ====== */
+(function(){
+  var viewer = document.getElementById('voucher-viewer');
+  if (!viewer) return;
+  viewer.addEventListener('click', function(e){
+    if (e.target === viewer || e.target.id === 'voucher-viewer-img') {
+      viewer.style.display = 'none';
+      document.getElementById('voucher-viewer-img').src = '';
+    }
+  });
+})();
 
 /* ====== \u521d\u59cb\u5316 ====== */
 function init() {
