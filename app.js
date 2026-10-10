@@ -2044,7 +2044,16 @@ function renderBigSupplies() {
 
 // \u7f34\u8d39\u6e05\u5355
 var currentFeeMonth = null;
-var currentFeeVoucher = null;
+var currentFeeVouchers = [];
+function renderVoucherPreview() {
+  var preview = document.getElementById('fee-voucher-preview');
+  if (!preview) return;
+  var html = '';
+  for (var i = 0; i < currentFeeVouchers.length; i++) {
+    html += '<div class="fee-voucher-thumb"><img src="' + currentFeeVouchers[i] + '"><button type="button" class="fee-voucher-remove" data-voucher-idx="' + i + '">\u5220\u9664</button></div>';
+  }
+  preview.innerHTML = html;
+}
 function getFeeMonthFromDate(dateStr) {
   return dateStr ? dateStr.substring(0, 7) : '';
 }
@@ -2084,7 +2093,7 @@ function renderFeeItems(items, mode) {
   updateFeeTotal();
 }
 function resetFeeForm() {
-  currentFeeVoucher = null;
+  currentFeeVouchers = [];
   document.getElementById('fee-date').value = '';
   document.getElementById('fee-editing-id').value = '';
   document.getElementById('fee-voucher').value = '';
@@ -2115,7 +2124,14 @@ function renderBigFees() {
     }
     html += '</div>';
     html += '<div class="fee-card-total"><span>\u5408\u8ba1</span><span>' + (f.total || 0).toFixed(2) + ' \u5143</span></div>';
-    if (f.voucher) html += '<div class="fee-card-voucher"><img src="' + f.voucher + '" alt="\u8f6c\u8d26\u51ed\u8bc1"></div>';
+    var vouchers = Array.isArray(f.voucher) ? f.voucher : (f.voucher ? [f.voucher] : []);
+    if (vouchers.length) {
+      html += '<div class="fee-card-voucher">';
+      for (var vi = 0; vi < vouchers.length; vi++) {
+        html += '<img src="' + vouchers[vi] + '" alt="\u8f6c\u8d26\u51ed\u8bc1' + (vi+1) + '">';
+      }
+      html += '</div>';
+    }
     html += '</div>';
   }
   list.innerHTML = html;
@@ -2674,11 +2690,12 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     updateFeeTotal();
     return;
   }
-  // \u7f34\u8d39\u6e05\u5355 - \u5220\u9664\u51ed\u8bc1
-  if (e.target.id === 'fee-voucher-remove') {
-    currentFeeVoucher = null;
+  // \u7f34\u8d39\u6e05\u5355 - \u5220\u9664\u51ed\u8bc1\uff08\u6309\u7d22\u5f15\u5220\u9664\u5355\u5f20\uff09
+  var voucherRemove = e.target.closest ? e.target.closest('[data-voucher-idx]') : null;
+  if (voucherRemove) {
+    currentFeeVouchers.splice(parseInt(voucherRemove.dataset.voucherIdx), 1);
     document.getElementById('fee-voucher').value = '';
-    document.getElementById('fee-voucher-preview').innerHTML = '';
+    renderVoucherPreview();
     return;
   }
   // \u7f34\u8d39\u6e05\u5355 - \u4fdd\u5b58\u7f34\u8d39
@@ -2694,7 +2711,7 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     }
     if (!items.length) { alert('\u8bf7\u81f3\u5c11\u586b\u5199\u4e00\u9879\u7f34\u8d39\u660e\u7ec6'); return; }
     var editingId = document.getElementById('fee-editing-id').value;
-    var feeRec = { id: editingId ? parseInt(editingId) : newId(appData.petBig.fees), date:feeDate, month:getFeeMonthFromDate(feeDate), items:items, total:feeItemTotal(), voucher:currentFeeVoucher || '' };
+    var feeRec = { id: editingId ? parseInt(editingId) : newId(appData.petBig.fees), date:feeDate, month:getFeeMonthFromDate(feeDate), items:items, total:feeItemTotal(), voucher:currentFeeVouchers.slice() };
     if (editingId) {
       appData.petBig.fees = appData.petBig.fees.filter(function(f){ return f.id !== feeRec.id; });
     }
@@ -2712,10 +2729,9 @@ document.getElementById('pet-big').addEventListener('click', function(e){
     if (frec) {
       document.getElementById('fee-date').value = frec.date || '';
       document.getElementById('fee-editing-id').value = frec.id;
-      currentFeeVoucher = frec.voucher || null;
+      currentFeeVouchers = Array.isArray(frec.voucher) ? frec.voucher.slice() : (frec.voucher ? [frec.voucher] : []);
       renderFeeItems(frec.items);
-      var preview = document.getElementById('fee-voucher-preview');
-      preview.innerHTML = currentFeeVoucher ? ('<img src="' + currentFeeVoucher + '"><button type="button" id="fee-voucher-remove" class="fee-voucher-remove">\u5220\u9664\u51ed\u8bc1</button>') : '';
+      renderVoucherPreview();
       document.getElementById('fee-date').scrollIntoView({block:'center'});
     }
     return;
@@ -2746,18 +2762,26 @@ document.getElementById('fee-month').addEventListener('change', function(){
   currentFeeMonth = this.value;
   renderBigFees();
 });
-// \u7f34\u8d39\u6e05\u5355 - \u51ed\u8bc1\u4e0a\u4f20
+// \u7f34\u8d39\u6e05\u5355 - \u51ed\u8bc1\u4e0a\u4f20\uff08\u652f\u6301\u591a\u5f20\uff09
 document.getElementById('fee-voucher').addEventListener('change', function(e){
-  var file = e.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith('image/')) { alert('\u8bf7\u9009\u62e9\u56fe\u7247\u6587\u4ef6'); e.target.value = ''; return; }
-  if (file.size > 2 * 1024 * 1024) { alert('\u56fe\u7247\u8bf7\u5c0f\u4e8e 2MB'); e.target.value = ''; return; }
-  var reader = new FileReader();
-  reader.onload = function(ev){
-    currentFeeVoucher = ev.target.result;
-    document.getElementById('fee-voucher-preview').innerHTML = '<img src="' + currentFeeVoucher + '"><button type="button" id="fee-voucher-remove" class="fee-voucher-remove">\u5220\u9664\u51ed\u8bc1</button>';
-  };
-  reader.readAsDataURL(file);
+  var files = Array.prototype.slice.call(e.target.files);
+  if (!files.length) return;
+  var pending = 0;
+  for (var i = 0; i < files.length; i++) {
+    (function(file){
+      if (!file.type.startsWith('image/')) return;
+      if (file.size > 2 * 1024 * 1024) { alert('\u56fe\u7247 ' + file.name + ' \u8d85\u8fc7 2MB\uff0c\u5df2\u8df3\u8fc7'); return; }
+      pending++;
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        currentFeeVouchers.push(ev.target.result);
+        pending--;
+        if (pending <= 0) renderVoucherPreview();
+      };
+      reader.readAsDataURL(file);
+    })(files[i]);
+  }
+  e.target.value = '';
 });
 
 // \u5c0f\u5b9d\u4fe1\u606f\u4fdd\u5b58
