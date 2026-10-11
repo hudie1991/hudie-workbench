@@ -1114,6 +1114,7 @@ function resetCheckupForm() {
   document.getElementById('checkup-item').value = '';
   document.getElementById('checkup-result').value = '';
   document.getElementById('checkup-next').value = '';
+  document.getElementById('checkup-next-item').value = '';
   document.getElementById('checkup-edit-id').value = '';
   document.getElementById('add-checkup-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-checkup-edit').style.display = 'none';
@@ -1123,6 +1124,7 @@ document.getElementById('add-checkup-btn').addEventListener('click', function(){
   var item = document.getElementById('checkup-item').value.trim();
   var result = document.getElementById('checkup-result').value.trim();
   var nextDate = document.getElementById('checkup-next').value;
+  var nextItem = document.getElementById('checkup-next-item').value.trim();
   var editId = document.getElementById('checkup-edit-id').value;
   if (!date || !item) { alert('\u8bf7\u586b\u5199\u65e5\u671f\u548c\u9879\u76ee'); return; }
   if (editId) {
@@ -1133,11 +1135,12 @@ document.getElementById('add-checkup-btn').addEventListener('click', function(){
         appData.checkupRecords[i].item = item;
         appData.checkupRecords[i].result = result;
         appData.checkupRecords[i].nextDate = nextDate;
+        appData.checkupRecords[i].nextItem = nextItem;
         break;
       }
     }
   } else {
-    appData.checkupRecords.push({ id:newId(appData.checkupRecords), date:date, item:item, result:result, nextDate:nextDate });
+    appData.checkupRecords.push({ id:newId(appData.checkupRecords), date:date, item:item, result:result, nextDate:nextDate, nextItem:nextItem });
   }
   saveData(); resetCheckupForm(); renderCheckupSection();
 });
@@ -1151,7 +1154,7 @@ function renderCheckupList() {
     html += '<div class="record-item">';
     html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + escapeHtml(r.item) + '</span></div>';
     if (r.result) html += '<div class="record-note">\u7ed3\u679c\uff1a' + escapeHtml(r.result) + '</div>';
-    if (r.nextDate) html += '<div class="record-note">\u4e0b\u6b21\u4ea7\u68c0\uff1a' + r.nextDate + '</div>';
+    if (r.nextDate) html += '<div class="record-note">\u4e0b\u6b21\u4ea7\u68c0\uff1a' + r.nextDate + (r.nextItem ? ' ' + escapeHtml(r.nextItem) : '') + '</div>';
     html += '<button class="record-edit" data-id="' + r.id + '" data-type="checkup" title="\u7f16\u8f91">\u270e</button>';
     html += '<button class="record-delete" data-id="' + r.id + '" data-type="checkup" title="\u5220\u9664">\u2715</button>';
     html += '</div>';
@@ -1254,6 +1257,7 @@ function editCheckupRecord(id) {
   document.getElementById('checkup-item').value = r.item || '';
   document.getElementById('checkup-result').value = r.result || '';
   document.getElementById('checkup-next').value = r.nextDate || '';
+  document.getElementById('checkup-next-item').value = r.nextItem || '';
   document.getElementById('checkup-edit-id').value = r.id;
   document.getElementById('add-checkup-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-checkup-edit').style.display = 'inline-block';
