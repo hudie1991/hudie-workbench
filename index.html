@@ -226,6 +226,25 @@
           <button type="button" id="cancel-checkup-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
         </div>
         <div class="record-list" id="checkup-list"></div>
+
+        <!-- 孕检缴费清单 -->
+        <div class="checkup-fee-block">
+          <h3>💰 孕检缴费清单</h3>
+          <div class="checkup-fee-summary">
+            <span class="checkup-fee-summary-label">累计合计</span>
+            <span class="checkup-fee-summary-num" id="checkup-fee-total">0.00</span>
+            <span class="checkup-fee-summary-unit">元</span>
+          </div>
+          <div class="checkup-fee-form">
+            <input type="date" id="checkup-fee-date">
+            <input type="text" id="checkup-fee-item" placeholder="检查项目（如 NT 检查）">
+            <input type="number" inputmode="decimal" id="checkup-fee-amount" placeholder="金额" min="0" step="0.01">
+            <input type="hidden" id="checkup-fee-edit-id" value="">
+            <button id="add-checkup-fee-btn">添加</button>
+            <button type="button" id="cancel-checkup-fee-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
+          </div>
+          <div class="checkup-fee-list" id="checkup-fee-list"></div>
+        </div>
       </div>
 
       <!-- 数胎动 -->

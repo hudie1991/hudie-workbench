@@ -46,6 +46,18 @@ const DAILY_VIDEOS = {
     { title:'\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe', link:'https://www.baidu.com/s?wd=\u770b\u75c5\u5c31\u533b\u82f1\u8bed\u5e38\u7528\u8868\u8fbe' }
   ]
 };
+/* \u5927\u5b9d\u5b66\u4e60\u6a21\u5757\u9ed8\u8ba4\u6570\u636e\uff08\u5fc5\u987b\u5728 defaultData / migrateData \u4e4b\u524d\u5b9a\u4e49\uff09 */
+var DEFAULT_LEARNING_MODULES = [
+  { id:1, icon:'\u1f524', name:'\u8bc6\u5b57\u542f\u8499', desc:'\u5e38\u7528\u5b57\u3001\u8c61\u5f62\u5b57\u3001\u751f\u6d3b\u5b57' },
+  { id:2, icon:'\u1f522', name:'\u6570\u5b66\u601d\u7ef4', desc:'\u6570\u6570\u3001\u5206\u7c7b\u3001\u7b80\u5355\u52a0\u51cf' },
+  { id:3, icon:'\u1f3a8', name:'\u7f8e\u672f\u521b\u610f', desc:'\u6d82\u9e26\u3001\u624b\u5de5\u3001\u8272\u5f69' },
+  { id:4, icon:'\u1f3b5', name:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u5531\u6b4c\u3001\u8282\u594f\u3001\u5f8b\u52a8' },
+  { id:5, icon:'\u1f3c3', name:'\u8fd0\u52a8\u4f53\u80fd', desc:'\u8dd1\u6b65\u3001\u8df3\u8dc3\u3001\u5e73\u8861' },
+  { id:6, icon:'\u1f9e9', name:'\u903b\u8f91\u601d\u7ef4', desc:'\u62fc\u56fe\u3001\u79ef\u6728\u3001\u627e\u89c4\u5f8b' },
+  { id:7, icon:'\u1f310', name:'\u82f1\u8bed\u542f\u8499', desc:'\u82f1\u6587\u513f\u6b4c\u3001\u52a8\u753b\u7247\u3001\u53e3\u8bed' },
+  { id:8, icon:'\u1f4da', name:'\u7ed8\u672c\u9605\u8bfb', desc:'3-6\u5c81\u7ed8\u672c\u3001\u7eaa\u5f55\u7247\u3001\u81ea\u6211\u4fdd\u62a4' }
+];
+
 const defaultData = {
   todos: [
     { id:1, text:'\u666e\u62c9\u63d0\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'pilates', note:'' },
@@ -53,7 +65,7 @@ const defaultData = {
     { id:3, text:'\u5316\u5986\u7a7f\u642d\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'beauty', note:'' },
     { id:4, text:'\u82f1\u8bed\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'english', note:'' }
   ],
-  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
+  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], checkupFees:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
   petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{}, fees:[] },
   petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
@@ -103,13 +115,13 @@ function migrateData(stored) {
     }
     merged.weeklyPlanMigrated = true;
   }
-  ['weightRecords','poopRecords','babyRecords','checkupRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
+  ['weightRecords','poopRecords','babyRecords','checkupRecords','checkupFees','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   ['petBig','petSmall'].forEach(function(k){
     if (!merged[k]) merged[k] = {};
     if (k === 'petBig') {
       if (!merged[k].info) merged[k].info = {name:'',birth:'',cls:''};
       if (!merged[k].suppliesChecked) merged[k].suppliesChecked = {};
-      if (!merged[k].learning || !merged[k].learning.length) merged[k].learning = deepClone(DEFAULT_LEARNING_MODULES);
+      if (!merged[k].learning || !merged[k].learning.length) merged[k].learning = (typeof DEFAULT_LEARNING_MODULES !== 'undefined') ? deepClone(DEFAULT_LEARNING_MODULES) : [];
       else {
         // \u786e\u4fdd id:7(\u82f1\u8bed\u542f\u8499) \u548c id:8(\u7ed8\u672c\u9605\u8bfb) \u5728\u5b66\u4e60\u6570\u636e\u4e2d\uff0c\u5e76\u4e14 id \u8981\u4e0e DEFAULT_LEARNING_MODULES \u4e2d\u7684\u4e00\u81f4
         var hasEnglish = false; var hasPictureBook = false;
@@ -141,15 +153,32 @@ function migrateData(stored) {
 function loadData() {
   var stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
+    var parsed = null;
     try {
-      return migrateData(JSON.parse(stored));
-    } catch(e) {
+      parsed = JSON.parse(stored);
+    } catch(pe) {
       // JSON \u89e3\u6790\u5931\u8d25\uff0c\u5c1d\u8bd5\u4ece\u5907\u4efd\u6062\u590d
-      var backup = localStorage.getItem(STORAGE_KEY + '_backup');
-      if (backup) {
-        try { return migrateData(JSON.parse(backup)); } catch(e2) {}
+      var backupRaw = localStorage.getItem(STORAGE_KEY + '_backup');
+      if (backupRaw) {
+        try { parsed = JSON.parse(backupRaw); } catch(pe2) {}
       }
-      return deepClone(defaultData);
+    }
+    if (parsed) {
+      try {
+        return migrateData(parsed);
+      } catch(me) {
+        // \u8fc1\u79fb\u5931\u8d25\uff1a\u7edd\u4e0d\u4e22\u5f03\u7528\u6237\u6570\u636e\uff0c\u9000\u56de\u539f\u59cb\u5bf9\u8c61\u5e76\u8865\u9f50\u5fc5\u9700\u5b57\u6bb5
+        console.warn('migrateData failed, using raw data', me);
+        try {
+          var safe = deepClone(defaultData);
+          for (var sk in parsed) {
+            if (parsed.hasOwnProperty(sk) && parsed[sk] !== undefined && parsed[sk] !== null) {
+              safe[sk] = parsed[sk];
+            }
+          }
+          return safe;
+        } catch(e3) { return parsed; }
+      }
     }
   }
   return deepClone(defaultData);
@@ -1079,7 +1108,7 @@ function editBabyRecord(id) {
 }
 
 /* ====== \u5b55\u68c0\u8bb0\u5f55 ====== */
-function renderCheckupSection() { document.getElementById('checkup-date').value = todayISO(); renderCheckupList(); }
+function renderCheckupSection() { document.getElementById('checkup-date').value = todayISO(); renderCheckupList(); renderCheckupFees(); resetCheckupFeeForm(); }
 function resetCheckupForm() {
   document.getElementById('checkup-date').value = todayISO();
   document.getElementById('checkup-item').value = '';
@@ -1129,6 +1158,95 @@ function renderCheckupList() {
   }
   list.innerHTML = html;
 }
+
+/* ====== \u5b55\u68c0\u7f34\u8d39\u6e05\u5355 ====== */
+function checkupFeeTotal() {
+  var fees = appData.checkupFees || [];
+  var sum = 0;
+  for (var i = 0; i < fees.length; i++) sum += (parseFloat(fees[i].amount) || 0);
+  return sum;
+}
+function updateCheckupFeeTotal() {
+  var el = document.getElementById('checkup-fee-total');
+  if (el) el.textContent = checkupFeeTotal().toFixed(2);
+}
+function resetCheckupFeeForm() {
+  var d = document.getElementById('checkup-fee-date');
+  if (d) d.value = todayISO();
+  var it = document.getElementById('checkup-fee-item');
+  if (it) it.value = '';
+  var am = document.getElementById('checkup-fee-amount');
+  if (am) am.value = '';
+  var hid = document.getElementById('checkup-fee-edit-id');
+  if (hid) hid.value = '';
+  var btn = document.getElementById('add-checkup-fee-btn');
+  if (btn) btn.textContent = '\u6dfb\u52a0';
+  var cancel = document.getElementById('cancel-checkup-fee-edit');
+  if (cancel) cancel.style.display = 'none';
+}
+function renderCheckupFees() {
+  if (!appData.checkupFees) appData.checkupFees = [];
+  var list = document.getElementById('checkup-fee-list');
+  if (!list) return;
+  updateCheckupFeeTotal();
+  var fees = appData.checkupFees.slice().sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); }).reverse();
+  if (!fees.length) {
+    list.innerHTML = '<div class="empty-state"><p>\u6682\u65e0\u7f34\u8d39\u8bb0\u5f55</p></div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < fees.length; i++) {
+    var f = fees[i];
+    html += '<div class="checkup-fee-item">';
+    html += '<div class="checkup-fee-item-main">';
+    html += '<span class="checkup-fee-item-date">' + escapeHtml(f.date || '') + '</span>';
+    html += '<span class="checkup-fee-item-name">' + escapeHtml(f.item || '') + '</span>';
+    html += '<span class="checkup-fee-item-amount">' + (parseFloat(f.amount) || 0).toFixed(2) + ' \u5143</span>';
+    html += '</div>';
+    html += '<button class="record-edit" data-id="' + f.id + '" data-type="checkupfee" title="\u7f16\u8f91">\u270e</button>';
+    html += '<button class="record-delete" data-id="' + f.id + '" data-type="checkupfee" title="\u5220\u9664">\u2715</button>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+function editCheckupFee(id) {
+  var f = appData.checkupFees.find(function(x){ return x.id === id; });
+  if (!f) return;
+  document.getElementById('checkup-fee-date').value = f.date || '';
+  document.getElementById('checkup-fee-item').value = f.item || '';
+  document.getElementById('checkup-fee-amount').value = f.amount || '';
+  document.getElementById('checkup-fee-edit-id').value = f.id;
+  document.getElementById('add-checkup-fee-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
+  document.getElementById('cancel-checkup-fee-edit').style.display = 'inline-block';
+  var blk = document.querySelector('.checkup-fee-block');
+  if (blk) blk.scrollIntoView({ block:'center' });
+}
+document.getElementById('add-checkup-fee-btn').addEventListener('click', function(){
+  var date = document.getElementById('checkup-fee-date').value;
+  var item = document.getElementById('checkup-fee-item').value.trim();
+  var amount = parseFloat(document.getElementById('checkup-fee-amount').value);
+  var editId = document.getElementById('checkup-fee-edit-id').value;
+  if (!date) { alert('\u8bf7\u9009\u62e9\u7f34\u8d39\u65e5\u671f'); return; }
+  if (!item) { alert('\u8bf7\u586b\u5199\u68c0\u67e5\u9879\u76ee'); return; }
+  if (isNaN(amount) || amount < 0) { alert('\u8bf7\u586b\u5199\u6709\u6548\u91d1\u989d'); return; }
+  if (!appData.checkupFees) appData.checkupFees = [];
+  if (editId) {
+    var id = parseInt(editId, 10);
+    for (var i = 0; i < appData.checkupFees.length; i++) {
+      if (appData.checkupFees[i].id === id) {
+        appData.checkupFees[i].date = date;
+        appData.checkupFees[i].item = item;
+        appData.checkupFees[i].amount = amount;
+        break;
+      }
+    }
+  } else {
+    appData.checkupFees.push({ id:newId(appData.checkupFees), date:date, item:item, amount:amount });
+  }
+  saveData(); resetCheckupFeeForm(); renderCheckupFees();
+});
+document.getElementById('cancel-checkup-fee-edit').addEventListener('click', resetCheckupFeeForm);
+
 function editCheckupRecord(id) {
   var r = appData.checkupRecords.find(function(x){ return x.id === id; });
   if (!r) return;
@@ -1149,11 +1267,19 @@ document.getElementById('diet').addEventListener('click', function(e){
     if (etype === 'poop') editPoopRecord(parseInt(eid));
     if (etype === 'baby') editBabyRecord(parseInt(eid));
     if (etype === 'checkup') editCheckupRecord(parseInt(eid));
+    if (etype === 'checkupfee') editCheckupFee(parseInt(eid));
     return;
   }
   var btn = e.target.closest ? e.target.closest('.record-delete') : null;
   if (!btn) return;
   var id = btn.dataset.id, type = btn.dataset.type;
+  if (type === 'checkupfee') {
+    if (confirm('\u5220\u9664\u8fd9\u6761\u7f34\u8d39\u8bb0\u5f55\uff1f')) {
+      appData.checkupFees = appData.checkupFees.filter(function(r){ return r.id != id; });
+      saveData(); renderCheckupFees();
+    }
+    return;
+  }
   var arr = type + 'Records';
   if (!appData[arr]) return;
   if (confirm('\u5220\u9664\u8fd9\u6761\u8bb0\u5f55\uff1f')) {
@@ -1865,17 +1991,6 @@ var BABY_FOOD_PLAN = [
     { day:'\u52a0\u9910', food:'\u9178\u5976\u3001\u6c34\u679c\u5757\u3001\u5c0f\u997c\u5e72', note:'2\u6b21\u52a0\u9910' },
     { day:'\u5976\u91cf', food:'\u6bcf\u65e5500-600ml', note:'\u4e0d\u80fd\u4f4e\u4e8e500ml' }
   ]}
-];
-
-var DEFAULT_LEARNING_MODULES = [
-  { id:1, icon:'\u1f524', name:'\u8bc6\u5b57\u542f\u8499', desc:'\u5e38\u7528\u5b57\u3001\u8c61\u5f62\u5b57\u3001\u751f\u6d3b\u5b57' },
-  { id:2, icon:'\u1f522', name:'\u6570\u5b66\u601d\u7ef4', desc:'\u6570\u6570\u3001\u5206\u7c7b\u3001\u7b80\u5355\u52a0\u51cf' },
-  { id:3, icon:'\u1f3a8', name:'\u7f8e\u672f\u521b\u610f', desc:'\u6d82\u9e26\u3001\u624b\u5de5\u3001\u8272\u5f69' },
-  { id:4, icon:'\u1f3b5', name:'\u97f3\u4e50\u5f8b\u52a8', desc:'\u5531\u6b4c\u3001\u8282\u594f\u3001\u5f8b\u52a8' },
-  { id:5, icon:'\u1f3c3', name:'\u8fd0\u52a8\u4f53\u80fd', desc:'\u8dd1\u6b65\u3001\u8df3\u8dc3\u3001\u5e73\u8861' },
-  { id:6, icon:'\u1f9e9', name:'\u903b\u8f91\u601d\u7ef4', desc:'\u62fc\u56fe\u3001\u79ef\u6728\u3001\u627e\u89c4\u5f8b' },
-  { id:7, icon:'\u1f310', name:'\u82f1\u8bed\u542f\u8499', desc:'\u82f1\u6587\u513f\u6b4c\u3001\u52a8\u753b\u7247\u3001\u53e3\u8bed' },
-  { id:8, icon:'\u1f4da', name:'\u7ed8\u672c\u9605\u8bfb', desc:'3-6\u5c81\u7ed8\u672c\u3001\u7eaa\u5f55\u7247\u3001\u81ea\u6211\u4fdd\u62a4' }
 ];
 
 var LEARNING_RESOURCES = {
