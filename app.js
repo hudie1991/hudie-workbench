@@ -65,7 +65,7 @@ const defaultData = {
     { id:3, text:'\u5316\u5986\u7a7f\u642d\u5b66\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'beauty', note:'' },
     { id:4, text:'\u82f1\u8bed\u7ec3\u4e60 30 \u5206\u949f', time:'\u7075\u6d3b\u5b89\u6392', done:false, category:'english', note:'' }
   ],
-  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], checkupFees:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
+  weightRecords:[], poopRecords:[], babyRecords:[], checkupRecords:[], checkupFees:[], sugarRecords:[], lmpDate:null, fetalRecords:[], bagItems:[], knowledgeFavs:[],
   height:170, preWeight:null,
   petBig:{ info:{name:'',birth:'',cls:''}, suppliesChecked:{}, learning:[], learningCompleted:{}, learningCustom:{}, health:[], memo:[], attendance:{}, fees:[] },
   petSmall:{ info:{name:'',birth:''}, earlyEduChecked:{}, earlyEduStreak:{} },
@@ -115,7 +115,7 @@ function migrateData(stored) {
     }
     merged.weeklyPlanMigrated = true;
   }
-  ['weightRecords','poopRecords','babyRecords','checkupRecords','checkupFees','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
+  ['weightRecords','poopRecords','babyRecords','checkupRecords','checkupFees','sugarRecords','fetalRecords','interests','memos','reviews','bagItems','knowledgeFavs'].forEach(function(k){ if (!merged[k]) merged[k] = []; });
   ['petBig','petSmall'].forEach(function(k){
     if (!merged[k]) merged[k] = {};
     if (k === 'petBig') {
@@ -523,6 +523,117 @@ function renderFetalHistory() {
 }
 updateFetalDisplay();
 
+/* ====== \u8840\u7cd6\u76d1\u6d4b ====== */
+var SUGAR_FIELDS = [
+  { key:'fasting', label:'\u7a7a\u8179', type:'pre' },
+  { key:'breakfast', label:'\u65e9\u9910\u540e2h', type:'post' },
+  { key:'lunchpre', label:'\u5348\u9910\u524d', type:'pre' },
+  { key:'lunch', label:'\u5348\u9910\u540e2h', type:'post' },
+  { key:'dinnerpre', label:'\u665a\u9910\u524d', type:'pre' },
+  { key:'dinner', label:'\u665a\u9910\u540e2h', type:'post' }
+];
+// \u5b55\u671f\u6b63\u5e38\u8303\u56f4\uff1a\u9910\u524d 3.3-5.3\uff0c\u9910\u540e2\u5c0f\u65f6 \u22646.7
+function sugarOutOfRange(val, type) {
+  if (isNaN(val)) return false;
+  if (type === 'pre') return val < 3.3 || val > 5.3;
+  return val > 6.7;
+}
+function resetSugarForm() {
+  document.getElementById('sugar-date').value = todayISO();
+  SUGAR_FIELDS.forEach(function(f){ document.getElementById('sugar-' + f.key).value = ''; });
+  document.getElementById('sugar-note').value = '';
+  document.getElementById('sugar-edit-id').value = '';
+  document.getElementById('add-sugar-btn').textContent = '\u6dfb\u52a0';
+  document.getElementById('cancel-sugar-edit').style.display = 'none';
+}
+function renderSugarSection() {
+  if (!appData.sugarRecords) appData.sugarRecords = [];
+  document.getElementById('sugar-date').value = document.getElementById('sugar-date').value || todayISO();
+  var list = document.getElementById('sugar-list');
+  var records = appData.sugarRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).reverse();
+  if (!records.length) {
+    list.innerHTML = '<div class="empty-state"><p>\u6682\u65e0\u8840\u7cd6\u8bb0\u5f55</p></div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    html += '<div class="sugar-record">';
+    html += '<div class="sugar-record-head"><span class="sugar-record-date">' + r.date + '</span>';
+    html += '<button class="record-edit sugar-edit" data-id="' + r.id + '" title="\u7f16\u8f91">\u270e</button>';
+    html += '<button class="record-delete sugar-delete" data-id="' + r.id + '" title="\u5220\u9664">\u2715</button></div>';
+    html += '<div class="sugar-values">';
+    for (var j = 0; j < SUGAR_FIELDS.length; j++) {
+      var f = SUGAR_FIELDS[j];
+      var v = parseFloat(r[f.key]);
+      var bad = sugarOutOfRange(v, f.type);
+      html += '<div class="sugar-value ' + (bad ? 'sugar-bad' : '') + '"><span class="sugar-value-label">' + f.label + '</span><span class="sugar-value-num">' + (isNaN(v) ? '--' : v.toFixed(1)) + '</span></div>';
+    }
+    html += '</div>';
+    if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+document.getElementById('add-sugar-btn').addEventListener('click', function(){
+  var date = document.getElementById('sugar-date').value;
+  if (!date) { alert('\u8bf7\u9009\u62e9\u65e5\u671f'); return; }
+  var rec = { date:date };
+  var hasValue = false;
+  for (var j = 0; j < SUGAR_FIELDS.length; j++) {
+    var f = SUGAR_FIELDS[j];
+    var v = parseFloat(document.getElementById('sugar-' + f.key).value);
+    if (!isNaN(v)) {
+      if (v < 1 || v > 40) { alert(f.label + ' \u6570\u503c\u4e0d\u5408\u7406\uff08\u5e94\u5728 1-40 mmol/L \u4e4b\u95f4\uff09'); return; }
+      rec[f.key] = v; hasValue = true;
+    }
+  }
+  if (!hasValue) { alert('\u8bf7\u81f3\u5c11\u586b\u5199\u4e00\u9879\u8840\u7cd6\u503c'); return; }
+  rec.note = document.getElementById('sugar-note').value.trim();
+  if (!appData.sugarRecords) appData.sugarRecords = [];
+  var editId = document.getElementById('sugar-edit-id').value;
+  if (editId) {
+    var id = parseInt(editId);
+    for (var i2 = 0; i2 < appData.sugarRecords.length; i2++) {
+      if (appData.sugarRecords[i2].id === id) {
+        rec.id = id;
+        appData.sugarRecords[i2] = rec;
+        break;
+      }
+    }
+  } else {
+    rec.id = newId(appData.sugarRecords);
+    appData.sugarRecords.push(rec);
+  }
+  saveData(); resetSugarForm(); renderSugarSection();
+});
+document.getElementById('cancel-sugar-edit').addEventListener('click', resetSugarForm);
+document.getElementById('sugar-list').addEventListener('click', function(e){
+  var editBtn = e.target.closest ? e.target.closest('.sugar-edit') : null;
+  if (editBtn) {
+    var id = parseInt(editBtn.dataset.id);
+    var r = appData.sugarRecords.find(function(x){ return x.id === id; });
+    if (!r) return;
+    document.getElementById('sugar-date').value = r.date;
+    for (var j = 0; j < SUGAR_FIELDS.length; j++) {
+      var f = SUGAR_FIELDS[j];
+      document.getElementById('sugar-' + f.key).value = (r[f.key] === undefined || r[f.key] === null) ? '' : r[f.key];
+    }
+    document.getElementById('sugar-note').value = r.note || '';
+    document.getElementById('sugar-edit-id').value = r.id;
+    document.getElementById('add-sugar-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
+    document.getElementById('cancel-sugar-edit').style.display = 'inline-block';
+    return;
+  }
+  var delBtn = e.target.closest ? e.target.closest('.sugar-delete') : null;
+  if (delBtn) {
+    if (confirm('\u5220\u9664\u8fd9\u6761\u8840\u7cd6\u8bb0\u5f55\uff1f')) {
+      appData.sugarRecords = appData.sugarRecords.filter(function(x){ return x.id != delBtn.dataset.id; });
+      saveData(); renderSugarSection();
+    }
+  }
+});
+
 /* ====== \u4f53\u91cd\u8bb0\u5f55 ====== */
 function getWeightUnit() { return appData.weightUnit || 'kg'; }
 function weightUnitLabel(unit) { return unit === 'jin' ? '\u65a4' : '\u516c\u65a4'; }
@@ -566,6 +677,7 @@ function resetWeightForm() {
   document.getElementById('weight-edit-id').value = '';
   document.getElementById('add-weight-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-weight-edit').style.display = 'none';
+  document.getElementById('delete-weight-btn').style.display = 'none';
 }
 function renderWeightSection() {
   document.getElementById('weight-date').value = todayISO();
@@ -600,22 +712,112 @@ document.getElementById('add-weight-btn').addEventListener('click', function(){
   saveData(); resetWeightForm(); renderWeightSection();
 });
 document.getElementById('cancel-weight-edit').addEventListener('click', resetWeightForm);
+function getCurrentWeightMonth() {
+  if (!window._weightMonth) {
+    var d = new Date();
+    window._weightMonth = d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2);
+  }
+  return window._weightMonth;
+}
+// \u8bb0\u5f55\u7684\u5b55\u5468\u6807\u7b7e\uff1a\u4f18\u5148\u624b\u52a8\u586b\u5199\uff0c\u5426\u5219\u6309\u672b\u6b21\u6708\u7ecf\u81ea\u52a8\u7b97\uff08\u5982 26+1\uff09
+function weightWeekTag(r) {
+  if (r.week) return '\u5b55 ' + r.week + ' \u5468';
+  var wd = getPregnancyWeekDetail(r.date);
+  return wd ? '\u5b55 ' + wd.label + ' \u5468' : '';
+}
 function renderWeightList() {
   var list = document.getElementById('weight-list');
   var unit = getWeightUnit();
-  var records = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); }).reverse();
-  var html = '';
-  for (var i = 0; i < records.length; i++) {
-    var r = records[i];
-    html += '<div class="record-item">';
-    html += '<div class="record-main"><span class="record-date">' + r.date + '</span><span class="record-value">' + formatWeight(r.weight, unit) + '</span>' + (r.week ? '<span class="record-tag">\u5b55 ' + r.week + ' \u5468</span>' : '') + '</div>';
-    if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
-    html += '<button class="record-edit" data-id="' + r.id + '" data-type="weight" title="\u7f16\u8f91">\u270e</button>';
-    html += '<button class="record-delete" data-id="' + r.id + '" data-type="weight" title="\u5220\u9664">\u2715</button>';
-    html += '</div>';
+  var ym = getCurrentWeightMonth();
+  var y = parseInt(ym.split('-')[0], 10);
+  var m = parseInt(ym.split('-')[1], 10);
+  // \u6309\u65e5\u671f\u7d22\u5f15\uff08\u540c\u65e5\u53d6\u6700\u540e\u4e00\u6761\uff09
+  var byDate = {};
+  appData.weightRecords.forEach(function(r){ byDate[r.date] = r; });
+  var daysInMonth = new Date(y, m, 0).getDate();
+  var firstDay = new Date(y, m-1, 1);
+  var startCol = (firstDay.getDay() + 6) % 7; // \u5468\u4e00\u5f00\u5934
+  // \u4e0e\u4e0a\u4e00\u6b21\u8bb0\u5f55\u6bd4\u8f83
+  var sortedAsc = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
+  function prevWeight(dateStr) {
+    var prev = null;
+    for (var pi = 0; pi < sortedAsc.length; pi++) {
+      if (sortedAsc[pi].date < dateStr) prev = sortedAsc[pi].weight;
+    }
+    return prev;
   }
+  var html = '';
+  // \u6708\u4efd\u5207\u6362
+  html += '<div class="wcal-header"><button type="button" class="wcal-nav" data-wcal="prev">\u2039</button><span class="wcal-title">' + y + ' \u5e74 ' + m + ' \u6708</span><button type="button" class="wcal-nav" data-wcal="next">\u203a</button></div>';
+  html += '<div class="wcal-grid wcal-weeks">';
+  var wl = ['\u4e00','\u4e8c','\u4e09','\u56db','\u4e94','\u516d','\u65e5'];
+  for (var wi=0; wi<7; wi++) html += '<div class="wcal-week-label">' + wl[wi] + '</div>';
+  html += '</div><div class="wcal-grid">';
+  for (var e=0; e<startCol; e++) html += '<div class="wcal-cell wcal-empty"></div>';
+  var days = [];
+  for (var dnum=1; dnum<=daysInMonth; dnum++) days.push(dnum);
+  var totalGain = 0, totalLose = 0, monthStartW = null, monthEndW = null;
+  for (var di=0; di<days.length; di++) {
+    var dnum = days[di];
+    var iso = y + '-' + ('0'+m).slice(-2) + '-' + ('0'+dnum).slice(-2);
+    var r = byDate[iso];
+    if (r) {
+      if (monthStartW === null) monthStartW = r.weight;
+      monthEndW = r.weight;
+      var prev = prevWeight(iso);
+      var diff = (prev !== null) ? (r.weight - prev) : null;
+      if (diff !== null) { if (diff > 0) totalGain++; else if (diff < 0) totalLose++; }
+      var diffHtml = '';
+      if (diff !== null && Math.abs(diff) >= 0.05) {
+        var up = diff > 0;
+        diffHtml = '<div class="wcal-diff ' + (up ? 'wcal-up' : 'wcal-down') + '">' + (up ? '\u25b2' : '\u25bc') + ' ' + Math.abs(unit === 'jin' ? diff*2 : diff).toFixed(1) + '</div>';
+      } else if (diff !== null) {
+        diffHtml = '<div class="wcal-diff wcal-flat">- 0.0</div>';
+      }
+      var dispW = unit === 'jin' ? (r.weight*2).toFixed(1) : r.weight.toFixed(1);
+      var wd = getPregnancyWeekDetail(iso);
+      html += '<div class="wcal-cell wcal-has" data-wcal-date="' + iso + '">';
+      html += diffHtml;
+      html += '<div class="wcal-weight">' + dispW + '</div>';
+      if (wd && wd.day === 0) html += '<div class="wcal-week-mark">' + wd.week + '\u5468</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="wcal-cell wcal-empty-day"><div class="wcal-daynum">' + dnum + '</div></div>';
+    }
+  }
+  html += '</div>';
+  // \u5e95\u90e8\u7edf\u8ba1
+  var monthChange = (monthStartW !== null && monthEndW !== null) ? (monthEndW - monthStartW) : null;
+  html += '<div class="wcal-stats">';
+  html += '<div class="wcal-stat"><div class="wcal-stat-num">' + Object.keys(byDate).filter(function(k){ return k.indexOf(ym) === 0; }).length + '</div><div class="wcal-stat-label">\u6253\u5361\u5929\u6570</div></div>';
+  html += '<div class="wcal-stat"><div class="wcal-stat-num">' + totalGain + '</div><div class="wcal-stat-label">\u589e\u91cd\u5929\u6570</div></div>';
+  html += '<div class="wcal-stat"><div class="wcal-stat-num">' + totalLose + '</div><div class="wcal-stat-label">\u51cf\u91cd\u5929\u6570</div></div>';
+  html += '<div class="wcal-stat"><div class="wcal-stat-num">' + (monthChange === null ? '--' : (monthChange > 0 ? '+' : '') + (unit === 'jin' ? (monthChange*2).toFixed(1) : monthChange.toFixed(1))) + '</div><div class="wcal-stat-label">\u672c\u6708\u53d8\u5316</div></div>';
+  html += '</div>';
+  html += '<div class="wcal-tip">\u70b9\u51fb\u6709\u8bb0\u5f55\u7684\u65e5\u671f\u53ef\u7f16\u8f91\uff0c\u5207\u6362\u516c\u65a4/\u65a4\u81ea\u52a8\u6362\u7b97</div>';
   list.innerHTML = html;
+  list.classList.add('wcal-wrap');
 }
+// \u6708\u5386\u70b9\u51fb\uff1a\u52a0\u8f7d\u7f16\u8f91 / \u6708\u4efd\u5207\u6362
+document.getElementById('weight-list').addEventListener('click', function(e){
+  var nav = e.target.closest ? e.target.closest('[data-wcal]') : null;
+  if (nav) {
+    var ym = getCurrentWeightMonth().split('-');
+    var y = parseInt(ym[0], 10), m = parseInt(ym[1], 10);
+    if (nav.dataset.wcal === 'prev') { m--; if (m < 1) { m = 12; y--; } }
+    else { m++; if (m > 12) { m = 1; y++; } }
+    window._weightMonth = y + '-' + ('0'+m).slice(-2);
+    renderWeightList();
+    return;
+  }
+  var cell = e.target.closest ? e.target.closest('[data-wcal-date]') : null;
+  if (cell) {
+    var rid = null;
+    var target = cell.dataset.wcalDate;
+    var rec = appData.weightRecords.filter(function(r){ return r.date === target; }).sort(function(a,b){ return b.id - a.id; })[0];
+    if (rec) editWeightRecord(rec.id);
+  }
+});
 function editWeightRecord(id) {
   var r = appData.weightRecords.find(function(x){ return x.id === id; });
   if (!r) return;
@@ -626,8 +828,17 @@ function editWeightRecord(id) {
   document.getElementById('weight-edit-id').value = r.id;
   document.getElementById('add-weight-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
   document.getElementById('cancel-weight-edit').style.display = 'inline-block';
+  document.getElementById('delete-weight-btn').style.display = 'inline-block';
   window.scrollTo({ top:0, behavior:'smooth' });
 }
+document.getElementById('delete-weight-btn').addEventListener('click', function(){
+  var editId = document.getElementById('weight-edit-id').value;
+  if (!editId) return;
+  if (confirm('\u5220\u9664\u8fd9\u6761\u4f53\u91cd\u8bb0\u5f55\uff1f')) {
+    appData.weightRecords = appData.weightRecords.filter(function(r){ return r.id != editId; });
+    saveData(); resetWeightForm(); renderWeightSection();
+  }
+});
 function formatWeightForEdit(weightKg) {
   var unit = getWeightUnit();
   return unit === 'jin' ? (weightKg * 2).toFixed(1) : weightKg.toFixed(1);
@@ -636,10 +847,10 @@ function renderWeightChart() {
   var chart = document.getElementById('weight-chart');
   var records = appData.weightRecords.slice().sort(function(a,b){ return a.date.localeCompare(b.date); });
   if (records.length < 2) { chart.innerHTML = '<div class="chart-placeholder">\u8bb0\u5f55 2 \u6761\u4ee5\u4e0a\u4f53\u91cd\u540e\u751f\u6210\u66f2\u7ebf</div>'; return; }
-  var W = 600, H = 240, pad = { l:44, r:20, t:20, b:34 };
+  var W = Math.max(600, 44 + records.length * 72 + 20), H = 240, pad = { l:44, r:20, t:20, b:34 };
   var weights = records.map(function(r){ return r.weight; });
   var minW = Math.min.apply(null, weights) - 1, maxW = Math.max.apply(null, weights) + 1;
-  var xStep = (W - pad.l - pad.r) / (records.length - 1);
+  var xStep = (W - pad.l - pad.r) / Math.max(records.length - 1, 1);
   var points = [];
   for (var i = 0; i < records.length; i++) {
     var x = pad.l + i * xStep;
@@ -647,7 +858,7 @@ function renderWeightChart() {
     points.push({ x:x, y:y, r:records[i] });
   }
   var polyline = points.map(function(p){ return p.x + ',' + p.y; }).join(' ');
-  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="width:100%;height:240px;">';
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" style="display:block;">';
   for (var j = 0; j <= 4; j++) {
     var y = pad.t + j * (H - pad.t - pad.b) / 4;
     svg += '<line x1="' + pad.l + '" y1="' + y + '" x2="' + (W-pad.r) + '" y2="' + y + '" stroke="#eee" stroke-dasharray="3"/>';
@@ -659,10 +870,13 @@ function renderWeightChart() {
     svg += '<text x="' + points[k].x + '" y="' + (points[k].y-10) + '" text-anchor="middle" font-size="10" fill="#666">' + points[k].r.weight + '</text>';
   }
   for (var m = 0; m < points.length; m++) {
-    if (records.length <= 7 || m % Math.ceil(records.length/7) === 0) svg += '<text x="' + points[m].x + '" y="' + (H-8) + '" text-anchor="middle" font-size="10" fill="#999">' + points[m].r.date.slice(5) + '</text>';
+    var wd = getPregnancyWeekDetail(points[m].r.date);
+    var weekLabel = wd ? (wd.day > 0 ? wd.label : wd.week + '\u6574') : '';
+    svg += '<text x="' + points[m].x + '" y="' + (H-22) + '" text-anchor="middle" font-size="10" fill="#999">' + points[m].r.date.slice(5) + '</text>';
+    if (weekLabel) svg += '<text x="' + points[m].x + '" y="' + (H-8) + '" text-anchor="middle" font-size="9" fill="#5a7a4f">' + weekLabel + '</text>';
   }
   svg += '</svg>';
-  chart.innerHTML = svg;
+  chart.innerHTML = '<div class="weight-chart-scroll">' + svg + '</div>';
 }
 
 /* ====== \u5b55\u671f\u4f53\u91cd\u589e\u957f\u53c2\u8003\u8868 ====== */
@@ -738,13 +952,23 @@ function getPreWeight() {
 function getCurrentPregnancyWeek() {
   if (appData.lmpDate) {
     var totalDays = daysBetween(appData.lmpDate, new Date());
-    if (totalDays >= 0) return Math.floor(totalDays / 7) + 1;
+    if (totalDays >= 0) return Math.floor(totalDays / 7);
   }
   if (appData.babyRecords && appData.babyRecords.length) {
     var last = appData.babyRecords.slice().sort(function(a,b){ return b.totalDays - a.totalDays; })[0];
     if (last && last.week) return last.week;
   }
   return null;
+}
+// \u5b55\u5468\u7ec6\u5206\uff1a\u5982 26+1\uff08\u6839\u636e\u672b\u6b21\u6708\u7ecf\u81ea\u52a8\u8ba1\u7b97\uff09
+function getPregnancyWeekDetail(dateStr) {
+  if (!appData.lmpDate) return null;
+  var end = dateStr ? parseISO(dateStr) : new Date();
+  var totalDays = daysBetween(appData.lmpDate, end);
+  if (totalDays < 0) return null;
+  var w = Math.floor(totalDays / 7);
+  var d = totalDays % 7;
+  return { week:w, day:d, label:(d > 0 ? w + '+' + d : String(w)), totalDays:totalDays };
 }
 function getBmiCategory(bmi) {
   if (bmi < 18.5) return 'bmi_low';
@@ -780,7 +1004,9 @@ function renderWeightGuide() {
     summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5df2\u589e\u91cd</div><div class="wgs-value">--</div><div class="wgs-sub">\u8bf7\u5148\u8bb0\u5f55\u4f53\u91cd</div></div>';
   }
   if (week) {
-    summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u5f53\u524d\u5b55\u5468</div><div class="wgs-value">' + weekNum + ' \u5468</div><div class="wgs-sub">' + currentPhase + '</div></div>';
+    var weekDetail = getPregnancyWeekDetail();
+    var weekLabel = weekDetail ? (weekDetail.label + ' \u5468') : (weekNum + ' \u5468');
+    summaryHtml += '<div class="wgs-item"><div class="wgs-label">\u5f53\u524d\u5b55\u5468</div><div class="wgs-value">' + weekLabel + '</div><div class="wgs-sub">' + currentPhase + '</div></div>';
   } else {
     summaryHtml += '<div class="wgs-item warn"><div class="wgs-label">\u5f53\u524d\u5b55\u5468</div><div class="wgs-value">\u672a\u8bbe\u7f6e</div><div class="wgs-sub">\u8bf7\u8bbe\u7f6e\u672b\u6b21\u6708\u7ecf</div></div>';
   }
@@ -3094,6 +3320,7 @@ function init() {
   document.getElementById('today-weekday').textContent = weekdayStr();
   renderTodos();
   renderWeightSection();
+  renderSugarSection();
   renderPoopSection();
   renderBabySection();
   renderCheckupSection();

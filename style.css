@@ -755,3 +755,59 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   .checkup-fee-form #checkup-fee-amount { flex:1 1 auto; width:100%; }
   .checkup-fee-item { padding:11px 70px 11px 12px; }
 }
+
+/* ====== 体重月历总表 ====== */
+.wcal-wrap { display:block; }
+.wcal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.wcal-title { font-size:15px; font-weight:700; color:var(--text); }
+.wcal-nav { width:32px; height:32px; border:1px solid var(--border); background:white; border-radius:8px; font-size:18px; color:var(--text); cursor:pointer; }
+.wcal-nav:active { background:var(--bg); }
+.wcal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.wcal-week-label { text-align:center; font-size:11px; color:var(--text-light); padding:4px 0; }
+.wcal-cell { min-height:52px; border-radius:8px; background:var(--bg); padding:4px 2px; text-align:center; display:flex; flex-direction:column; justify-content:center; gap:1px; }
+.wcal-empty { background:transparent; }
+.wcal-empty-day { background:rgba(0,0,0,0.015); }
+.wcal-daynum { font-size:11px; color:var(--text-light); }
+.wcal-has { cursor:pointer; border:1px solid rgba(90,122,79,0.15); }
+.wcal-has:active { background:rgba(90,122,79,0.08); }
+.wcal-diff { font-size:10px; font-weight:600; }
+.wcal-up { color:#e05a5a; }
+.wcal-down { color:#4aa564; }
+.wcal-flat { color:var(--text-light); }
+.wcal-weight { font-size:12px; font-weight:700; color:var(--text); }
+.wcal-week-mark { font-size:9px; color:var(--primary); }
+.wcal-stats { display:flex; justify-content:space-between; background:linear-gradient(135deg, rgba(90,122,79,0.10), rgba(90,122,79,0.04)); border:1px solid rgba(90,122,79,0.22); border-radius:12px; padding:12px 10px; margin-top:12px; }
+.wcal-stat { text-align:center; flex:1; }
+.wcal-stat-num { font-size:18px; font-weight:700; color:var(--primary-dark); }
+.wcal-stat-label { font-size:11px; color:var(--text-light); margin-top:2px; }
+.wcal-tip { font-size:11px; color:var(--text-light); text-align:center; margin-top:8px; }
+.weight-delete-btn { padding:8px 14px; background:#fbe9e7; color:#c62828; border:none; border-radius:8px; font-size:13px; cursor:pointer; }
+.weight-chart-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+/* ====== 血糖监测 ====== */
+.sugar-tip { background:rgba(90,122,79,0.06); border-left:3px solid var(--primary); border-radius:10px; padding:12px 14px; font-size:13px; color:var(--text); line-height:1.8; margin-bottom:14px; }
+.sugar-warn-text { color:#c62828; font-weight:700; }
+.sugar-form { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+.sugar-inputs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.sugar-field { display:flex; flex-direction:column; gap:4px; }
+.sugar-field label { font-size:11px; color:var(--text-light); }
+.sugar-field input { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-size:14px; outline:none; background:white; width:100%; box-sizing:border-box; }
+.sugar-field input:focus { border-color:var(--primary); }
+.sugar-form > input[type="date"], .sugar-form > input[type="text"] { padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:13px; outline:none; background:white; min-height:40px; }
+.sugar-form button { padding:9px 20px; background:var(--primary); color:white; border:none; border-radius:8px; font-size:13px; cursor:pointer; align-self:flex-start; }
+.sugar-form button:hover { background:var(--primary-dark); }
+.sugar-list { display:flex; flex-direction:column; gap:10px; }
+.sugar-record { background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px; position:relative; }
+.sugar-record-head { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+.sugar-record-date { font-size:13px; font-weight:700; color:var(--text); flex:1; }
+.sugar-edit, .sugar-delete { position:static; }
+.sugar-values { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.sugar-value { background:white; border-radius:8px; padding:6px 4px; text-align:center; }
+.sugar-value-label { display:block; font-size:10px; color:var(--text-light); margin-bottom:2px; }
+.sugar-value-num { font-size:15px; font-weight:700; color:var(--text); }
+.sugar-bad { background:#fdecea; border:1px solid #f5c6c2; }
+.sugar-bad .sugar-value-num { color:#c62828; }
+@media (max-width:600px) {
+  .sugar-inputs { grid-template-columns:repeat(3,1fr); }
+  .sugar-field input { font-size:16px; }
+}

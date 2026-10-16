@@ -112,6 +112,7 @@
         <button class="diet-nav-btn" data-panel="baby">👶 宝宝</button>
         <button class="diet-nav-btn" data-panel="checkup">🏥 孕检</button>
         <button class="diet-nav-btn" data-panel="fetal">👣 胎动</button>
+        <button class="diet-nav-btn" data-panel="sugar">🩸 血糖</button>
         <button class="diet-nav-btn" data-panel="bag">🎒 待产包</button>
         <button class="diet-nav-btn" data-panel="knowledge">📚 知识</button>
       </div>
@@ -134,6 +135,7 @@
           <input type="text" id="weight-note" placeholder="备注">
           <button id="add-weight-btn">添加</button>
           <button type="button" id="cancel-weight-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
+          <button type="button" id="delete-weight-btn" class="weight-delete-btn" style="display:none;">删除此记录</button>
         </div>
         <div class="preg-info-form">
           <span class="preg-info-title">📐 孕期基础信息（用于生成增长表）</span>
@@ -266,6 +268,33 @@
           </div>
         </div>
         <div class="fetal-history" id="fetal-history"></div>
+      </div>
+
+      <!-- 血糖监测 -->
+      <div class="diet-section diet-panel" data-panel="sugar">
+        <h3>🩸 血糖监测</h3>
+        <div class="sugar-tip">
+          📖 <strong>孕期血糖正常参考范围（mmol/L）：</strong><br>
+          空腹及餐前（午/晚餐前）：<strong>3.3 - 5.3</strong><br>
+          餐后 2 小时：<strong>≤ 6.7</strong><br>
+          超出范围的数值会自动<span class="sugar-warn-text">标红提醒</span>；尿酮体阳性或持续超标请及时就医。
+        </div>
+        <div class="sugar-form">
+          <input type="date" id="sugar-date">
+          <div class="sugar-inputs">
+            <div class="sugar-field"><label>空腹</label><input type="number" inputmode="decimal" id="sugar-fasting" step="0.1" placeholder="3.3-5.3"></div>
+            <div class="sugar-field"><label>早餐后2h</label><input type="number" inputmode="decimal" id="sugar-breakfast" step="0.1" placeholder="≤6.7"></div>
+            <div class="sugar-field"><label>午餐前</label><input type="number" inputmode="decimal" id="sugar-lunchpre" step="0.1" placeholder="3.3-5.3"></div>
+            <div class="sugar-field"><label>午餐后2h</label><input type="number" inputmode="decimal" id="sugar-lunch" step="0.1" placeholder="≤6.7"></div>
+            <div class="sugar-field"><label>晚餐前</label><input type="number" inputmode="decimal" id="sugar-dinnerpre" step="0.1" placeholder="3.3-5.3"></div>
+            <div class="sugar-field"><label>晚餐后2h</label><input type="number" inputmode="decimal" id="sugar-dinner" step="0.1" placeholder="≤6.7"></div>
+          </div>
+          <input type="text" id="sugar-note" placeholder="备注（如 尿酮体-，饮食情况）">
+          <input type="hidden" id="sugar-edit-id" value="">
+          <button id="add-sugar-btn">添加</button>
+          <button type="button" id="cancel-sugar-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>
+        </div>
+        <div class="sugar-list" id="sugar-list"></div>
       </div>
 
       <!-- 待产包清单 -->
