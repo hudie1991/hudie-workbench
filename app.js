@@ -459,7 +459,8 @@ document.getElementById('knowledge-list').addEventListener('click', function(e){
 });
 
 /* ====== \u6570\u80ce\u52a8 ====== */
-var fetalState = { count:0, startTime:0, timer:null };
+var fetalState = { count:0, startTime:0, timer:null, lastCountTime:0 };
+var FETAL_MERGE_MS = 3 * 60 * 1000; // 3\u5206\u949f\u5185\u7684\u8fde\u7eed/\u9891\u7e41\u80ce\u52a8\u5408\u5e76\u4e3a1\u6b21
 function updateFetalDisplay() {
   document.getElementById('fetal-count').textContent = fetalState.count;
   var elapsed = fetalState.startTime ? Math.floor((Date.now() - fetalState.startTime) / 1000) : 0;
@@ -475,10 +476,36 @@ function startFetalTimer() {
 function stopFetalTimer() {
   if (fetalState.timer) { clearInterval(fetalState.timer); fetalState.timer = null; }
 }
+// \u77ed\u63d0\u793a\uff08\u4e0d\u6253\u65ad\u8ba1\u6570\uff09
+var fetalTipTimer = null;
+function showFetalTip(msg) {
+  var tip = document.getElementById('fetal-merge-tip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = 'fetal-merge-tip';
+    tip.className = 'fetal-merge-tip';
+    var counter = document.querySelector('.fetal-counter');
+    if (counter) counter.appendChild(tip); else return;
+  }
+  tip.textContent = msg;
+  tip.style.display = 'block';
+  if (fetalTipTimer) clearTimeout(fetalTipTimer);
+  fetalTipTimer = setTimeout(function(){ tip.style.display = 'none'; }, 4000);
+}
 document.getElementById('fetal-tap').addEventListener('click', function(){
   if (!fetalState.startTime) fetalState.startTime = Date.now();
   startFetalTimer();
+  var now = Date.now();
+  if (fetalState.lastCountTime && (now - fetalState.lastCountTime) < FETAL_MERGE_MS) {
+    // 3\u5206\u949f\u5185\u7684\u8fde\u7eed\u80ce\u52a8\u53ea\u8ba1 1 \u6b21
+    var remainSec = Math.ceil((FETAL_MERGE_MS - (now - fetalState.lastCountTime)) / 1000);
+    var remainMin = Math.ceil(remainSec / 60);
+    showFetalTip('\u8fde\u7eed\u80ce\u52a8\u5df2\u5408\u5e76\u4e3a 1 \u6b21\uff0c\u7ea6 ' + remainMin + ' \u5206\u949f\u540e\u7684\u65b0\u80ce\u52a8\u5c06\u5355\u72ec\u8ba1\u6570');
+    updateFetalDisplay();
+    return;
+  }
   if (fetalState.count < 10) fetalState.count++;
+  fetalState.lastCountTime = now;
   updateFetalDisplay();
   if (fetalState.count >= 10) {
     stopFetalTimer();
@@ -495,6 +522,7 @@ function fetalReset() {
   }
   fetalState.count = 0;
   fetalState.startTime = 0;
+  fetalState.lastCountTime = 0;
   stopFetalTimer();
   updateFetalDisplay();
 }
