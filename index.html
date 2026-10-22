@@ -253,20 +253,24 @@
       <!-- 数胎动 -->
       <div class="diet-section diet-panel" data-panel="fetal">
         <h3>👣 数胎动</h3>
-        <div class="fetal-tip">
-          📖 <strong>胎动计数方法：</strong>每天早、中、晚各选1小时安静躺着或坐着，专心感受胎动。<br>
-          正常范围：<strong>1小时内不少于3-5次，或数到10次不超过2小时</strong>。<br>
-          💡 <strong>3 分钟内的连续胎动只计 1 次</strong>，间隔 3 分钟以上才算新的一次。<br>
-          如果明显减少或2小时不足10次，请及时就医。
+        <div class="fetal-stats">
+          <div class="fetal-stat"><div class="fetal-stat-label">计时</div><div class="fetal-stat-num" id="fetal-timer">60:00</div></div>
+          <div class="fetal-stat"><div class="fetal-stat-label">实际点击</div><div class="fetal-stat-num" id="fetal-taps">0</div></div>
+          <div class="fetal-stat"><div class="fetal-stat-label">有效次数</div><div class="fetal-stat-num fetal-stat-main" id="fetal-count">0</div></div>
         </div>
         <div class="fetal-counter">
-          <div class="fetal-counter-label">当前计数</div>
-          <div class="fetal-counter-num"><span id="fetal-count">0</span> / 10</div>
-          <div class="fetal-counter-time" id="fetal-timer">00:00</div>
-          <div class="fetal-counter-actions">
-            <button id="fetal-tap" class="fetal-tap-btn">👣 轻拍计数</button>
-            <button id="fetal-reset" class="fetal-reset-btn">重置</button>
-          </div>
+          <button id="fetal-undo" class="fetal-undo-btn" style="display:none;">取消</button>
+          <button id="fetal-tap" class="fetal-tap-big">
+            <span class="fetal-tap-icon">👣</span>
+            <span class="fetal-tap-text">动一下点一下</span>
+          </button>
+        </div>
+        <div class="fetal-merge-tip" id="fetal-merge-tip" style="display:none;"></div>
+        <div class="fetal-tip">
+          📖 <strong>胎动计数方法：</strong>每天早、中、晚各选1小时安静数。<br>
+          正常范围：<strong>1小时内不少于3-5次，或数到10次不超过2小时</strong>。<br>
+          💡 5分钟内连续活动只算1次有效胎动，点「动一下点一下」即可。<br>
+          如果明显减少或2小时不足10次，请及时就医。
         </div>
         <div class="fetal-history" id="fetal-history"></div>
       </div>

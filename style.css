@@ -825,3 +825,36 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
   text-align: left;
   line-height: 1.5;
 }
+
+/* ====== 数胎动（美柚风格） ====== */
+.fetal-stats { display:flex; justify-content:space-around; background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:14px 10px; margin-bottom:16px; }
+.fetal-stat { text-align:center; flex:1; }
+.fetal-stat-label { font-size:12px; color:var(--text-light); margin-bottom:4px; }
+.fetal-stat-num { font-size:22px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
+.fetal-stat-main { color:var(--primary); font-size:26px; }
+.fetal-counter { display:flex; align-items:center; justify-content:center; gap:24px; margin-bottom:16px; min-height:130px; }
+.fetal-tap-big {
+  width:130px; height:130px; border-radius:50%;
+  border:none; cursor:pointer;
+  background:linear-gradient(145deg, #6b8a5e, #5a7a4f);
+  color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  box-shadow:0 6px 20px rgba(90,122,79,0.35);
+  transition:transform 0.1s, box-shadow 0.1s;
+  -webkit-tap-highlight-color:transparent;
+}
+.fetal-tap-big:active { transform:scale(0.93); box-shadow:0 3px 10px rgba(90,122,79,0.3); }
+.fetal-tap-icon { font-size:34px; line-height:1; }
+.fetal-tap-text { font-size:12px; letter-spacing:1px; }
+.fetal-undo-btn {
+  width:56px; height:56px; border-radius:50%;
+  border:1.5px solid var(--primary); background:white; color:var(--primary);
+  font-size:13px; cursor:pointer; align-self:center;
+}
+.fetal-undo-btn:active { background:rgba(90,122,79,0.08); }
+.fetal-counter { position:relative; }
+.fetal-counter .fetal-merge-tip { position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:auto; max-width:90%; z-index:2; }
+@media (max-width:600px) {
+  .fetal-tap-big { width:120px; height:120px; }
+  .fetal-stat-num { font-size:20px; }
+  .fetal-stat-main { font-size:24px; }
+}

@@ -458,74 +458,113 @@ document.getElementById('knowledge-list').addEventListener('click', function(e){
   saveData(); renderKnowledgeList();
 });
 
-/* ====== \u6570\u80ce\u52a8 ====== */
-var fetalState = { count:0, startTime:0, timer:null, lastCountTime:0 };
-var FETAL_MERGE_MS = 3 * 60 * 1000; // 3\u5206\u949f\u5185\u7684\u8fde\u7eed/\u9891\u7e41\u80ce\u52a8\u5408\u5e76\u4e3a1\u6b21
+/* ====== \u6570\u80ce\u52a8\uff08\u7f8e\u67da\u98ce\u683c\uff1a\u8ba1\u65f6/\u5b9e\u9645\u70b9\u51fb/\u6709\u6548\u6b21\u6570 + \u5927\u6309\u94ae + \u53d6\u6d88\uff09 ====== */
+var fetalState = { count:0, taps:0, startTime:0, timer:null, lastCountTime:0, validTimes:[], done:false };
+var FETAL_MERGE_MS = 5 * 60 * 1000;   // 5\u5206\u949f\u5185\u8fde\u7eed\u6d3b\u52a8\u53ea\u7b971\u6b21\u6709\u6548\u80ce\u52a8
+var FETAL_TOTAL_MS = 60 * 60 * 1000;  // 1\u5c0f\u65f6\u5012\u8ba1\u65f6
 function updateFetalDisplay() {
-  document.getElementById('fetal-count').textContent = fetalState.count;
-  var elapsed = fetalState.startTime ? Math.floor((Date.now() - fetalState.startTime) / 1000) : 0;
-  var mm = String(Math.floor(elapsed / 60)).padStart(2,'0');
-  var ss = String(elapsed % 60).padStart(2,'0');
-  document.getElementById('fetal-timer').textContent = mm + ':' + ss;
+  var countEl = document.getElementById('fetal-count');
+  var tapsEl = document.getElementById('fetal-taps');
+  var timerEl = document.getElementById('fetal-timer');
+  var undoEl = document.getElementById('fetal-undo');
+  if (!countEl) return;
+  countEl.textContent = fetalState.count;
+  tapsEl.textContent = fetalState.taps;
+  var remain = 0;
+  if (fetalState.startTime) {
+    remain = Math.max(0, FETAL_TOTAL_MS - (Date.now() - fetalState.startTime));
+  } else {
+    remain = FETAL_TOTAL_MS;
+  }
+  var totalSec = Math.ceil(remain / 1000);
+  var mm = String(Math.floor(totalSec / 60)).padStart(2,'0');
+  var ss = String(totalSec % 60).padStart(2,'0');
+  timerEl.textContent = mm + ':' + ss;
+  undoEl.style.display = (fetalState.taps > 0 && !fetalState.done) ? 'inline-flex' : 'none';
 }
 function startFetalTimer() {
   if (fetalState.timer) return;
-  if (!fetalState.startTime) fetalState.startTime = Date.now();
-  fetalState.timer = setInterval(updateFetalDisplay, 1000);
+  fetalState.timer = setInterval(function(){
+    updateFetalDisplay();
+    if (fetalState.startTime && Date.now() - fetalState.startTime >= FETAL_TOTAL_MS) {
+      stopFetalTimer();
+      if (!fetalState.done) {
+        fetalState.done = true;
+        if (fetalState.count > 0) {
+          if (confirm('1\u5c0f\u65f6\u8ba1\u65f6\u7ed3\u675f\uff0c\u5171 ' + fetalState.count + ' \u6b21\u6709\u6548\u80ce\u52a8\u3002\u662f\u5426\u4fdd\u5b58\u4eca\u65e5\u8bb0\u5f55\uff1f')) {
+            saveFetalRecord();
+          }
+          fetalClearState();
+          updateFetalDisplay();
+        }
+      }
+    }
+  }, 1000);
 }
 function stopFetalTimer() {
   if (fetalState.timer) { clearInterval(fetalState.timer); fetalState.timer = null; }
+}
+function fetalClearState() {
+  fetalState.count = 0;
+  fetalState.taps = 0;
+  fetalState.startTime = 0;
+  fetalState.lastCountTime = 0;
+  fetalState.validTimes = [];
+  fetalState.done = false;
 }
 // \u77ed\u63d0\u793a\uff08\u4e0d\u6253\u65ad\u8ba1\u6570\uff09
 var fetalTipTimer = null;
 function showFetalTip(msg) {
   var tip = document.getElementById('fetal-merge-tip');
-  if (!tip) {
-    tip = document.createElement('div');
-    tip.id = 'fetal-merge-tip';
-    tip.className = 'fetal-merge-tip';
-    var counter = document.querySelector('.fetal-counter');
-    if (counter) counter.appendChild(tip); else return;
-  }
+  if (!tip) return;
   tip.textContent = msg;
   tip.style.display = 'block';
   if (fetalTipTimer) clearTimeout(fetalTipTimer);
   fetalTipTimer = setTimeout(function(){ tip.style.display = 'none'; }, 4000);
 }
 document.getElementById('fetal-tap').addEventListener('click', function(){
+  if (fetalState.done) { showFetalTip('\u672c\u8f6e\u8ba1\u65f6\u5df2\u7ed3\u675f\uff0c\u8bf7\u7a0d\u540e\u91cd\u65b0\u5f00\u59cb'); return; }
   if (!fetalState.startTime) fetalState.startTime = Date.now();
   startFetalTimer();
+  fetalState.taps++;
   var now = Date.now();
   if (fetalState.lastCountTime && (now - fetalState.lastCountTime) < FETAL_MERGE_MS) {
-    // 3\u5206\u949f\u5185\u7684\u8fde\u7eed\u80ce\u52a8\u53ea\u8ba1 1 \u6b21
+    // 5\u5206\u949f\u5185\u7684\u8fde\u7eed\u6d3b\u52a8\u53ea\u7b971\u6b21\u6709\u6548\u80ce\u52a8
     var remainSec = Math.ceil((FETAL_MERGE_MS - (now - fetalState.lastCountTime)) / 1000);
     var remainMin = Math.ceil(remainSec / 60);
-    showFetalTip('\u8fde\u7eed\u80ce\u52a8\u5df2\u5408\u5e76\u4e3a 1 \u6b21\uff0c\u7ea6 ' + remainMin + ' \u5206\u949f\u540e\u7684\u65b0\u80ce\u52a8\u5c06\u5355\u72ec\u8ba1\u6570');
+    showFetalTip('\u8fde\u7eed\u6d3b\u52a8\u5df2\u5408\u5e76\u4e3a 1 \u6b21\uff0c\u7ea6 ' + remainMin + ' \u5206\u949f\u540e\u7b97\u65b0\u7684\u6709\u6548\u80ce\u52a8');
     updateFetalDisplay();
     return;
   }
-  if (fetalState.count < 10) fetalState.count++;
+  if (fetalState.count < 99) fetalState.count++;
   fetalState.lastCountTime = now;
+  fetalState.validTimes.push(now);
   updateFetalDisplay();
-  if (fetalState.count >= 10) {
+  if (fetalState.count === 10) {
+    showFetalTip('\u2705 \u5df2\u6570\u5230 10 \u6b21\u6709\u6548\u80ce\u52a8\uff0c\u5f88\u68d2\uff01\u53ef\u7ee7\u7eed\u6216\u70b9\u300c\u53d6\u6d88\u300d\u65c1\u7684\u4fdd\u5b58');
     stopFetalTimer();
-    if (confirm('\u5df2\u8fbe\u5230 10 \u6b21\u80ce\u52a8\uff0c\u662f\u5426\u4fdd\u5b58\u4eca\u65e5\u8bb0\u5f55\uff1f')) {
+    if (confirm('\u5df2\u8fbe\u5230 10 \u6b21\u6709\u6548\u80ce\u52a8\uff0c\u662f\u5426\u4fdd\u5b58\u4eca\u65e5\u8bb0\u5f55\uff1f')) {
       saveFetalRecord();
-      fetalReset();
+      fetalClearState();
+      updateFetalDisplay();
     }
   }
 });
-document.getElementById('fetal-reset').addEventListener('click', fetalReset);
-function fetalReset() {
-  if (fetalState.count > 0 && fetalState.startTime) {
-    if (!confirm('\u5f53\u524d\u8ba1\u6570 ' + fetalState.count + ' \u6b21\u8981\u4e22\u5f03\u5417\uff1f')) return;
+// \u53d6\u6d88\uff1a\u64a4\u9500\u6700\u8fd1\u4e00\u6b21\u6709\u6548\u8ba1\u6570\uff1b\u6ca1\u6709\u6709\u6548\u8ba1\u6570\u65f6\u6e05\u7a7a\u6574\u8f6e
+document.getElementById('fetal-undo').addEventListener('click', function(){
+  if (fetalState.validTimes.length) {
+    fetalState.validTimes.pop();
+    fetalState.count = Math.max(0, fetalState.count - 1);
+    fetalState.taps = Math.max(0, fetalState.taps - 1);
+    fetalState.lastCountTime = fetalState.validTimes.length ? fetalState.validTimes[fetalState.validTimes.length - 1] : 0;
+    showFetalTip('\u5df2\u64a4\u9500\u6700\u8fd1 1 \u6b21\u6709\u6548\u8ba1\u6570');
+  } else {
+    fetalClearState();
+    stopFetalTimer();
+    showFetalTip('\u5df2\u91cd\u65b0\u5f00\u59cb');
   }
-  fetalState.count = 0;
-  fetalState.startTime = 0;
-  fetalState.lastCountTime = 0;
-  stopFetalTimer();
   updateFetalDisplay();
-}
+});
 function saveFetalRecord() {
   var date = todayISO();
   var existing = appData.fetalRecords.find(function(r){ return r.date === date; });
