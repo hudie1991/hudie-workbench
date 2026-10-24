@@ -874,3 +874,12 @@ body { background:var(--bg); color:var(--text); min-height:100vh; line-height:1.
 }
 .sugar-photos { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
 .sugar-photo-img { width:84px; height:84px; object-fit:cover; border-radius:8px; border:1px solid var(--border); cursor:zoom-in; }
+
+/* 胎动结束本轮 */
+.fetal-stop-row { display:flex; align-items:center; justify-content:center; gap:10px; margin:-4px 0 14px; }
+.fetal-stop-btn {
+  padding:8px 18px; border-radius:20px; border:1.5px solid #c62828;
+  background:white; color:#c62828; font-size:13px; cursor:pointer;
+}
+.fetal-stop-btn:active { background:#fdecea; }
+.fetal-stop-hint { font-size:11px; color:var(--text-light); }

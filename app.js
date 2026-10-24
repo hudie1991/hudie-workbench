@@ -462,11 +462,42 @@ document.getElementById('knowledge-list').addEventListener('click', function(e){
 var fetalState = { count:0, taps:0, startTime:0, timer:null, lastCountTime:0, validTimes:[], done:false };
 var FETAL_MERGE_MS = 5 * 60 * 1000;   // 5\u5206\u949f\u5185\u8fde\u7eed\u6d3b\u52a8\u53ea\u7b971\u6b21\u6709\u6548\u80ce\u52a8
 var FETAL_TOTAL_MS = 60 * 60 * 1000;  // 1\u5c0f\u65f6\u5012\u8ba1\u65f6
+var FETAL_STATE_KEY = 'hudie_fetal_state';
+// \u72b6\u6001\u6301\u4e45\u5316\uff1a\u5237\u65b0\u9875\u9762\u4e0d\u4e22\u8ba1\u6570
+function fetalSaveState() {
+  try {
+    localStorage.setItem(FETAL_STATE_KEY, JSON.stringify({
+      count:fetalState.count, taps:fetalState.taps, startTime:fetalState.startTime,
+      lastCountTime:fetalState.lastCountTime, validTimes:fetalState.validTimes, done:fetalState.done
+    }));
+  } catch(e) {}
+}
+function fetalLoadState() {
+  try {
+    var raw = localStorage.getItem(FETAL_STATE_KEY);
+    if (!raw) return;
+    var s = JSON.parse(raw);
+    if (!s || !s.startTime) return;
+    // \u8de8\u5929\u6216\u5df2\u8d85\u8fc71\u5c0f\u65f6\u7684\u65e7\u72b6\u6001\u76f4\u63a5\u4f5c\u5e9f
+    if (new Date(s.startTime).toDateString() !== new Date().toDateString() || Date.now() - s.startTime >= FETAL_TOTAL_MS) {
+      localStorage.removeItem(FETAL_STATE_KEY);
+      return;
+    }
+    fetalState.count = s.count || 0;
+    fetalState.taps = s.taps || 0;
+    fetalState.startTime = s.startTime;
+    fetalState.lastCountTime = s.lastCountTime || 0;
+    fetalState.validTimes = Array.isArray(s.validTimes) ? s.validTimes : [];
+    fetalState.done = !!s.done;
+    if (!fetalState.done) startFetalTimer();
+  } catch(e) {}
+}
 function updateFetalDisplay() {
   var countEl = document.getElementById('fetal-count');
   var tapsEl = document.getElementById('fetal-taps');
   var timerEl = document.getElementById('fetal-timer');
   var undoEl = document.getElementById('fetal-undo');
+  var stopRow = document.getElementById('fetal-stop-row');
   if (!countEl) return;
   countEl.textContent = fetalState.count;
   tapsEl.textContent = fetalState.taps;
@@ -481,6 +512,7 @@ function updateFetalDisplay() {
   var ss = String(totalSec % 60).padStart(2,'0');
   timerEl.textContent = mm + ':' + ss;
   undoEl.style.display = (fetalState.taps > 0 && !fetalState.done) ? 'inline-flex' : 'none';
+  stopRow.style.display = fetalState.startTime ? 'flex' : 'none';
 }
 function startFetalTimer() {
   if (fetalState.timer) return;
@@ -511,6 +543,7 @@ function fetalClearState() {
   fetalState.lastCountTime = 0;
   fetalState.validTimes = [];
   fetalState.done = false;
+  fetalSaveState();
 }
 // \u77ed\u63d0\u793a\uff08\u4e0d\u6253\u65ad\u8ba1\u6570\uff09
 var fetalTipTimer = null;
@@ -533,12 +566,14 @@ document.getElementById('fetal-tap').addEventListener('click', function(){
     var remainSec = Math.ceil((FETAL_MERGE_MS - (now - fetalState.lastCountTime)) / 1000);
     var remainMin = Math.ceil(remainSec / 60);
     showFetalTip('\u8fde\u7eed\u6d3b\u52a8\u5df2\u5408\u5e76\u4e3a 1 \u6b21\uff0c\u7ea6 ' + remainMin + ' \u5206\u949f\u540e\u7b97\u65b0\u7684\u6709\u6548\u80ce\u52a8');
+    fetalSaveState();
     updateFetalDisplay();
     return;
   }
   if (fetalState.count < 99) fetalState.count++;
   fetalState.lastCountTime = now;
   fetalState.validTimes.push(now);
+  fetalSaveState();
   updateFetalDisplay();
   if (fetalState.count === 10) {
     showFetalTip('\u2705 \u5df2\u6570\u5230 10 \u6b21\u6709\u6548\u80ce\u52a8\uff0c\u5f88\u68d2\uff01\u53ef\u7ee7\u7eed\u6216\u70b9\u300c\u53d6\u6d88\u300d\u65c1\u7684\u4fdd\u5b58');
@@ -562,6 +597,30 @@ document.getElementById('fetal-undo').addEventListener('click', function(){
     fetalClearState();
     stopFetalTimer();
     showFetalTip('\u5df2\u91cd\u65b0\u5f00\u59cb');
+  }
+  fetalSaveState();
+  updateFetalDisplay();
+});
+// \u7ed3\u675f\u672c\u8f6e\uff1a\u53ef\u4fdd\u5b58\u6216\u4e22\u5f03
+document.getElementById('fetal-stop').addEventListener('click', function(){
+  if (!fetalState.startTime) return;
+  if (fetalState.count === 0) {
+    if (confirm('\u672c\u8f6e\u8fd8\u6ca1\u6709\u6709\u6548\u8ba1\u6570\uff0c\u786e\u5b9a\u7ed3\u675f\u5e76\u6e05\u96f6\u5417\uff1f')) {
+      fetalClearState(); stopFetalTimer(); updateFetalDisplay();
+      showFetalTip('\u5df2\u7ed3\u675f\u672c\u8f6e');
+    }
+    return;
+  }
+  var msg = '\u672c\u8f6e\u5171 ' + fetalState.count + ' \u6b21\u6709\u6548\u80ce\u52a8\uff08' + fetalState.taps + ' \u6b21\u70b9\u51fb\uff09\u3002\n\n\u786e\u5b9a = \u4fdd\u5b58\u5230\u4eca\u65e5\u8bb0\u5f55\n\u53d6\u6d88 = \u4e22\u5f03\u5e76\u91cd\u65b0\u5f00\u59cb';
+  if (confirm(msg)) {
+    saveFetalRecord();
+    fetalClearState();
+    stopFetalTimer();
+    showFetalTip('\u5df2\u4fdd\u5b58\u4eca\u65e5\u80ce\u52a8\u8bb0\u5f55');
+  } else {
+    fetalClearState();
+    stopFetalTimer();
+    showFetalTip('\u5df2\u4e22\u5f03\u672c\u8f6e\u8ba1\u6570\uff0c\u91cd\u65b0\u5f00\u59cb');
   }
   updateFetalDisplay();
 });
@@ -588,6 +647,8 @@ function renderFetalHistory() {
   }
   list.innerHTML = html;
 }
+// \u9875\u9762\u52a0\u8f7d\u65f6\u6062\u590d\u672a\u5b8c\u6210\u7684\u8ba1\u6570
+fetalLoadState();
 updateFetalDisplay();
 
 /* ====== \u8840\u7cd6\u76d1\u6d4b ====== */
