@@ -295,6 +295,11 @@
             <div class="sugar-field"><label>晚餐后2h</label><input type="number" inputmode="decimal" id="sugar-dinner" step="0.1" placeholder="≤6.7"></div>
           </div>
           <input type="text" id="sugar-note" placeholder="备注（如 尿酮体-，饮食情况）">
+          <div class="sugar-photo-wrap">
+            <label class="sugar-photo-label">饮食拍照（可选，可多张）</label>
+            <input type="file" id="sugar-photos" accept="image/*" multiple class="sugar-photo-input">
+            <div class="sugar-photo-preview" id="sugar-photo-preview"></div>
+          </div>
           <input type="hidden" id="sugar-edit-id" value="">
           <button id="add-sugar-btn">添加</button>
           <button type="button" id="cancel-sugar-edit" class="cancel-edit-btn" style="display:none;">取消编辑</button>

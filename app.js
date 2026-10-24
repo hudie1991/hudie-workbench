@@ -609,10 +609,44 @@ function resetSugarForm() {
   document.getElementById('sugar-date').value = todayISO();
   SUGAR_FIELDS.forEach(function(f){ document.getElementById('sugar-' + f.key).value = ''; });
   document.getElementById('sugar-note').value = '';
+  window.currentSugarPhotos = [];
+  renderSugarPhotoPreview();
   document.getElementById('sugar-edit-id').value = '';
   document.getElementById('add-sugar-btn').textContent = '\u6dfb\u52a0';
   document.getElementById('cancel-sugar-edit').style.display = 'none';
 }
+// \u996e\u98df\u7167\u7247\uff1a\u591a\u5f20\u4e0a\u4f20\u9884\u89c8
+function renderSugarPhotoPreview() {
+  var preview = document.getElementById('sugar-photo-preview');
+  if (!preview) return;
+  var photos = window.currentSugarPhotos || [];
+  var html = '';
+  for (var i = 0; i < photos.length; i++) {
+    html += '<div class="sugar-photo-thumb"><img src="' + photos[i] + '" data-sugar-pv="' + i + '"><button type="button" class="sugar-photo-remove" data-sugar-photo-remove="' + i + '">\u2715</button></div>';
+  }
+  preview.innerHTML = html;
+}
+document.getElementById('sugar-photos').addEventListener('change', function(e){
+  var files = Array.prototype.slice.call(e.target.files);
+  if (!files.length) return;
+  if (!window.currentSugarPhotos) window.currentSugarPhotos = [];
+  var pending = 0;
+  for (var i = 0; i < files.length; i++) {
+    (function(file){
+      if (!file.type || file.type.indexOf('image/') !== 0) return;
+      if (file.size > 2 * 1024 * 1024) { alert('\u56fe\u7247 ' + file.name + ' \u8d85\u8fc7 2MB\uff0c\u5df2\u8df3\u8fc7'); return; }
+      pending++;
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        window.currentSugarPhotos.push(ev.target.result);
+        pending--;
+        if (pending <= 0) renderSugarPhotoPreview();
+      };
+      reader.readAsDataURL(file);
+    })(files[i]);
+  }
+  e.target.value = '';
+});
 function renderSugarSection() {
   if (!appData.sugarRecords) appData.sugarRecords = [];
   document.getElementById('sugar-date').value = document.getElementById('sugar-date').value || todayISO();
@@ -638,6 +672,14 @@ function renderSugarSection() {
     }
     html += '</div>';
     if (r.note) html += '<div class="record-note">' + escapeHtml(r.note) + '</div>';
+    var photos = Array.isArray(r.photos) ? r.photos : [];
+    if (photos.length) {
+      html += '<div class="sugar-photos">';
+      for (var p = 0; p < photos.length; p++) {
+        html += '<img src="' + photos[p] + '" class="sugar-photo-img" data-sugar-view="' + r.id + '_' + p + '" alt="\u996e\u98df\u7167\u7247' + (p+1) + '">';
+      }
+      html += '</div>';
+    }
     html += '</div>';
   }
   list.innerHTML = html;
@@ -657,6 +699,7 @@ document.getElementById('add-sugar-btn').addEventListener('click', function(){
   }
   if (!hasValue) { alert('\u8bf7\u81f3\u5c11\u586b\u5199\u4e00\u9879\u8840\u7cd6\u503c'); return; }
   rec.note = document.getElementById('sugar-note').value.trim();
+  rec.photos = (window.currentSugarPhotos || []).slice();
   if (!appData.sugarRecords) appData.sugarRecords = [];
   var editId = document.getElementById('sugar-edit-id').value;
   if (editId) {
@@ -675,7 +718,33 @@ document.getElementById('add-sugar-btn').addEventListener('click', function(){
   saveData(); resetSugarForm(); renderSugarSection();
 });
 document.getElementById('cancel-sugar-edit').addEventListener('click', resetSugarForm);
+// \u9884\u89c8\u533a\u5220\u9664\u7167\u7247
+document.getElementById('sugar-photo-preview').addEventListener('click', function(e){
+  var rm = e.target.closest ? e.target.closest('[data-sugar-photo-remove]') : null;
+  if (rm) {
+    var idx = parseInt(rm.dataset.sugarPhotoRemove, 10);
+    window.currentSugarPhotos.splice(idx, 1);
+    renderSugarPhotoPreview();
+  }
+});
 document.getElementById('sugar-list').addEventListener('click', function(e){
+  // \u70b9\u51fb\u996e\u98df\u7167\u7247 \u2192 \u67e5\u770b\u5927\u56fe\uff08\u590d\u7528\u51ed\u8bc1\u67e5\u770b\u5668\uff09
+  var photoView = e.target.closest ? e.target.closest('[data-sugar-view]') : null;
+  if (photoView) {
+    var parts = String(photoView.dataset.sugarView).split('_');
+    var pid = parseInt(parts[0], 10);
+    var pidx = parseInt(parts[1], 10);
+    var rec2 = appData.sugarRecords.find(function(x){ return x.id === pid; });
+    if (rec2 && Array.isArray(rec2.photos) && rec2.photos[pidx]) {
+      var viewerImg = document.getElementById('voucher-viewer-img');
+      var viewerBox = document.getElementById('voucher-viewer');
+      if (viewerImg && viewerBox) {
+        viewerImg.src = rec2.photos[pidx];
+        viewerBox.style.display = 'flex';
+      }
+    }
+    return;
+  }
   var editBtn = e.target.closest ? e.target.closest('.sugar-edit') : null;
   if (editBtn) {
     var id = parseInt(editBtn.dataset.id);
@@ -687,6 +756,8 @@ document.getElementById('sugar-list').addEventListener('click', function(e){
       document.getElementById('sugar-' + f.key).value = (r[f.key] === undefined || r[f.key] === null) ? '' : r[f.key];
     }
     document.getElementById('sugar-note').value = r.note || '';
+    window.currentSugarPhotos = Array.isArray(r.photos) ? r.photos.slice() : [];
+    renderSugarPhotoPreview();
     document.getElementById('sugar-edit-id').value = r.id;
     document.getElementById('add-sugar-btn').textContent = '\u4fdd\u5b58\u4fee\u6539';
     document.getElementById('cancel-sugar-edit').style.display = 'inline-block';
