@@ -687,6 +687,31 @@ function renderSugarPhotoPreview() {
   }
   preview.innerHTML = html;
 }
+// \u56fe\u7247\u538b\u7f29\uff1a\u624b\u673a\u7167\u7247\u901a\u5e38 3-8MB\uff0c\u7f29\u653e\u8f6c\u7801\u5230 1600px \u5185 JPEG\uff0c\u63a7\u5236\u5b58\u50a8\u4f53\u79ef
+function compressImageFile(file, cb) {
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = new Image();
+    img.onload = function() {
+      var maxSide = 1600;
+      var w = img.width, h = img.height;
+      var scale = Math.min(1, maxSide / Math.max(w, h));
+      var cw = Math.round(w * scale), ch = Math.round(h * scale);
+      var canvas = document.createElement('canvas');
+      canvas.width = cw; canvas.height = ch;
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.drawImage(img, 0, 0, cw, ch);
+      var out = canvas.toDataURL('image/jpeg', 0.8);
+      cb(out);
+    };
+    img.onerror = function() { cb(null); };
+    img.src = ev.target.result;
+  };
+  reader.onerror = function() { cb(null); };
+  reader.readAsDataURL(file);
+}
 document.getElementById('sugar-photos').addEventListener('change', function(e){
   var files = Array.prototype.slice.call(e.target.files);
   if (!files.length) return;
@@ -695,15 +720,16 @@ document.getElementById('sugar-photos').addEventListener('change', function(e){
   for (var i = 0; i < files.length; i++) {
     (function(file){
       if (!file.type || file.type.indexOf('image/') !== 0) return;
-      if (file.size > 2 * 1024 * 1024) { alert('\u56fe\u7247 ' + file.name + ' \u8d85\u8fc7 2MB\uff0c\u5df2\u8df3\u8fc7'); return; }
       pending++;
-      var reader = new FileReader();
-      reader.onload = function(ev){
-        window.currentSugarPhotos.push(ev.target.result);
+      compressImageFile(file, function(dataUrl){
+        if (dataUrl) {
+          window.currentSugarPhotos.push(dataUrl);
+        } else {
+          alert('\u56fe\u7247 ' + file.name + ' \u5904\u7406\u5931\u8d25\uff0c\u5df2\u8df3\u8fc7');
+        }
         pending--;
         if (pending <= 0) renderSugarPhotoPreview();
-      };
-      reader.readAsDataURL(file);
+      });
     })(files[i]);
   }
   e.target.value = '';
